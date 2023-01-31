@@ -1,0 +1,163 @@
+@font-face {
+  font-family: GoodOT;
+  src: url(./fonts/GoodOT-Book.eot);
+  src: url(./fonts/GoodOT-Book.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-Book.woff2) format("woff2"),
+    url(./fonts/GoodOT-Book.woff) format("woff"),
+    url(./fonts/GoodOT-Book.ttf) format("truetype"),
+    url(./fonts/GoodOT-Book.font.svg#GoodOT-Book) format("svg");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: GoodOT;
+  src: url(./fonts/GoodOT-Medium.eot);
+  src: url(./fonts/GoodOT-Medium.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-Medium.woff2) format("woff2"),
+    url(./fonts/GoodOT-Medium.woff) format("woff"),
+    url(./fonts/GoodOT-Medium.ttf) format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: GoodOT;
+  src: url(./fonts/GoodOT-BookItalic.eot);
+  src: url(./fonts/GoodOT-BookItalic.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-BookItalic.woff2) format("woff2"),
+    url(./fonts/GoodOT-BookItalic.woff) format("woff"),
+    url(./fonts/GoodOT-BookItalic.ttf) format("truetype"),
+    url(./fonts/GoodOT-BookItalic.font.svg#GoodOT-BookItalic) format("svg");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: GoodOT;
+  src: url(./fonts/GoodOT-Bold.eot);
+  src: url(./fonts/GoodOT-Bold.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-Bold.woff2) format("woff2"),
+    url(./fonts/GoodOT-Bold.woff) format("woff"),
+    url(./fonts/GoodOT-Bold.ttf) format("truetype"),
+    url(./fonts/GoodOT-Bold.font.svg#GoodOT-Bold) format("svg");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: GoodOT;
+  src: url(./fonts/GoodOT-BoldItalic.eot);
+  src: url(./fonts/GoodOT-BoldItalic.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-BoldItalic.woff2) format("woff2"),
+    url(./fonts/GoodOT-BoldItalic.woff) format("woff"),
+    url(./fonts/GoodOT-BoldItalic.ttf) format("truetype"),
+    url(./fonts/GoodOT-BoldItalic.font.svg#GoodOT-BoldItalic) format("svg");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: GoodOT-Cond;
+  src: url(./fonts/GoodOT-CondBook.eot);
+  src: url(./fonts/GoodOT-CondBook.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-CondBook.woff2) format("woff2"),
+    url(./fonts/GoodOT-CondBook.woff) format("woff"),
+    url(./fonts/GoodOT-CondBook.ttf) format("truetype"),
+    url(./fonts/GoodOT-CondBook.font.svg#GoodOT-CondBook) format("svg");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: GoodOT-Cond;
+  src: url(./fonts/GoodOT-CondBookItalic.eot);
+  src: url(./fonts/GoodOT-CondBookItalic.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-CondBookItalic.woff2) format("woff2"),
+    url(./fonts/GoodOT-CondBookItalic.woff) format("woff"),
+    url(./fonts/GoodOT-CondBookItalic.ttf) format("truetype"),
+    url(./fonts/GoodOT-CondBookItalic.font.svg#GoodOT-CondBookItalic) format("svg");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: GoodOT-Cond;
+  src: url(./fonts/GoodOT-CondBold.eot);
+  src: url(./fonts/GoodOT-CondBold.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-CondBold.woff2) format("woff2"),
+    url(./fonts/GoodOT-CondBold.woff) format("woff"),
+    url(./fonts/GoodOT-CondBold.ttf) format("truetype"),
+    url(./fonts/GoodOT-CondBold.font.svg#GoodOT-CondBold) format("svg");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: GoodOT-Cond;
+  src: url(./fonts/GoodOT-CondBoldItalic.eot);
+  src: url(./fonts/GoodOT-CondBoldItalic.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-CondBoldItalic.woff2) format("woff2"),
+    url(./fonts/GoodOT-CondBoldItalic.woff) format("woff"),
+    url(./fonts/GoodOT-CondBoldItalic.ttf) format("truetype"),
+    url(./fonts/GoodOT-CondBoldItalic.font.svg#GoodOT-CondBoldItalic) format("svg");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: GoodOT-Cond;
+  src: url(./fonts/GoodOT-CondMedium.eot);
+  src: url(./fonts/GoodOT-CondMedium.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/GoodOT-CondMedium.woff2) format("woff2"),
+    url(./fonts/GoodOT-CondMedium.woff) format("woff"),
+    url(./fonts/GoodOT-CondMedium.ttf) format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: FreightText;
+  src: url(./fonts/FreightText-Book.eot);
+  src: url(./fonts/FreightText-Book.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/FreightText-Book.woff2) format("woff2"),
+    url(./fonts/FreightText-Book.woff) format("woff"),
+    url(./fonts/FreightText-Book.ttf) format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: FreightText;
+  src: url(./fonts/FreightText-Medium.eot);
+  src: url(./fonts/FreightText-Medium.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/FreightText-Medium.woff2) format("woff2"),
+    url(./fonts/FreightText-Medium.woff) format("woff"),
+    url(./fonts/FreightText-Medium.ttf) format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: FreightText;
+  src: url(./fonts/FreightText-SemiBold.eot);
+  src: url(./fonts/FreightText-SemiBold.eot?#iefix) format("embedded-opentype"),
+    url(./fonts/FreightText-SemiBold.woff2) format("woff2"),
+    url(./fonts/FreightText-SemiBold.woff) format("woff"),
+    url(./fonts/FreightText-SemiBold.ttf) format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

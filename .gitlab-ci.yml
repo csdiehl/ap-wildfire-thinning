@@ -1,0 +1,47 @@
+stages:
+  - build
+  - deploy
+
+# Build project into public/ directory and provide the built assets as
+# artifacts of the CI job. Set the artifacts to expire in 30 days. If you want
+# to build for branches other than `main` you can delete the last few lines of
+# this block (the "only" section).
+build:
+  image: node:14
+  stage: build
+  script:
+    - curl -u "$SA_USER:$SA_PASS" https://associatedpress.jfrog.io/artifactory/api/npm/auth > .npmrc
+    - npm config set registry https://associatedpress.jfrog.io/artifactory/api/npm/npm
+    - yarn install
+    - yarn build
+    - echo "BUILD_JOB_ID=${CI_JOB_ID}" >> public/.ci
+  artifacts:
+    paths:
+      - public/
+    expire_in: 30 days
+  only:
+    - main
+
+# Deploy the artifacts of the build job directly to preview. Use the
+# CI_COMMIT_REF_NAME as the deployment's namespace and specify the user who
+# triggered the job. If you want to deploy branches other than `main` you can
+# delete the last few lines of this block (the "only" section).
+deploy_preview:
+  image: eamonwoortman/alpine-curl-zip
+  stage: deploy
+  script:
+    - zip -r deployment.zip public/
+    - 'curl -X POST --fail -H "Authorization: Bearer ${INTERACTIVE_NEWS_API_KEY}" -F "deployment=@./deployment.zip" "https://interactive-news.ap.org/api/projects/custom/${CI_PROJECT_NAME}/deployments/preview?namespace=${CI_COMMIT_REF_NAME}&user=user:gitlab:${GITLAB_USER_ID}"'
+  only:
+    - main
+    
+# Queue a deployment for production that expires in 30 days. Specify the user
+# who triggered the job.
+deploy_production:
+  image: eamonwoortman/alpine-curl-zip
+  stage: deploy
+  script:
+    - source public/.ci
+    - 'curl -X POST --fail -H "Authorization: Bearer ${INTERACTIVE_NEWS_API_KEY}" -H "Content-Type: application/json" --data "{\"url\": \"https://gitlab.inside.ap.org/api/v4/projects/${CI_PROJECT_ID}/jobs/${BUILD_JOB_ID}/artifacts\", \"expireIn\": \"30d\"}" "https://interactive-news.ap.org/api/projects/custom/${CI_PROJECT_NAME}/deployments/production/queue?user=user:gitlab:${GITLAB_USER_ID}"'
+  only:
+    - main
