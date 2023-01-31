@@ -66,12 +66,14 @@
     "ap-react-hooks": "^1.0.15",
     "ap-react-utils": "^1.0.5",
     "core-js": "^3.18.1",
+    "d3": "^7.8.2",
     "interact-analytics": "^0.0.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-is": "^17.0.2",
     "styled-components": "^5.3.1",
-    "tailor": "^1.0.10"
+    "tailor": "^1.0.10",
+    "topojson-client": "^3.1.0"
   },
   "babel": {
     "presets": [

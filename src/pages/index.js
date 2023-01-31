@@ -1,14 +1,24 @@
 import React from 'react'
 import { toSentence } from 'ap-react-utils'
-import { Nav, Article, SeoHeadline, HeroTitle, Metadata, BodyText, Graphic, EndNotes, Footer } from 'tailor'
+import {
+  Nav,
+  Article,
+  SeoHeadline,
+  HeroTitle,
+  Metadata,
+  BodyText,
+  Graphic,
+  EndNotes,
+  Footer,
+} from 'tailor'
 import apLogo from 'ap-interactive-assets/images/AP_LOGO_86x100.png'
 import WildfireThinning from 'js/visuals/wildfire_thinning'
 
 const metadata = {
-  title: "Wildfire Thinning",
-  description: "",
-  authors: [{"name":"Caleb Diehl"}],
-  published: "2023-01-31T22:23:41.922Z",
+  title: 'Wildfire Thinning',
+  description: '',
+  authors: [{ 'name': 'Caleb Diehl' }],
+  published: '2023-01-31T22:23:41.922Z',
 }
 const notes = [
   {
@@ -35,22 +45,22 @@ function Index() {
             alt: 'Example gradient',
           }}
           bottom
-         />
+        />
         <Metadata
-          byline={`By ${toSentence(metadata.authors.map(a => a.name))}`}
+          byline={`By ${toSentence(metadata.authors.map((a) => a.name))}`}
           date={metadata.published}
         />
         <BodyText>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-            viverra diam vel libero tristique venenatis. Curabitur vitae quam vel
-            nibh suscipit efficitur. Vestibulum ante ipsum primis in faucibus
-            orci luctus et ultrices posuere cubilia curae; Proin eu sapien in dui
-            tristique fringilla. Fusce eget tellus a libero dignissim
-            porta.
+            viverra diam vel libero tristique venenatis. Curabitur vitae quam
+            vel nibh suscipit efficitur. Vestibulum ante ipsum primis in
+            faucibus orci luctus et ultrices posuere cubilia curae; Proin eu
+            sapien in dui tristique fringilla. Fusce eget tellus a libero
+            dignissim porta.
           </p>
         </BodyText>
-        <Graphic wide>
+        <Graphic widest>
           <WildfireThinning />
         </Graphic>
         <BodyText>
@@ -63,9 +73,7 @@ function Index() {
             at tincidunt libero.
           </p>
         </BodyText>
-        <EndNotes
-          notes={notes}
-        />
+        <EndNotes notes={notes} />
       </Article>
       <Footer dark />
     </div>
