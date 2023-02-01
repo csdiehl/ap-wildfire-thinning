@@ -9,17 +9,17 @@ const stateCodes = ['32', '08', '41', '53', '06', '49', '16', '04', '35', '30']
 const stateGeos = {
   type: 'GeometryCollection',
   geometries: countyData.objects.states.geometries.filter((d) =>
-    stateCodes.includes(String(d.id))
+    stateCodes.includes(String(d.id).padStart(2, '0'))
   ),
 }
 
-const states = topojson
-  .feature(countyData, stateGeos)
-  .features.filter((d) => stateCodes.includes(String(d.id)))
+const states = topojson.feature(countyData, stateGeos).features
 
 const counties = topojson
   .feature(countyData, countyData.objects.counties)
-  .features.filter((d) => stateCodes.includes(String(d.id).slice(0, 2)))
+  .features.filter((d) =>
+    stateCodes.includes(String(d.id).padStart(5, '0').slice(0, 2))
+  )
 
 function zoomed(e) {
   const g = d3.select(document.getElementById('map-content'))
