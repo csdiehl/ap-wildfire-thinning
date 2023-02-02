@@ -1,8 +1,8 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useNodeDimensions } from 'ap-react-hooks'
 import riskTotals from '../../../live-data/risk_totals.json'
 import { stateCodes } from './utils'
-import { scaleLinear, scaleOrdinal, sum, stack } from 'd3'
+import * as d3 from 'd3'
 import { colors } from './utils'
 import PropTypes from 'prop-types'
 
@@ -23,33 +23,44 @@ const StackedBar = ({ selectedArea }) => {
     : [
         {
           state: 'All States',
-          exp_zone: sum(riskTotals, (d) => d.exp_zone),
-          exp_outside: sum(riskTotals, (d) => d.exp_outside),
-          exp_wild: sum(riskTotals, (d) => d.exp_wild),
+          exp_zone: d3.sum(riskTotals, (d) => d.exp_zone),
+          exp_outside: d3.sum(riskTotals, (d) => d.exp_outside),
+          exp_wild: d3.sum(riskTotals, (d) => d.exp_wild),
         },
       ]
 
-  const stackedData = stack().keys(cols)(data)
+  const stackedData = d3.stack().keys(cols)(data)
 
   const total = data[0].exp_outside + data[0].exp_wild + data[0].exp_zone
 
-  const X = scaleLinear().domain([0, total]).range([0, dimensions.width])
-  const color = scaleOrdinal()
+  const X = d3.scaleLinear().domain([0, total]).range([0, dimensions.width])
+  const color = d3
+    .scaleOrdinal()
     .domain(cols)
     .range([colors.red, colors.blue, colors.grey])
+
+  useEffect(() => {
+    d3.select(svgRef.current)
+      .selectAll('rect')
+      .data(stackedData)
+      .transition()
+      .duration(1000)
+      .attr('x', (d) => X(d[0][0]))
+      .attr('width', (d) => X(d[0][1] - d[0][0]))
+  }, [stackedData, X])
 
   return (
     <div style={{ height: '100%' }} ref={node}>
       <svg ref={svgRef} height={dimensions.height} width={dimensions.width}>
         <text x={0} y={15}>
-          {stateCodes[stateCode] ?? 'All'} {data.pct_saved}
+          {stateCodes[stateCode] ?? 'All'}{' '}
+          {stateCodes[stateCode] &&
+            `- Zones cover ${data[0].pct_saved} of building exposure`}
         </text>
         {stackedData.map((d) => {
           return (
             <rect
               y={20}
-              x={X(d[0][0])}
-              width={X(d[0][1] - d[0][0])}
               height={5}
               key={d.key}
               stroke='#FFF'
