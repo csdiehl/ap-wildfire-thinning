@@ -1,3 +1,5 @@
+import expCounty from '../../../live-data/exp_by_county.json'
+
 export const stateCodes = {
   '32': 'NV',
   '08': 'CO',
@@ -15,4 +17,13 @@ export const colors = {
   blue: '#3787C0',
   red: '#B73C01',
   grey: 'darkgrey',
+}
+
+export function codeToName(countyCode) {
+  const code = countyCode.padStart(5, 0)
+
+  const state = stateCodes[code.split(0, 2)]
+  const county = expCounty.find((d) => d.county === code.split(3, 5))
+
+  return [state, county?.name ?? 'not found']
 }
