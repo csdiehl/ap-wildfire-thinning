@@ -95,7 +95,7 @@ function WildfireThinning() {
           warmColors={[0, 1, 2, 3, 4, 5, 6].map((d) => fireshedColor(d))}
           coolColors={[0, 1, 2, 3, 4, 5, 6].map((d) => thinningColor(d))}
           labels={[
-            'super low',
+            'lowest',
             'very low',
             'low',
             'medium',
