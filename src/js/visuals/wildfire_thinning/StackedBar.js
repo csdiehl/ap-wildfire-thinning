@@ -4,14 +4,22 @@ import riskTotals from '../../../live-data/risk_totals.json'
 import { stateCodes } from './utils'
 import { scaleLinear, sum } from 'd3'
 import { colors } from './utils'
+import PropTypes from 'prop-types'
 
 const formatNum = (n) => Math.round(n).toLocaleString('en')
 
 const StackedBar = ({ selectedArea }) => {
   const [node, dimensions] = useNodeDimensions()
 
-  const data = stateCodes[selectedArea]
-    ? riskTotals.find((d) => d.state === stateCodes[selectedArea])
+  const stateCode =
+    selectedArea.length > 2
+      ? selectedArea.padStart(5, 0).slice(0, 2)
+      : selectedArea.padStart(2, 0)
+
+  console.log(stateCode)
+
+  const data = stateCodes[stateCode]
+    ? riskTotals.find((d) => d.state.padStart(2, 0) === stateCodes[stateCode])
     : {
         state: 'All States',
         exp_zone: sum(riskTotals, (d) => d.exp_zone),
@@ -29,7 +37,7 @@ const StackedBar = ({ selectedArea }) => {
     <div style={{ height: '100%' }} ref={node}>
       <svg height={dimensions.height} width={dimensions.width}>
         <text x={0} y={15}>
-          {stateCodes[selectedArea] ?? 'All'} {data.pct_saved}
+          {stateCodes[stateCode] ?? 'All'} {data.pct_saved}
         </text>
         <rect
           x={X(0)}
@@ -63,6 +71,10 @@ const StackedBar = ({ selectedArea }) => {
       </svg>
     </div>
   )
+}
+
+StackedBar.propTypes = {
+  selectedArea: PropTypes.string,
 }
 
 export default StackedBar

@@ -40,7 +40,7 @@ const Map = ({
       return
     }
 
-    setSelectedArea(data.id)
+    setSelectedArea(data.id.toString())
     const [[x0, y0], [x1, y1]] = path.bounds(data)
 
     const svg = d3.select(svgRef.current)
