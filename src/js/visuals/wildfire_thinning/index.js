@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import Legend from './Legend'
 import { scaleSequential, interpolateBlues, interpolateOranges } from 'd3'
 import StackedBar from './StackedBar'
+import { colors } from './utils'
 
 const Container = styled.div`
   display: grid;
@@ -12,7 +13,7 @@ const Container = styled.div`
   content-sizing: border-box;
   height: calc(100vh - 40px);
   width: 100%;
-  grid-template-rows: 20% 55% 5% 20%;
+  grid-template-rows: 20% 57% 6% 17%;
   grid-template-columns: 100%;
   grid-template-areas:
     'Header'
@@ -22,11 +23,11 @@ const Container = styled.div`
 
   @media (min-width: 768px) {
     grid-template-columns: 30% 70%;
-    grid-template-rows: 50% 45% 5%;
+    grid-template-rows: 50% 42% 8%;
     grid-template-areas:
       'Header Map'
       'Legend Map'
-      'Legend StackedBar';
+      'StackedBar StackedBar';
   }
 `
 
@@ -47,6 +48,8 @@ const fireshedColor = scaleSequential()
 function WildfireThinning() {
   // state
   const [selectedArea, setSelectedArea] = useState('none')
+  const [stateIsZoomed, setStateIsZoomed] = useState(false)
+  const [countyIsZoomed, setCountyIsZoomed] = useState(false)
   const [node, dimensions] = useNodeDimensions()
   const { width, height } = dimensions
 
@@ -57,10 +60,17 @@ function WildfireThinning() {
         <p>
           This map shows higher risk firesheds across the Western US, including
           areas{' '}
-          <strong style={{ color: '#3787C0' }}>targeted for thinning,</strong>{' '}
-          and those <strong style={{ color: '#B73C01' }}>left untreated</strong>
+          <strong style={{ color: colors.blue }}>targeted for thinning,</strong>{' '}
+          and those{' '}
+          <strong style={{ color: colors.red }}>left untreated</strong>
         </p>
-        <p>Click on a state to zoom in</p>
+        {!stateIsZoomed && !countyIsZoomed && (
+          <p>Click on a state to zoom in</p>
+        )}
+        {stateIsZoomed && !countyIsZoomed && (
+          <p>Click on a county to zoom in</p>
+        )}
+        {countyIsZoomed && <p>Click to zoom out</p>}
       </div>
 
       <div style={{ gridArea: 'Map' }} ref={node}>
@@ -70,6 +80,10 @@ function WildfireThinning() {
           width={width}
           height={height}
           setSelectedArea={setSelectedArea}
+          stateIsZoomed={stateIsZoomed}
+          countyIsZoomed={countyIsZoomed}
+          setCountyIsZoomed={setCountyIsZoomed}
+          setStateIsZoomed={setStateIsZoomed}
         />
       </div>
       <div style={{ gridArea: 'StackedBar' }}>

@@ -10,3 +10,9 @@ export const stateCodes = {
   '35': 'NM',
   '30': 'MT',
 }
+
+export const colors = {
+  blue: '#3787C0',
+  red: '#B73C01',
+  grey: 'darkgrey',
+}

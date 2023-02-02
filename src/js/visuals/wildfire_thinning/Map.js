@@ -24,12 +24,21 @@ const Map = ({
   thinningColor,
   fireshedColor,
   setSelectedArea,
+  setStateIsZoomed,
+  setCountyIsZoomed,
+  countyIsZoomed,
+  stateIsZoomed,
 }) => {
-  const [stateIsZoomed, setStateIsZoomed] = useState(false)
   const svgRef = useRef()
 
   function onClick(data) {
-    setStateIsZoomed(true)
+    stateIsZoomed ? setCountyIsZoomed(true) : setStateIsZoomed(true)
+
+    if (countyIsZoomed) {
+      reset()
+      return
+    }
+
     setSelectedArea(data.id)
     const [[x0, y0], [x1, y1]] = path.bounds(data)
 
@@ -51,6 +60,7 @@ const Map = ({
 
   function reset() {
     setStateIsZoomed(false)
+    setCountyIsZoomed(false)
     setSelectedArea('none')
     const svg = d3.select(svgRef.current)
 
@@ -66,7 +76,12 @@ const Map = ({
   // generators
   const path = d3.geoPath(projection)
   return (
-    <svg ref={svgRef} width={width} height={height} onDoubleClick={reset}>
+    <svg
+      vectorEffect='non-scaling-stroke'
+      ref={svgRef}
+      width={width}
+      height={height}
+    >
       <g id='map-content'>
         {firesheds.map((d) => (
           <path
