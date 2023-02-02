@@ -22,8 +22,10 @@ export const colors = {
 export function codeToName(countyCode) {
   const code = countyCode.padStart(5, 0)
 
-  const state = stateCodes[code.split(0, 2)]
-  const county = expCounty.find((d) => d.county === code.split(3, 5))
+  const state = stateCodes[code.slice(0, 2)]
+  const county = expCounty
+    .filter((d) => d.state === state)
+    .find((d) => d.county === code.slice(3, 5).padStart(3, 0))
 
-  return [state, county?.name ?? 'not found']
+  return [state, county?.name ?? 'not found', county?.exp_in_zone]
 }

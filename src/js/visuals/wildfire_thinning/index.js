@@ -84,6 +84,7 @@ function WildfireThinning() {
           countyIsZoomed={countyIsZoomed}
           setCountyIsZoomed={setCountyIsZoomed}
           setStateIsZoomed={setStateIsZoomed}
+          selectedArea={selectedArea}
         />
       </div>
       <div style={{ gridArea: 'StackedBar' }}>

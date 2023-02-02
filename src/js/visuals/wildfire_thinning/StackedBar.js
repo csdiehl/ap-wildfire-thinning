@@ -16,8 +16,6 @@ const StackedBar = ({ selectedArea }) => {
       ? selectedArea.padStart(5, 0).slice(0, 2)
       : selectedArea.padStart(2, 0)
 
-  console.log(stateCode)
-
   const data = stateCodes[stateCode]
     ? riskTotals.find((d) => d.state.padStart(2, 0) === stateCodes[stateCode])
     : {
@@ -67,6 +65,7 @@ const StackedBar = ({ selectedArea }) => {
           <tspan fill={colors.red}>{formatNum(expOutside)} |</tspan>{' '}
           <tspan fill={colors.blue}>{formatNum(data.exp_zone)} | </tspan>
           <tspan fill={colors.grey}>{formatNum(data.exp_wild)}</tspan> Buildings
+          affected by fires starting in this state
         </text>
       </svg>
     </div>
