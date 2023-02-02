@@ -14,6 +14,7 @@ import {
 function zoomed(e) {
   const g = d3.select(document.getElementById('map-content'))
   g.attr('transform', e.transform)
+  g.attr('stroke-width', 0.5 / e.transform.k)
 }
 
 const zoom = d3.zoom().scaleExtent([1, 8]).on('zoom', zoomed)
@@ -89,7 +90,6 @@ const Map = ({
             d={path(d)}
             fill={fireshedColor(parseInt(d.properties.exp_level_out))}
             stroke='#FFF'
-            strokeWidth={0.5}
           ></path>
         ))}
         {thinning.map((d) => (
@@ -98,7 +98,6 @@ const Map = ({
             d={path(d)}
             stroke='lightgrey'
             fill={thinningColor(parseInt(d.properties.exp_level))}
-            strokeWidth={0.5}
           ></path>
         ))}
         {wilderness.map((d) => (
@@ -107,7 +106,6 @@ const Map = ({
             d={path(d)}
             fill='darkgrey'
             stroke='#FFF'
-            strokeWidth={0.5}
           ></path>
         ))}
         {counties.map((d) => (
@@ -118,7 +116,6 @@ const Map = ({
             fill='#FFF'
             fillOpacity={0}
             stroke='lightgrey'
-            strokeWidth={0.5}
           ></path>
         ))}
         {states.map((d) => (
@@ -129,7 +126,6 @@ const Map = ({
             fill={stateIsZoomed ? 'none' : '#FFF'}
             fillOpacity={0}
             stroke='#121212'
-            strokeWidth={1}
           ></path>
         ))}
       </g>
