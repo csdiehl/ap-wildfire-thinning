@@ -18,22 +18,19 @@ function zoomed(e) {
 
 const zoom = d3.zoom().scaleExtent([1, 8]).on('zoom', zoomed)
 
-const thinningColor = d3
-  .scaleSequential()
-  .domain([0, 6])
-  .interpolator(d3.interpolateBlues)
-
-const fireshedColor = d3
-  .scaleSequential()
-  .domain([0, 6])
-  .interpolator(d3.interpolateOranges)
-
-const Map = ({ width, height }) => {
+const Map = ({
+  width,
+  height,
+  thinningColor,
+  fireshedColor,
+  setSelectedArea,
+}) => {
   const [stateIsZoomed, setStateIsZoomed] = useState(false)
   const svgRef = useRef()
 
   function onClick(data) {
     setStateIsZoomed(true)
+    setSelectedArea(data.id)
     const [[x0, y0], [x1, y1]] = path.bounds(data)
 
     const svg = d3.select(svgRef.current)
@@ -54,6 +51,7 @@ const Map = ({ width, height }) => {
 
   function reset() {
     setStateIsZoomed(false)
+    setSelectedArea('none')
     const svg = d3.select(svgRef.current)
 
     svg
