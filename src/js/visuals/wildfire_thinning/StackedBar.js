@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useNodeDimensions } from 'ap-react-hooks'
 import riskTotals from '../../../live-data/risk_totals.json'
 import { stateCodes } from './utils'
-import { scaleLinear, sum } from 'd3'
+import { scaleLinear, scaleOrdinal, sum, stack } from 'd3'
 import { colors } from './utils'
 import PropTypes from 'prop-types'
 
 const formatNum = (n) => Math.round(n).toLocaleString('en')
+const cols = ['exp_outside', 'exp_zone', 'exp_wild']
 
 const StackedBar = ({ selectedArea }) => {
   const [node, dimensions] = useNodeDimensions()
+  const svgRef = useRef()
 
   const stateCode =
     selectedArea.length > 2
@@ -17,55 +19,49 @@ const StackedBar = ({ selectedArea }) => {
       : selectedArea.padStart(2, 0)
 
   const data = stateCodes[stateCode]
-    ? riskTotals.find((d) => d.state.padStart(2, 0) === stateCodes[stateCode])
-    : {
-        state: 'All States',
-        exp_zone: sum(riskTotals, (d) => d.exp_zone),
-        exp_total: sum(riskTotals, (d) => d.exp_total),
-        exp_wild: sum(riskTotals, (d) => d.exp_wild),
-      }
+    ? riskTotals.filter((d) => d.state.padStart(2, 0) === stateCodes[stateCode])
+    : [
+        {
+          state: 'All States',
+          exp_zone: sum(riskTotals, (d) => d.exp_zone),
+          exp_outside: sum(riskTotals, (d) => d.exp_outside),
+          exp_wild: sum(riskTotals, (d) => d.exp_wild),
+        },
+      ]
 
-  const expOutside = data.exp_total - data.exp_wild - data.exp_zone
+  const stackedData = stack().keys(cols)(data)
 
-  const X = scaleLinear()
-    .domain([0, data.exp_total])
-    .range([0, dimensions.width])
+  const total = data[0].exp_outside + data[0].exp_wild + data[0].exp_zone
+
+  const X = scaleLinear().domain([0, total]).range([0, dimensions.width])
+  const color = scaleOrdinal()
+    .domain(cols)
+    .range([colors.red, colors.blue, colors.grey])
 
   return (
     <div style={{ height: '100%' }} ref={node}>
-      <svg height={dimensions.height} width={dimensions.width}>
+      <svg ref={svgRef} height={dimensions.height} width={dimensions.width}>
         <text x={0} y={15}>
           {stateCodes[stateCode] ?? 'All'} {data.pct_saved}
         </text>
-        <rect
-          x={X(0)}
-          fill={colors.red}
-          y={20}
-          height={5}
-          width={X(expOutside)}
-          stroke='#FFF'
-        ></rect>
-        <rect
-          x={X(data.exp_total - data.exp_wild - data.exp_zone)}
-          fill={colors.blue}
-          y={20}
-          height={5}
-          width={X(data.exp_zone)}
-          stroke='#FFF'
-        ></rect>
-        <rect
-          x={X(data.exp_total - data.exp_wild)}
-          fill={colors.grey}
-          y={20}
-          height={5}
-          width={X(data.exp_wild)}
-          stroke='#FFF'
-        ></rect>
+        {stackedData.map((d) => {
+          return (
+            <rect
+              y={20}
+              x={X(d[0][0])}
+              width={X(d[0][1] - d[0][0])}
+              height={5}
+              key={d.key}
+              stroke='#FFF'
+              fill={color(d.key)}
+            ></rect>
+          )
+        })}
         <text x={0} y={40} fontSize='12px' fill='#121212'>
-          <tspan fill={colors.red}>{formatNum(expOutside)} |</tspan>{' '}
-          <tspan fill={colors.blue}>{formatNum(data.exp_zone)} | </tspan>
-          <tspan fill={colors.grey}>{formatNum(data.exp_wild)}</tspan> Buildings
-          affected by fires starting in this state
+          <tspan fill={colors.red}>{formatNum(data[0].exp_outside)} |</tspan>{' '}
+          <tspan fill={colors.blue}>{formatNum(data[0].exp_zone)} | </tspan>
+          <tspan fill={colors.grey}>{formatNum(data[0].exp_wild)}</tspan>{' '}
+          Buildings affected by fires starting in this state
         </text>
       </svg>
     </div>

@@ -2,71 +2,71 @@
  {
    "state": "NV",
    "exp_zone": 348.94,
-   "exp_total": 764.98,
    "exp_wild": 14.66,
+   "exp_outside": 401.39,
    "pct_saved": "46.5%"
  },
  {
    "state": "CO",
    "exp_zone": 538.9,
-   "exp_total": 1196.98,
    "exp_wild": 28.46,
+   "exp_outside": 629.62,
    "pct_saved": "46.1%"
  },
  {
    "state": "OR",
    "exp_zone": 250.87,
-   "exp_total": 622.95,
    "exp_wild": 12.43,
+   "exp_outside": 359.65,
    "pct_saved": "41.1%"
  },
  {
    "state": "WA",
    "exp_zone": 262.12,
-   "exp_total": 788.8,
    "exp_wild": 17.86,
+   "exp_outside": 508.82,
    "pct_saved": "34.0%"
  },
  {
    "state": "ID",
    "exp_zone": 164.84,
-   "exp_total": 731.37,
    "exp_wild": 11.4,
+   "exp_outside": 555.14,
    "pct_saved": "22.9%"
  },
  {
    "state": "AZ",
    "exp_zone": 549.95,
-   "exp_total": 2577.04,
    "exp_wild": 91.16,
+   "exp_outside": 1935.93,
    "pct_saved": "22.1%"
  },
  {
    "state": "CA",
    "exp_zone": 1849.47,
-   "exp_total": 13534.76,
    "exp_wild": 417.29,
+   "exp_outside": 11267.99,
    "pct_saved": "14.1%"
  },
  {
    "state": "NM",
    "exp_zone": 60.26,
-   "exp_total": 825.62,
    "exp_wild": 20.03,
+   "exp_outside": 745.33,
    "pct_saved": "7.5%"
  },
  {
    "state": "MT",
    "exp_zone": 18.43,
-   "exp_total": 493.23,
    "exp_wild": 41.78,
+   "exp_outside": 433.02,
    "pct_saved": "4.1%"
  },
  {
    "state": "UT",
    "exp_zone": 89.47,
-   "exp_total": 2330.01,
    "exp_wild": 50.74,
+   "exp_outside": 2189.8,
    "pct_saved": "3.9%"
  }
 ]
