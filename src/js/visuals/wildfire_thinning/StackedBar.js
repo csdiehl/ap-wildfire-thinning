@@ -7,7 +7,7 @@ import { colors } from './utils'
 import PropTypes from 'prop-types'
 
 const formatNum = (n) => Math.round(n).toLocaleString('en')
-const cols = ['exp_outside', 'exp_zone', 'exp_wild']
+const cols = ['exp_outside', 'exp_in_zone', 'exp_in_wild']
 
 const StackedBar = ({ selectedArea }) => {
   const [node, dimensions] = useNodeDimensions()
@@ -23,15 +23,15 @@ const StackedBar = ({ selectedArea }) => {
     : [
         {
           state: 'All States',
-          exp_zone: d3.sum(riskTotals, (d) => d.exp_zone),
+          exp_in_zone: d3.sum(riskTotals, (d) => d.exp_in_zone),
           exp_outside: d3.sum(riskTotals, (d) => d.exp_outside),
-          exp_wild: d3.sum(riskTotals, (d) => d.exp_wild),
+          exp_in_wild: d3.sum(riskTotals, (d) => d.exp_in_wild),
         },
       ]
 
   const stackedData = d3.stack().keys(cols)(data)
 
-  const total = data[0].exp_outside + data[0].exp_wild + data[0].exp_zone
+  const total = data[0].exp_outside + data[0].exp_in_wild + data[0].exp_in_zone
 
   const X = d3.scaleLinear().domain([0, total]).range([0, dimensions.width])
   const color = d3
@@ -55,7 +55,9 @@ const StackedBar = ({ selectedArea }) => {
         <text x={0} y={15}>
           {stateCodes[stateCode] ?? 'All'}{' '}
           {stateCodes[stateCode] &&
-            `- Zones cover ${data[0].pct_saved} of building exposure`}
+            `- Zones cover ${(data[0].pct_saved * 100).toFixed(
+              1
+            )}% of building exposure`}
         </text>
         {stackedData.map((d) => {
           return (
@@ -70,8 +72,10 @@ const StackedBar = ({ selectedArea }) => {
         })}
         <text x={0} y={40} fontSize='12px' fill='#121212'>
           <tspan fill={colors.red}>{formatNum(data[0].exp_outside)} |</tspan>{' '}
-          <tspan fill={colors.blue}>{formatNum(data[0].exp_zone)} | </tspan>
-          <tspan fill={colors.grey}>{formatNum(data[0].exp_wild)}</tspan>{' '}
+          <tspan fill={colors.blue}>{formatNum(data[0].exp_in_zone)} | </tspan>
+          <tspan fill={colors.grey}>
+            {formatNum(data[0].exp_in_wild)}
+          </tspan>{' '}
           Buildings affected by fires starting in this state
         </text>
       </svg>

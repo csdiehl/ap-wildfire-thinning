@@ -1,72 +1,92 @@
 [
- {
-   "state": "NV",
-   "exp_zone": 348.94,
-   "exp_wild": 14.66,
-   "exp_outside": 401.39,
-   "pct_saved": "46.5%"
- },
- {
-   "state": "CO",
-   "exp_zone": 538.9,
-   "exp_wild": 28.46,
-   "exp_outside": 629.62,
-   "pct_saved": "46.1%"
- },
- {
-   "state": "OR",
-   "exp_zone": 250.87,
-   "exp_wild": 12.43,
-   "exp_outside": 359.65,
-   "pct_saved": "41.1%"
- },
- {
-   "state": "WA",
-   "exp_zone": 262.12,
-   "exp_wild": 17.86,
-   "exp_outside": 508.82,
-   "pct_saved": "34.0%"
- },
- {
-   "state": "ID",
-   "exp_zone": 164.84,
-   "exp_wild": 11.4,
-   "exp_outside": 555.14,
-   "pct_saved": "22.9%"
- },
- {
-   "state": "AZ",
-   "exp_zone": 549.95,
-   "exp_wild": 91.16,
-   "exp_outside": 1935.93,
-   "pct_saved": "22.1%"
- },
- {
-   "state": "CA",
-   "exp_zone": 1849.47,
-   "exp_wild": 417.29,
-   "exp_outside": 11267.99,
-   "pct_saved": "14.1%"
- },
- {
-   "state": "NM",
-   "exp_zone": 60.26,
-   "exp_wild": 20.03,
-   "exp_outside": 745.33,
-   "pct_saved": "7.5%"
- },
- {
-   "state": "MT",
-   "exp_zone": 18.43,
-   "exp_wild": 41.78,
-   "exp_outside": 433.02,
-   "pct_saved": "4.1%"
- },
- {
-   "state": "UT",
-   "exp_zone": 89.47,
-   "exp_wild": 50.74,
-   "exp_outside": 2189.8,
-   "pct_saved": "3.9%"
- }
+  {
+    "state": "CO",
+    "exp_in_zone": 538.8962231322,
+    "annualexposure": 767.3526721366,
+    "exp_in_wild": 28.4609498047,
+    "pct_saved": 0.702,
+    "pct_outside_wild_saved": 0.729,
+    "exp_outside": 199.9954991997
+  },
+  {
+    "state": "NV",
+    "exp_in_zone": 348.9363742703,
+    "annualexposure": 624.1549916217,
+    "exp_in_wild": 14.6968695569,
+    "pct_saved": 0.559,
+    "pct_outside_wild_saved": 0.573,
+    "exp_outside": 260.5217477944
+  },
+  {
+    "state": "OR",
+    "exp_in_zone": 250.8726318872,
+    "annualexposure": 522.4157087722,
+    "exp_in_wild": 12.426078193,
+    "pct_saved": 0.48,
+    "pct_outside_wild_saved": 0.492,
+    "exp_outside": 259.116998692
+  },
+  {
+    "state": "WA",
+    "exp_in_zone": 262.1151187065,
+    "annualexposure": 687.0083960247,
+    "exp_in_wild": 17.8600380696,
+    "pct_saved": 0.382,
+    "pct_outside_wild_saved": 0.392,
+    "exp_outside": 407.0332392485
+  },
+  {
+    "state": "AZ",
+    "exp_in_zone": 549.9538732075,
+    "annualexposure": 1892.1845155741,
+    "exp_in_wild": 91.1603051208,
+    "pct_saved": 0.291,
+    "pct_outside_wild_saved": 0.305,
+    "exp_outside": 1251.0703372458
+  },
+  {
+    "state": "ID",
+    "exp_in_zone": 164.8398180784,
+    "annualexposure": 720.9249626585,
+    "exp_in_wild": 11.3961756473,
+    "pct_saved": 0.229,
+    "pct_outside_wild_saved": 0.232,
+    "exp_outside": 544.6889689327
+  },
+  {
+    "state": "CA",
+    "exp_in_zone": 1849.4740465367,
+    "annualexposure": 9158.684609085,
+    "exp_in_wild": 417.245198171,
+    "pct_saved": 0.202,
+    "pct_outside_wild_saved": 0.212,
+    "exp_outside": 6891.9653643772
+  },
+  {
+    "state": "UT",
+    "exp_in_zone": 89.4695858787,
+    "annualexposure": 765.7195342584,
+    "exp_in_wild": 50.735380956,
+    "pct_saved": 0.117,
+    "pct_outside_wild_saved": 0.125,
+    "exp_outside": 625.5145674236
+  },
+  {
+    "state": "NM",
+    "exp_in_zone": 60.2560248605,
+    "annualexposure": 734.8425933119,
+    "exp_in_wild": 20.0343707522,
+    "pct_saved": 0.082,
+    "pct_outside_wild_saved": 0.084,
+    "exp_outside": 654.5521976993
+  },
+  {
+    "state": "MT",
+    "exp_in_zone": 18.4318871517,
+    "annualexposure": 460.5909642128,
+    "exp_in_wild": 41.7765398184,
+    "pct_saved": 0.04,
+    "pct_outside_wild_saved": 0.044,
+    "exp_outside": 400.3825372427
+  }
 ]
