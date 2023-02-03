@@ -13,6 +13,7 @@ import {
 } from 'tailor'
 import apLogo from 'ap-interactive-assets/images/AP_LOGO_86x100.png'
 import WildfireThinning from 'js/visuals/wildfire_thinning'
+import ForestChart from '../js/visuals/forest_chart'
 
 const metadata = {
   title: 'Wildfire Thinning',
@@ -73,6 +74,9 @@ function Index() {
             at tincidunt libero.
           </p>
         </BodyText>
+        <Graphic wide>
+          <ForestChart />
+        </Graphic>
         <EndNotes notes={notes} />
       </Article>
       <Footer dark />
