@@ -8,15 +8,19 @@ import {
   states,
   outline,
 } from './data'
-import { codeToName } from './utils'
+import MapLabel from './MapLabel'
 
 // FFF4EB
 
 function zoomed(e) {
   const g = d3.select(document.getElementById('map-content'))
+  const label = d3.select(document.getElementById('map-label'))
   g.attr('transform', e.transform)
   g.attr('stroke-width', 0.5 / e.transform.k)
   g.attr('font-size', `${16 / e.transform.k}px`)
+
+  label.attr('transform', e.transform)
+  label.attr('font-size', `${16 / e.transform.k}px`)
 }
 
 const zoom = d3.zoom().scaleExtent([1, 8]).on('zoom', zoomed)
@@ -81,26 +85,6 @@ const Map = ({
   // generators
   const path = d3.geoPath(projection)
 
-  // get the label to display when zoomed into a county
-  function getCountyLabel(code) {
-    const center = path.centroid(counties.find((d) => d.id.toString() === code))
-    const name = codeToName(code)
-
-    const bld = name[2] < 1 ? '< 1' : name[2].toLocaleString('en')
-
-    return (
-      <text paintOrder='stroke fill' stroke='#FFF' y={center[1]}>
-        <tspan x={center[0]}>{name[1]} County</tspan>
-        <tspan fill='#121212' x={center[0]} dy='2px'>
-          {bld} expected buildings
-        </tspan>
-        <tspan fill='#121212' x={center[0]} dy='2px'>
-          affected from fires starting here
-        </tspan>
-      </text>
-    )
-  }
-
   return (
     <svg
       vectorEffect='non-scaling-stroke'
@@ -119,7 +103,7 @@ const Map = ({
         ))}
         {thinning.map((d) => (
           <path
-            key={d.properties.fireshed_code}
+            key={d.properties.fireshed_code + d.properties.objectid}
             d={path(d)}
             stroke='lightgrey'
             fill={thinningColor(parseInt(d.properties.exp_level))}
@@ -127,7 +111,7 @@ const Map = ({
         ))}
         {wilderness.map((d) => (
           <path
-            key={d.properties.name}
+            key={d.properties.name + d.properties.agency}
             d={path(d)}
             fill='darkgrey'
             stroke='#FFF'
@@ -154,9 +138,16 @@ const Map = ({
             stroke='#121212'
           ></path>
         ))}
-        {selectedArea.length > 2 &&
-          selectedArea !== 'none' &&
-          getCountyLabel(selectedArea)}
+      </g>
+      <g id='map-label'>
+        {selectedArea.length > 2 && selectedArea !== 'none' && (
+          <MapLabel
+            code={selectedArea}
+            center={path.centroid(
+              counties.find((d) => d.id.toString() === selectedArea)
+            )}
+          />
+        )}
       </g>
     </svg>
   )
