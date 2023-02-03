@@ -7,8 +7,10 @@ import {
   firesheds,
   states,
   outline,
+  zones,
 } from './data'
 import MapLabel from './MapLabel'
+import { colors } from './utils'
 
 // FFF4EB
 
@@ -17,7 +19,7 @@ function zoomed(e) {
   const label = d3.select(document.getElementById('map-label'))
   g.attr('transform', e.transform)
   g.attr('stroke-width', 0.5 / e.transform.k)
-  g.attr('font-size', `${16 / e.transform.k}px`)
+  g.attr('font-size', `${10 / e.transform.k}px`)
 
   label.attr('transform', e.transform)
   label.attr('font-size', `${16 / e.transform.k}px`)
@@ -127,6 +129,30 @@ const Map = ({
             stroke={d.id.toString() === selectedArea ? '#121212' : 'lightgrey'}
           ></path>
         ))}
+
+        {zones.map((d) => {
+          const words = d.properties.name.split(' ')
+
+          return (
+            <g key={d.properties.name}>
+              <path d={path(d)} fill='none' stroke={colors.blue}></path>
+              {stateIsZoomed && (
+                <text
+                  paintOrder='stroke fill'
+                  stroke='#FFF'
+                  y={path.centroid(d)[1]}
+                >
+                  <tspan x={path.centroid(d)[0]}>
+                    {words.slice(0, 3).join(' ')}
+                  </tspan>
+                  <tspan x={path.centroid(d)[0]} dy='1.2em'>
+                    {words.slice(3, words.length).join(' ')}
+                  </tspan>
+                </text>
+              )}
+            </g>
+          )
+        })}
 
         {states.map((d) => (
           <path
