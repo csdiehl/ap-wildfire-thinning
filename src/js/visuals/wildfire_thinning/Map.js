@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect, useCallback } from 'react'
 import * as d3 from 'd3'
 import {
   counties,
@@ -41,6 +41,11 @@ const Map = ({
 }) => {
   const svgRef = useRef()
 
+  // this is not ideal, but have to call reset on 1st load to get the right strokes
+  useEffect(() => {
+    reset()
+  }, [reset])
+
   function onClick(data) {
     stateIsZoomed ? setCountyIsZoomed(true) : setStateIsZoomed(true)
 
@@ -69,7 +74,7 @@ const Map = ({
   }
 
   // reset back to normal zoom
-  function reset() {
+  const reset = useCallback(() => {
     setStateIsZoomed(false)
     setCountyIsZoomed(false)
     setSelectedArea('none')
@@ -79,7 +84,7 @@ const Map = ({
       .transition()
       .duration(750)
       .call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(1))
-  }
+  }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea])
 
   // projection
   const projection = d3.geoAlbersUsa().fitSize([width, height], outline)
