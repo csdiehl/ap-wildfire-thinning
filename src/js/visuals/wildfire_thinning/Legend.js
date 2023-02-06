@@ -5,6 +5,7 @@ const Patch = styled.div`
   width: ${(props) => props.width}%;
   height: ${(props) => props.height}px;
   background-color: ${(props) => props.color};
+  border: 1px solid white;
 `
 
 const Legend = ({ warmColors, coolColors, labels }) => {
@@ -12,9 +13,22 @@ const Legend = ({ warmColors, coolColors, labels }) => {
     height = 20
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <Patch color='darkgrey' width={10} height={height} />
-        <p style={{ fontSize: '12px' }}>Wilderness over 50k Acres</p>
+      <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Patch color='darkgrey' width={10} height={height} />
+          <p style={{ fontSize: '12px' }}>Wilderness over 50k Acres</p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div
+            style={{
+              borderRadius: '50%',
+              backgroundColor: '#121212',
+              width: '10px',
+              height: '10px',
+            }}
+          ></div>
+          <p style={{ fontSize: '12px' }}>City over 10k population</p>
+        </div>
       </div>
       <div
         style={{
