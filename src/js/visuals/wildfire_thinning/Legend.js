@@ -27,7 +27,7 @@ const Legend = ({ warmColors, coolColors, labels }) => {
               height: '10px',
             }}
           ></div>
-          <p style={{ fontSize: '12px' }}>City over 10k population</p>
+          <p style={{ fontSize: '12px' }}>City over 500k population</p>
         </div>
       </div>
       <div

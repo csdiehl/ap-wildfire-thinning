@@ -2,6 +2,7 @@ import countyData from '../../../live-data/us.json'
 import thinningData from '../../../live-data/firesheds_thinning.json'
 import fireshedExposure from '../../../live-data/exp_firesheds.json'
 import wildernessData from '../../../live-data/wilderness_clipped.json'
+import hwy_west from '../../../live-data/hwy_west.json'
 import zone_totals from '../../../live-data/zone_totals.json'
 import * as topojson from 'topojson-client'
 
@@ -41,6 +42,17 @@ const zones = topojson.feature(
   zone_totals.objects.zone_totals
 ).features
 
+const hwys = topojson.feature(hwy_west, hwy_west.objects.hwy_west).features
+
 const outline = topojson.merge(countyData, stateGeos.geometries)
 
-export { counties, thinning, firesheds, wilderness, states, outline, zones }
+export {
+  counties,
+  thinning,
+  firesheds,
+  wilderness,
+  states,
+  outline,
+  zones,
+  hwys,
+}
