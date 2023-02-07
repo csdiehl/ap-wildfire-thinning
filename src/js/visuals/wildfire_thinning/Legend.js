@@ -2,10 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Patch = styled.div`
-  width: ${(props) => props.width}%;
+  width: ${(props) => props.width};
   height: ${(props) => props.height}px;
   background-color: ${(props) => props.color};
   border: 1px solid white;
+`
+
+const Caption = styled.p`
+  font-size: 12px;
+  margin: 2px 5px 2px 0px;
 `
 
 const Legend = ({ warmColors, coolColors, labels }) => {
@@ -14,11 +19,12 @@ const Legend = ({ warmColors, coolColors, labels }) => {
   return (
     <div>
       <div style={{ display: 'flex' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Patch color='darkgrey' width={10} height={height} />
-          <p style={{ fontSize: '12px' }}>Wilderness over 50k Acres</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <Patch color='darkgrey' width='10px' height={height} />
+          <Caption>Wilderness over 50k Acres</Caption>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <div
             style={{
               borderRadius: '50%',
@@ -27,9 +33,16 @@ const Legend = ({ warmColors, coolColors, labels }) => {
               height: '10px',
             }}
           ></div>
-          <p style={{ fontSize: '12px' }}>City over 500k population</p>
+          <Caption>City over 500k population</Caption>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <Patch width='5px' height={height} color='black' />
+          <Caption>Interstate Highways</Caption>
         </div>
       </div>
+      <p style={{ fontSize: '12px', margin: '2px', fontWeight: 500 }}>
+        Risk Level
+      </p>
       <div
         style={{
           display: 'flex',
@@ -40,8 +53,8 @@ const Legend = ({ warmColors, coolColors, labels }) => {
       >
         {warmColors.map((c, i) => (
           <div key={i} style={{ width: `${width}%` }}>
-            <Patch width={100} height={height} color={c} />
-            <Patch width={100} height={height} color={coolColors[i]} />
+            <Patch width='100%' height={height} color={c} />
+            <Patch width='100%' height={height} color={coolColors[i]} />
             <p style={{ fontSize: '12px', textAlign: 'center' }}>{labels[i]}</p>
           </div>
         ))}
