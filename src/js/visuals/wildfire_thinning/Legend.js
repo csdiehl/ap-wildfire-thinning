@@ -15,7 +15,7 @@ const Caption = styled.p`
 
 const Legend = ({ warmColors, coolColors, labels }) => {
   const width = 100 / 7,
-    height = 20
+    height = 15
   return (
     <div>
       <div style={{ display: 'flex' }}>
@@ -40,8 +40,8 @@ const Legend = ({ warmColors, coolColors, labels }) => {
           <Caption>Interstate Highways</Caption>
         </div>
       </div>
-      <p style={{ fontSize: '12px', margin: '2px', fontWeight: 500 }}>
-        Risk Level
+      <p style={{ fontSize: '12px', margin: '5px 0px', fontWeight: 500 }}>
+        Wildfire Risk Level
       </p>
       <div
         style={{
@@ -49,13 +49,22 @@ const Legend = ({ warmColors, coolColors, labels }) => {
           flexDirection: 'row',
           alignItems: 'top',
           justifyContent: 'top',
+          maxWidth: '370px',
         }}
       >
         {warmColors.map((c, i) => (
           <div key={i} style={{ width: `${width}%` }}>
             <Patch width='100%' height={height} color={c} />
             <Patch width='100%' height={height} color={coolColors[i]} />
-            <p style={{ fontSize: '12px', textAlign: 'center' }}>{labels[i]}</p>
+            <p
+              style={{
+                fontSize: '12px',
+                textAlign: 'center',
+                margin: '2px 0 5px',
+              }}
+            >
+              {labels[i]}
+            </p>
           </div>
         ))}
       </div>

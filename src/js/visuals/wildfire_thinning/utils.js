@@ -43,7 +43,7 @@ export function codeToName(countyCode, name = false) {
     : stateCodes[code.slice(0, 2)]
   const county = expCounty
     .filter((d) => d.state === state)
-    .find((d) => d.county === code.slice(3, 5).padStart(3, 0))
+    .find((d) => d.county === code.slice(2, 5))
 
   return [state, county?.name ?? 'not found', county?.exp_in_zone]
 }

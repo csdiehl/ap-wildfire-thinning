@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useNodeDimensions } from 'ap-react-hooks'
 import riskTotals from '../../../live-data/risk_totals.json'
-import { stateCodes } from './utils'
+import { codeToName, stateCodes } from './utils'
 import * as d3 from 'd3'
 import { colors } from './utils'
 import PropTypes from 'prop-types'
@@ -53,9 +53,9 @@ const StackedBar = ({ selectedArea }) => {
     <div style={{ height: '100%' }} ref={node}>
       <svg ref={svgRef} height={dimensions.height} width={dimensions.width}>
         <text x={0} y={15}>
-          {stateCodes[stateCode] ?? 'All'}{' '}
+          {codeToName(stateCode, true)[0] ?? 'All States'}{' '}
           {stateCodes[stateCode] &&
-            `- Zones cover ${(data[0].pct_saved * 100).toFixed(
+            `- Thinning zones target ${(data[0].pct_saved * 100).toFixed(
               1
             )}% of building exposure`}
         </text>
@@ -63,7 +63,7 @@ const StackedBar = ({ selectedArea }) => {
           return (
             <rect
               y={20}
-              height={5}
+              height={8}
               key={d.key}
               stroke='#FFF'
               fill={color(d.key)}
@@ -71,12 +71,16 @@ const StackedBar = ({ selectedArea }) => {
           )
         })}
         <text x={0} y={40} fontSize='12px' fill='#121212'>
-          <tspan fill={colors.red}>{formatNum(data[0].exp_outside)} |</tspan>{' '}
-          <tspan fill={colors.blue}>{formatNum(data[0].exp_in_zone)} | </tspan>
-          <tspan fill={colors.grey}>
-            {formatNum(data[0].exp_in_wild)}
+          <tspan>Buildings exposed: </tspan>
+          <tspan fill={colors.red}>
+            {formatNum(data[0].exp_outside)} outside zones |
           </tspan>{' '}
-          Buildings affected by fires starting in this state
+          <tspan fill={colors.blue}>
+            {formatNum(data[0].exp_in_zone)} inside zones |{' '}
+          </tspan>
+          <tspan fill={colors.grey}>
+            {formatNum(data[0].exp_in_wild)} in wilderness
+          </tspan>{' '}
         </text>
       </svg>
     </div>

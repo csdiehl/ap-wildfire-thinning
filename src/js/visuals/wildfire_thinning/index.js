@@ -13,7 +13,7 @@ const Container = styled.div`
   content-sizing: border-box;
   height: calc(100vh - 40px);
   width: 100%;
-  grid-template-rows: 20% 57% 6% 17%;
+  grid-template-rows: 18% 57% 8% 15%;
   grid-template-columns: 100%;
   grid-template-areas:
     'Header'
@@ -23,7 +23,7 @@ const Container = styled.div`
 
   @media (min-width: 768px) {
     grid-template-columns: 30% 70%;
-    grid-template-rows: 50% 42% 8%;
+    grid-template-rows: 50% 40% 10%;
     grid-template-areas:
       'Header Map'
       'Legend Map'
@@ -32,8 +32,14 @@ const Container = styled.div`
 `
 
 const Header = styled.h1`
-  font-size: 2rem;
+  font-size: 20px;
   margin: 0;
+`
+
+const Caption = styled.p`
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 2px;
 `
 
 const thinningColor = scaleSequential()
@@ -56,21 +62,34 @@ function WildfireThinning() {
   return (
     <Container>
       <div style={{ gridArea: 'Header' }}>
-        <Header>Firesheds Map</Header>
-        <p>
+        <Header>Where fires start in the west</Header>
+        <Caption>
           This map shows higher risk firesheds across the Western US, including
           areas{' '}
           <strong style={{ color: colors.blue }}>targeted for thinning,</strong>{' '}
           and those{' '}
-          <strong style={{ color: colors.red }}>left untreated</strong>
-        </p>
-        {!stateIsZoomed && !countyIsZoomed && (
-          <p>Click on a state to zoom in</p>
-        )}
-        {stateIsZoomed && !countyIsZoomed && (
-          <p>Click on a county to zoom in</p>
-        )}
-        {countyIsZoomed && <p>Click to zoom out</p>}
+          <strong style={{ color: colors.red }}>left untreated.</strong> The
+          darker the area, the more buildings expected to be exposed in 1 year
+          by fires starting there.
+        </Caption>
+        <div style={{ display: 'flex', gap: '5px' }}>
+          <img height='20px' width='20px' src='./tap.svg' alt='tap icon'></img>
+          {!stateIsZoomed && !countyIsZoomed && (
+            <Caption>
+              Click on a <strong>state</strong> to zoom in
+            </Caption>
+          )}
+          {stateIsZoomed && !countyIsZoomed && (
+            <Caption>
+              Click on a <strong>county</strong> to zoom in
+            </Caption>
+          )}
+          {countyIsZoomed && (
+            <Caption>
+              Click to <strong>zoom out</strong>
+            </Caption>
+          )}
+        </div>
       </div>
 
       <div style={{ gridArea: 'Map' }} ref={node}>

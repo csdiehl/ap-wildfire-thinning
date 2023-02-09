@@ -255,6 +255,9 @@ const Map = ({
           />
         )}
       </g>
+      <text fontSize='12px' x={10} y={height - 10}>
+        Data: U.S. Forest Service
+      </text>
     </svg>
   )
 }

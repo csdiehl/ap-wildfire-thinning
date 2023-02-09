@@ -19,18 +19,16 @@ const Label = styled.text`
 const MapLabel = ({ code, center }) => {
   const name = codeToName(code)
 
-  const bld = name[2] < 1 ? '< 1' : name[2].toLocaleString('en')
+  const bld = name[2] < 1 ? '< 1' : Math.round(name[2]).toLocaleString('en')
 
   return (
     <Label paintOrder='stroke fill' stroke='#FFF' y={center[1]}>
-      <tspan fontWeight={600} x={center[0]}>
+      <tspan x={center[0]}>Fires starting within</tspan>
+      <tspan fontWeight={600} fill='#121212' x={center[0]} dy='1.2em'>
         {name[1]} County
       </tspan>
       <tspan fill='#121212' x={center[0]} dy='1.2em'>
-        {bld} expected buildings
-      </tspan>
-      <tspan fill='#121212' x={center[0]} dy='1.2em'>
-        affected from fires starting here
+        affect {bld} buildings
       </tspan>
     </Label>
   )
