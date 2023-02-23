@@ -1,24 +1,22 @@
-import city_data from '../../../live-data/cities.csv'
 import React from 'react'
-import { geoVoronoi } from 'd3-geo-voronoi'
+import Map from './Map'
+import { useNodeDimensions } from 'ap-react-hooks'
+import styled from 'styled-components'
 
-const makeGeoJSON = ({ lon, lat, ...data }) => {
-  return {
-    type: 'Feature',
-    properties: { ...data },
-    geometry: { type: 'Point', coordinates: [lon, lat] },
-  }
-}
-
-const spike = (length) => `M${-7 / 2},0L0,${-length}L${7 / 2},0`
-
-const cities = city_data.map((d) => makeGeoJSON(d))
+const Container = styled.div`
+  height: 100vh;
+  width: 100%;
+`
 
 const CommunityRisk = () => {
-  const voronoi = geoVoronoi(cities).polygons()
-
-  console.log(voronoi)
-  return <div></div>
+  const [node, dimensions] = useNodeDimensions()
+  const { width, height } = dimensions
+  return (
+    <Container ref={node}>
+      <h1>Risk to Communities</h1>
+      <Map width={width} height={height} />
+    </Container>
+  )
 }
 
 export default CommunityRisk
