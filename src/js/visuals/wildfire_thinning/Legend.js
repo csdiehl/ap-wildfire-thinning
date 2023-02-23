@@ -18,30 +18,8 @@ const Legend = ({ warmColors, coolColors, labels }) => {
     height = 15
   return (
     <div>
-      <div style={{ display: 'flex' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <Patch color='darkgrey' width='10px' height={height} />
-          <Caption>Wilderness over 50k Acres</Caption>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <div
-            style={{
-              borderRadius: '50%',
-              backgroundColor: '#121212',
-              width: '10px',
-              height: '10px',
-            }}
-          ></div>
-          <Caption>City over 500k population</Caption>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <Patch width='5px' height={height} color='black' />
-          <Caption>Interstate Highways</Caption>
-        </div>
-      </div>
       <p style={{ fontSize: '12px', margin: '5px 0px', fontWeight: 500 }}>
-        Wildfire Risk Level
+        Wildfire risk level
       </p>
       <div
         style={{
@@ -67,6 +45,28 @@ const Legend = ({ warmColors, coolColors, labels }) => {
             </p>
           </div>
         ))}
+      </div>
+      <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <Patch color='darkgrey' width='10px' height={height} />
+          <Caption>Wilderness over 50k acres</Caption>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <div
+            style={{
+              borderRadius: '50%',
+              backgroundColor: '#121212',
+              width: '10px',
+              height: '10px',
+            }}
+          ></div>
+          <Caption>City over 500k population</Caption>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <Patch width='5px' height={height} color='black' />
+          <Caption>Interstate highways</Caption>
+        </div>
       </div>
     </div>
   )

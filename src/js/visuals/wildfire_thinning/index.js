@@ -62,14 +62,14 @@ function WildfireThinning() {
   return (
     <Container>
       <div style={{ gridArea: 'Header' }}>
-        <Header>Where fires start in the west</Header>
+        <Header>Where fires start in the West</Header>
         <Caption>
-          This map shows higher risk firesheds across the Western US, including
-          areas{' '}
+          This map shows higher risk firesheds across the western U.S.,
+          including areas{' '}
           <strong style={{ color: colors.blue }}>targeted for thinning,</strong>{' '}
           and those{' '}
           <strong style={{ color: colors.red }}>left untreated.</strong> The
-          darker the area, the more buildings expected to be exposed in 1 year
+          darker the area, the more buildings expected to be exposed in a year
           by fires starting there.
         </Caption>
         <div style={{ display: 'flex', gap: '5px' }}>
@@ -79,14 +79,9 @@ function WildfireThinning() {
               Click on a <strong>state</strong> to zoom in
             </Caption>
           )}
-          {stateIsZoomed && !countyIsZoomed && (
+          {(stateIsZoomed || countyIsZoomed) && (
             <Caption>
               Click on a <strong>county</strong> to zoom in
-            </Caption>
-          )}
-          {countyIsZoomed && (
-            <Caption>
-              Click to <strong>zoom out</strong>
             </Caption>
           )}
         </div>

@@ -75,14 +75,11 @@ const Map = ({
   }, [])
 
   function onClick(data) {
-    stateIsZoomed ? setCountyIsZoomed(true) : setStateIsZoomed(true)
+    // need to change this for when switching between states
+    const id = data.id.toString()
+    id?.length >= 5 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
 
-    if (countyIsZoomed) {
-      reset()
-      return
-    }
-
-    setSelectedArea(data.id.toString())
+    setSelectedArea(id)
     const [[x0, y0], [x1, y1]] = path.bounds(data)
 
     const svg = d3.select(svgRef.current)
@@ -127,7 +124,7 @@ const Map = ({
       width={width}
       height={height}
     >
-      <g id='map-content'>
+      <g id='map-content' cursor='pointer'>
         {firesheds.map((d) => (
           <path
             key={d.properties.fireshed_code}
@@ -258,6 +255,19 @@ const Map = ({
       <text fontSize='12px' x={10} y={height - 10}>
         Data: U.S. Forest Service
       </text>
+      {(stateIsZoomed || countyIsZoomed) && (
+        <text
+          fontSize='18px'
+          textDecoration='underline'
+          x={10}
+          y={20}
+          cursor='pointer'
+          fontWeight={700}
+          onClick={() => reset()}
+        >
+          {'<'} Go Back
+        </text>
+      )}
     </svg>
   )
 }
