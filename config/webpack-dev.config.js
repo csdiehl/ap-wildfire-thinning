@@ -16,7 +16,8 @@ const parseArgs = (env) => {
 }
 
 const config = (env, argv, port, args) => {
-  const canonical = (opts = {}) => utils.canonical({ local: true, port, ...opts })
+  const canonical = (opts = {}) =>
+    utils.canonical({ local: true, port, ...opts })
   const shareImg = (opts = {}) => utils.shareImg({ local: true, port, ...opts })
 
   const pages = utils.getPageEntrypoints()
@@ -32,10 +33,7 @@ const config = (env, argv, port, args) => {
     mode: 'development',
     devtool: 'eval-source-map',
     resolve: {
-      modules: [
-        'node_modules',
-        'src',
-      ],
+      modules: ['node_modules', 'src'],
       extensions: ['.js', '.jsx'],
     },
     target: 'web',
@@ -48,7 +46,7 @@ const config = (env, argv, port, args) => {
       chunkFilename: '__cdn__/js/[id].[contenthash].js',
       filename: (pathData) => {
         if (clients[pathData.chunk.name]) return '[name].js'
-        return '__cdn__/js/[name].[contenthash].js';
+        return '__cdn__/js/[name].[contenthash].js'
       },
     },
     devServer: {
@@ -89,7 +87,7 @@ const config = (env, argv, port, args) => {
           exclude: /node_modules/,
           options: {
             emitWarning: true,
-          }
+          },
         },
         {
           test: /\.jsx?$/,
@@ -98,13 +96,16 @@ const config = (env, argv, port, args) => {
             loader: 'babel-loader',
             options: {
               presets: [
-                ['@babel/env', {
-                  useBuiltIns: 'usage',
-                  corejs: 3,
-                  targets: {
-                    browsers: 'last 2 versions',
+                [
+                  '@babel/env',
+                  {
+                    useBuiltIns: 'usage',
+                    corejs: 3,
+                    targets: {
+                      browsers: 'last 2 versions',
+                    },
                   },
-                }],
+                ],
                 '@babel/preset-react',
               ],
               plugins: [
@@ -152,6 +153,15 @@ const config = (env, argv, port, args) => {
             loader: 'ai2react-loader',
           },
         },
+        {
+          test: /\.csv$/,
+          loader: 'csv-loader',
+          options: {
+            dynamicTyping: true,
+            header: true,
+            skipEmptyLines: true,
+          },
+        },
       ],
     },
     plugins: [
@@ -160,17 +170,18 @@ const config = (env, argv, port, args) => {
         PROJECT_BASE_URL: JSON.stringify(canonical()),
         PROJECT_DATA_URL: JSON.stringify('/live-data'),
       }),
-      ...Object.keys(entrypoints).map(name => (
-        new HtmlWebpackPlugin({
-          filename: `${name}.html`,
-          template: 'src/index.html',
-          templateParameters: {
-            content: `<div class="ap-interactive" data-interactive="${utils.project.metadata.slug}" data-entrypoint="${name}"></div>`,
-          },
-          chunks: [name],
-        })
-      )),
-      ...Object.keys(entrypoints).map(name => {
+      ...Object.keys(entrypoints).map(
+        (name) =>
+          new HtmlWebpackPlugin({
+            filename: `${name}.html`,
+            template: 'src/index.html',
+            templateParameters: {
+              content: `<div class="ap-interactive" data-interactive="${utils.project.metadata.slug}" data-entrypoint="${name}"></div>`,
+            },
+            chunks: [name],
+          })
+      ),
+      ...Object.keys(entrypoints).map((name) => {
         const page = `${name}.html`
         return new MetataggerPlugin({
           pages: [page],
@@ -190,7 +201,7 @@ const config = (env, argv, port, args) => {
               return path.relative('./static', absoluteFilename)
             },
           },
-          ...Object.keys(pages).map(name => ({
+          ...Object.keys(pages).map((name) => ({
             from: 'package.json',
             to: `${name}-metadata.json`,
             transform: () => {
@@ -199,7 +210,10 @@ const config = (env, argv, port, args) => {
                 image: shareImg({ page }),
                 url: canonical({ page }),
                 updated: new Date(),
-                ...seo.pageMetadata(utils.project, { page, contentDir: utils.contentDir }),
+                ...seo.pageMetadata(utils.project, {
+                  page,
+                  contentDir: utils.contentDir,
+                }),
               })
             },
           })),
@@ -210,5 +224,6 @@ const config = (env, argv, port, args) => {
 }
 
 module.exports = (env, argv) =>
-  portfinder.getPortPromise()
-    .then(port => config(env, argv, port, parseArgs(env)))
+  portfinder
+    .getPortPromise()
+    .then((port) => config(env, argv, port, parseArgs(env)))

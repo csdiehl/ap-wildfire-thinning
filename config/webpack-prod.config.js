@@ -26,14 +26,11 @@ const port = process.env.PORT
 const preview = !!process.env.PREVIEW
 const baseUrl = seo.canonical(utils.project, { local, port, preview })
 
-const getConfig  = (entrypoints, assetPublicPath) => ({
+const getConfig = (entrypoints, assetPublicPath) => ({
   mode: 'production',
   devtool: 'source-map',
   resolve: {
-    modules: [
-      'node_modules',
-      'src',
-    ],
+    modules: ['node_modules', 'src'],
     extensions: ['.js', '.jsx'],
   },
   entry: {
@@ -58,7 +55,7 @@ const getConfig  = (entrypoints, assetPublicPath) => ({
         exclude: /node_modules/,
         options: {
           emitWarning: true,
-        }
+        },
       },
       {
         test: /\.jsx?$/,
@@ -67,13 +64,16 @@ const getConfig  = (entrypoints, assetPublicPath) => ({
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-env', {
-                useBuiltIns: 'usage',
-                corejs: 3,
-                targets: {
-                  browsers: 'last 2 versions',
+              [
+                '@babel/preset-env',
+                {
+                  useBuiltIns: 'usage',
+                  corejs: 3,
+                  targets: {
+                    browsers: 'last 2 versions',
+                  },
                 },
-              }],
+              ],
               '@babel/preset-react',
             ],
             plugins: [
@@ -87,21 +87,26 @@ const getConfig  = (entrypoints, assetPublicPath) => ({
       {
         test: /.*\.s?css$/,
         sideEffects: true,
-        use: [{
-          loader: MiniCssExtractPlugin.loader,
-        }, {
-          loader: 'css-loader',
-          options: {
-            sourceMap: true,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
           },
-        }, {
-          loader: 'resolve-url-loader',
-        }, {
-          loader: 'sass-loader',
-          options: {
-            sourceMap: true,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
           },
-        }],
+          {
+            loader: 'resolve-url-loader',
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(woff|woff2|eot|ttf|font\.svg)$/,
@@ -116,7 +121,7 @@ const getConfig  = (entrypoints, assetPublicPath) => ({
         type: 'asset',
         generator: {
           filename: '__cdn__/images/[name].[contenthash][ext]',
-          publicPath: assetPublicPath
+          publicPath: assetPublicPath,
         },
       },
       {
@@ -135,13 +140,19 @@ const getConfig  = (entrypoints, assetPublicPath) => ({
           },
         },
       },
+      {
+        test: /\.csv$/,
+        loader: 'csv-loader',
+        options: {
+          dynamicTyping: true,
+          header: true,
+          skipEmptyLines: true,
+        },
+      },
     ],
   },
   optimization: {
-    minimizer: [
-      new TerserPlugin(),
-      new OptimizeCSSAssetsPlugin(),
-    ],
+    minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin()],
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -149,17 +160,18 @@ const getConfig  = (entrypoints, assetPublicPath) => ({
       PROJECT_BASE_URL: JSON.stringify(baseUrl),
       PROJECT_DATA_URL: JSON.stringify(`${baseUrl}live-data`),
     }),
-    ...Object.keys(entrypoints).map(name => (
-      new HtmlWebpackPlugin({
-        filename: `${name}.html`,
-        template: 'src/index.html',
-        templateParameters: {
-          content: `<div class="ap-interactive" data-interactive="${utils.project.metadata.slug}" data-entrypoint="${name}"></div>`,
-        },
-        chunks: [name],
-      })
-    )),
-    ...Object.keys(entrypoints).map(name => {
+    ...Object.keys(entrypoints).map(
+      (name) =>
+        new HtmlWebpackPlugin({
+          filename: `${name}.html`,
+          template: 'src/index.html',
+          templateParameters: {
+            content: `<div class="ap-interactive" data-interactive="${utils.project.metadata.slug}" data-entrypoint="${name}"></div>`,
+          },
+          chunks: [name],
+        })
+    ),
+    ...Object.keys(entrypoints).map((name) => {
       const page = `${name}.html`
       return new MetataggerPlugin({
         pages: [page],
@@ -172,12 +184,17 @@ const getConfig  = (entrypoints, assetPublicPath) => ({
         }),
       })
     }),
-    new HtmlWebpackJsdomPrerenderPlugin(Object.keys(entrypoints).reduce((es, name) => ({
-      ...es,
-      [`${name}.html`]: {
-        chunks: [name],
-      },
-    }), {})),
+    new HtmlWebpackJsdomPrerenderPlugin(
+      Object.keys(entrypoints).reduce(
+        (es, name) => ({
+          ...es,
+          [`${name}.html`]: {
+            chunks: [name],
+          },
+        }),
+        {}
+      )
+    ),
     new MiniCssExtractPlugin({
       filename: '__cdn__/css/[name].[contenthash].css',
     }),
@@ -189,16 +206,24 @@ const getConfig  = (entrypoints, assetPublicPath) => ({
             return path.relative('./static', absoluteFilename)
           },
         },
-        ...Object.keys(pages).map(name => ({
+        ...Object.keys(pages).map((name) => ({
           from: 'package.json',
           to: `${name}-metadata.json`,
           transform: () => {
             const page = `${name}.html`
             return JSON.stringify({
-              image: seo.shareImage(utils.project, { page, preview, local, port }),
+              image: seo.shareImage(utils.project, {
+                page,
+                preview,
+                local,
+                port,
+              }),
               url: seo.canonical(utils.project, { page, preview, local, port }),
               updated: new Date(),
-              ...seo.pageMetadata(utils.project, { page, contentDir: utils.contentDir }),
+              ...seo.pageMetadata(utils.project, {
+                page,
+                contentDir: utils.contentDir,
+              }),
             })
           },
         })),

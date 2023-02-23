@@ -13,6 +13,7 @@ import {
 } from 'tailor'
 import apLogo from 'ap-interactive-assets/images/AP_LOGO_86x100.png'
 import WildfireThinning from 'js/visuals/wildfire_thinning'
+import CommunityRisk from '../js/visuals/community_risk'
 
 const metadata = {
   title: 'Wildfire Thinning',
@@ -50,6 +51,19 @@ function Index() {
           byline={`By ${toSentence(metadata.authors.map((a) => a.name))}`}
           date={metadata.published}
         />
+        <BodyText>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
+            viverra diam vel libero tristique venenatis. Curabitur vitae quam
+            vel nibh suscipit efficitur. Vestibulum ante ipsum primis in
+            faucibus orci luctus et ultrices posuere cubilia curae; Proin eu
+            sapien in dui tristique fringilla. Fusce eget tellus a libero
+            dignissim porta.
+          </p>
+        </BodyText>
+        <Graphic widest>
+          <CommunityRisk />
+        </Graphic>
         <BodyText>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean

@@ -13,12 +13,12 @@ const Container = styled.div`
   content-sizing: border-box;
   height: calc(100vh - 40px);
   width: 100%;
-  grid-template-rows: 18% 57% 8% 15%;
+  grid-template-rows: 18% 8% 57% 15%;
   grid-template-columns: 100%;
   grid-template-areas:
     'Header'
-    'Map'
     'StackedBar'
+    'Map'
     'Legend';
 
   @media (min-width: 768px) {
@@ -34,12 +34,20 @@ const Container = styled.div`
 const Header = styled.h1`
   font-size: 20px;
   margin: 0;
+
+  @media (min-width: 768px) {
+    font-size: 28px;
+  }
 `
 
 const Caption = styled.p`
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 5px;
   margin-bottom: 2px;
+
+  @media (min-width: 768px) {
+    font-size: 18px;
+  }
 `
 
 const thinningColor = scaleSequential()
@@ -72,12 +80,19 @@ function WildfireThinning() {
           darker the area, the more buildings expected to be exposed in a year
           by fires starting there.
         </Caption>
-        <div style={{ display: 'flex', gap: '5px' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '5px',
+            alignItems: 'baseline',
+            fontSize: '16px',
+          }}
+        >
           <img height='20px' width='20px' src='./tap.svg' alt='tap icon'></img>
           {!stateIsZoomed && !countyIsZoomed && (
-            <Caption>
+            <p>
               Click on a <strong>state</strong> to zoom in
-            </Caption>
+            </p>
           )}
           {(stateIsZoomed || countyIsZoomed) && (
             <Caption>
