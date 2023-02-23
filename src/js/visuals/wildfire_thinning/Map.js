@@ -77,7 +77,7 @@ const Map = ({
   function onClick(data) {
     // need to change this for when switching between states
     const id = data.id.toString()
-    id?.length >= 5 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
+    id?.length >= 4 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
 
     setSelectedArea(id)
     const [[x0, y0], [x1, y1]] = path.bounds(data)
