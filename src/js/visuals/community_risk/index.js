@@ -4,6 +4,7 @@ import Legend from './Legend'
 import { useNodeDimensions } from 'ap-react-hooks'
 import styled from 'styled-components'
 import { Caption, Header } from '../styles'
+import { scale } from 'chroma-js'
 
 const Container = styled.div`
   height: calc(100vh - 20px);
@@ -31,6 +32,9 @@ const Container = styled.div`
 const CommunityRisk = () => {
   const [node, dimensions] = useNodeDimensions()
   const { width, height } = dimensions
+
+  const colors = scale('Oranges').colors(7)
+
   return (
     <Container>
       <div style={{ gridArea: 'header' }}>
@@ -41,10 +45,10 @@ const CommunityRisk = () => {
         </Caption>
       </div>
       <div ref={node} style={{ gridArea: 'map' }}>
-        <Map width={width} height={height} />
+        <Map width={width} height={height} colors={colors} />
       </div>
 
-      <Legend style={{ gridArea: 'legend' }} />
+      <Legend style={{ gridArea: 'legend' }} colors={colors} />
       <div style={{ gridArea: 'footer', fontSize: '12px' }}>
         <p>
           Risk, determined by the U.S. forest service, is the probability and

@@ -27,10 +27,9 @@ const Annotation = ({ x, y, label }) => {
   )
 }
 
-const Legend = () => {
+const Legend = ({ colors }) => {
   const sizes = [5, 14, 41, 127]
-  const labels = [1000, 10000, 100000, 1000000]
-  const colors = ['#FFF4EB', '#FDD0A2', '#FD8C3B', '#D84702', '#7F2604'],
+  const labels = [1000, 10000, 100000, 1000000],
     primary = '#7F2604'
 
   return (
@@ -95,10 +94,10 @@ const Legend = () => {
         {colors.map((c, i) => (
           <rect
             key={c}
-            x={i * 20}
+            x={i * (100 / colors.length)}
             y={10}
-            width={20}
-            height={20}
+            width={100 / colors.length}
+            height={100 / colors.length}
             fill={c}
             stroke='#fff'
           ></rect>

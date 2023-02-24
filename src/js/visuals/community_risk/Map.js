@@ -5,6 +5,7 @@ import city_data from '../../../live-data/cities.csv'
 import { outline, states } from '../wildfire_thinning/data'
 import { makeGeoJSON, spike } from './utils'
 
+//OG settings: spike - 7, height - 250, colors - 5
 // data
 const cities = city_data.map((d) => makeGeoJSON(d))
 const populated = cities
@@ -12,7 +13,7 @@ const populated = cities
   .slice(0, 10)
 
 // Component
-const Map = ({ width, height }) => {
+const Map = ({ width, height, colors }) => {
   // projection
   const projection = geoAlbers().fitSize([width, height], outline)
 
@@ -24,11 +25,11 @@ const Map = ({ width, height }) => {
   //scales
   const heightScale = scaleSqrt()
     .domain([0, max(cities, (d) => d.properties.population)])
-    .range([1, 250])
+    .range([1, 220])
 
   const color = scaleQuantile()
     .domain(cities.map((d) => d.properties.risk_area))
-    .range(['#FFF4EB', '#FDD0A2', '#FD8C3B', '#D84702', '#7F2604'])
+    .range(colors)
 
   // generators
   const path = geoPath(projection)

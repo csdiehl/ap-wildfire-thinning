@@ -65,6 +65,7 @@
     "ap-react-d3": "^1.0.0",
     "ap-react-hooks": "^1.0.15",
     "ap-react-utils": "^1.0.5",
+    "chroma-js": "^2.4.2",
     "core-js": "^3.18.1",
     "csv-loader": "^3.0.5",
     "d3": "^7.8.2",

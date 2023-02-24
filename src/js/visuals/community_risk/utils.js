@@ -6,4 +6,4 @@ export const makeGeoJSON = ({ lon, lat, ...data }) => {
   }
 }
 
-export const spike = (length) => `M${-7 / 2},0L0,${-length}L${7 / 2},0`
+export const spike = (length) => `M${-5 / 2},0L0,${-length}L${5 / 2},0`

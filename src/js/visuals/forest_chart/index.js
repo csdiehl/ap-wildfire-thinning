@@ -7,7 +7,7 @@ import { Header, Caption } from '../styles'
 const Container = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   grid-gap: 10px;
 `
 
