@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Map from './Map'
 import Legend from './Legend'
 import { useNodeDimensions } from 'ap-react-hooks'
@@ -30,6 +30,7 @@ const Container = styled.div`
 `
 
 const CommunityRisk = () => {
+  const [selectedState, setSelectedState] = useState(null)
   const [node, dimensions] = useNodeDimensions()
   const { width, height } = dimensions
 
@@ -43,9 +44,16 @@ const CommunityRisk = () => {
           This map shows every city and census desginated place,with population
           size, and where wildfires are most likely to occur.{' '}
         </Caption>
+        <p>{selectedState}</p>
       </div>
       <div ref={node} style={{ gridArea: 'map' }}>
-        <Map width={width} height={height} colors={colors} />
+        <Map
+          width={width}
+          height={height}
+          colors={colors}
+          setSelectedState={setSelectedState}
+          selectedState={selectedState}
+        />
       </div>
 
       <Legend style={{ gridArea: 'legend' }} colors={colors} />

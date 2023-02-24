@@ -13,7 +13,7 @@ const populated = cities
   .slice(0, 10)
 
 // Component
-const Map = ({ width, height, colors }) => {
+const Map = ({ width, height, colors, setSelectedState }) => {
   // projection
   const projection = geoAlbers().fitSize([width, height], outline)
 
@@ -36,8 +36,12 @@ const Map = ({ width, height, colors }) => {
 
   const voronoi = geoVoronoi(cities).polygons()
 
+  function handleClick(data) {
+    setSelectedState(data.id)
+  }
+
   return (
-    <svg width={width} height={height}>
+    <svg width={width} height={height} cursor='pointer'>
       <defs>
         <clipPath id='state-outline'>
           <path d={path(outline)} stroke='darkgrey' />
@@ -82,6 +86,16 @@ const Map = ({ width, height, colors }) => {
         >
           {d.properties.name}
         </text>
+      ))}
+      {states.map((d) => (
+        <path
+          key={d.id}
+          d={path(d)}
+          fill='#FFF'
+          fillOpacity={0}
+          stroke='none'
+          onClick={() => handleClick(d)}
+        ></path>
       ))}
     </svg>
   )

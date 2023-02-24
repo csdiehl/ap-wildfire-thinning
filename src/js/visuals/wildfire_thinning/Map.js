@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react'
-import * as d3 from 'd3'
+import { select, zoom, geoAlbersUsa, geoPath } from 'd3'
 import {
   counties,
   wilderness,
@@ -12,6 +12,7 @@ import {
 } from './data'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
+import { zoomIn, zoomOut } from '../utils'
 
 // FFF4EB
 
@@ -31,10 +32,10 @@ const Map = ({
   const svgRef = useRef()
 
   function zoomed(e) {
-    const g = d3.select(document.getElementById('map-content'))
-    const label = d3.select(document.getElementById('map-label'))
-    const cities = d3.select(document.getElementById('cities'))
-    const hwy = d3.select(document.getElementById('highways'))
+    const g = select(document.getElementById('map-content'))
+    const label = select(document.getElementById('map-label'))
+    const cities = select(document.getElementById('cities'))
+    const hwy = select(document.getElementById('highways'))
 
     g.attr('transform', e.transform)
     g.attr('stroke-width', 0.5 / e.transform.k)
@@ -50,7 +51,7 @@ const Map = ({
     hwy.attr('stroke-width', 0.8 / e.transform.k)
   }
 
-  const zoom = d3.zoom().scaleExtent([1, 8]).on('zoom', zoomed)
+  const zoomer = zoom().scaleExtent([1, 8]).on('zoom', zoomed)
 
   // this is not ideal, but have to call reset on 1st load to get the right strokes
   useEffect(() => {
@@ -80,22 +81,8 @@ const Map = ({
     id?.length >= 4 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
 
     setSelectedArea(id)
-    const [[x0, y0], [x1, y1]] = path.bounds(data)
 
-    const svg = d3.select(svgRef.current)
-
-    svg
-      .transition()
-      .duration(1000)
-      .call(
-        zoom.transform,
-        d3.zoomIdentity
-          .translate(width / 2, height / 2)
-          .scale(
-            Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height))
-          )
-          .translate(-(x0 + x1) / 2, -(y0 + y1) / 2)
-      )
+    zoomIn(path.bounds(data), svgRef, zoomer, width, height)
   }
 
   // reset back to normal zoom
@@ -103,19 +90,15 @@ const Map = ({
     setStateIsZoomed(false)
     setCountyIsZoomed(false)
     setSelectedArea('none')
-    const svg = d3.select(svgRef.current)
 
-    svg
-      .transition()
-      .duration(750)
-      .call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(1))
+    zoomOut(svgRef, zoomer)
   }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea])
 
   // projection
-  const projection = d3.geoAlbersUsa().fitSize([width, height], outline)
+  const projection = geoAlbersUsa().fitSize([width, height], outline)
 
   // generators
-  const path = d3.geoPath(projection)
+  const path = geoPath(projection)
 
   return (
     <svg
