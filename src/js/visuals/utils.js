@@ -26,3 +26,12 @@ export const zoomOut = (svgRef, zoom) => {
     .duration(750)
     .call(zoom.transform, zoomIdentity.translate(0, 0).scale(1))
 }
+
+export const zoomed = (e, config) => {
+  for (let item of config) {
+    const el = select(document.getElementById(item.id))
+    if (item.transform) el.attr('transform', e.transform)
+    el.attr('stroke-width', item.baseStroke / e.transform.k)
+    el.attr('font-size', `${item.baseFont / e.transform.k}px`)
+  }
+}

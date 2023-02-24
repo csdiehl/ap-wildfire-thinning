@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react'
-import { select, zoom, geoAlbersUsa, geoPath } from 'd3'
+import { zoom, geoAlbersUsa, geoPath } from 'd3'
 import {
   counties,
   wilderness,
@@ -12,7 +12,8 @@ import {
 } from './data'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
-import { zoomIn, zoomOut } from '../utils'
+import { zoomIn, zoomOut, zoomed } from '../utils'
+import ResetButton from '../../components/ResetButton'
 
 // FFF4EB
 
@@ -31,27 +32,21 @@ const Map = ({
   const [cities, setCities] = useState(null)
   const svgRef = useRef()
 
-  function zoomed(e) {
-    const g = select(document.getElementById('map-content'))
-    const label = select(document.getElementById('map-label'))
-    const cities = select(document.getElementById('cities'))
-    const hwy = select(document.getElementById('highways'))
+  const zoomConfig = [
+    { id: 'map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
+    { id: 'map-label', transform: true, baseStroke: 0.5, baseFont: 10 },
+    {
+      id: 'cities',
+      transform: false,
+      baseStroke: 2,
+      baseFont: width >= 730 ? 12 : 10,
+    },
+    { id: 'highways', transform: false, baseStroke: 0.8, baseFont: 10 },
+  ]
 
-    g.attr('transform', e.transform)
-    g.attr('stroke-width', 0.5 / e.transform.k)
-    g.attr('font-size', `${10 / e.transform.k}px`)
-
-    label.attr('transform', e.transform)
-    label.attr('font-size', `${(width >= 730 ? 12 : 10) / e.transform.k}px`)
-    label.attr('stroke-width', 2 / e.transform.k)
-
-    cities.attr('stroke-width', 2 / e.transform.k)
-    cities.attr('font-size', `${(width >= 730 ? 12 : 10) / e.transform.k}px`)
-
-    hwy.attr('stroke-width', 0.8 / e.transform.k)
-  }
-
-  const zoomer = zoom().scaleExtent([1, 8]).on('zoom', zoomed)
+  const zoomer = zoom()
+    .scaleExtent([1, 8])
+    .on('zoom', (e) => zoomed(e, zoomConfig))
 
   // this is not ideal, but have to call reset on 1st load to get the right strokes
   useEffect(() => {
@@ -238,19 +233,7 @@ const Map = ({
       <text fontSize='12px' x={10} y={height - 10}>
         Data: U.S. Forest Service
       </text>
-      {(stateIsZoomed || countyIsZoomed) && (
-        <text
-          fontSize='18px'
-          textDecoration='underline'
-          x={10}
-          y={20}
-          cursor='pointer'
-          fontWeight={700}
-          onClick={() => reset()}
-        >
-          {'<'} Go Back
-        </text>
-      )}
+      {(stateIsZoomed || countyIsZoomed) && <ResetButton onClick={reset} />}
     </svg>
   )
 }
