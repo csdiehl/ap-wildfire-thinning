@@ -9,20 +9,22 @@ const Container = styled.div`
   height: calc(100vh - 20px);
   width: 100%;
   display: grid;
-  grid-template-columns: 100%;
+  grid-column-gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
   grid-template-areas:
-    'header'
-    'map'
-    'legend';
+    'header header'
+    'map map'
+    'legend footer';
 
   @media (min-width: 768px) {
     grid-template-columns: 200px minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-    grid-column-gap: 10px;
+    grid-template-rows: auto auto minmax(0, 1fr);
+
     grid-template-areas:
       'header map'
-      'legend map';
+      'legend map'
+      'footer map';
   }
 `
 
@@ -43,6 +45,15 @@ const CommunityRisk = () => {
       </div>
 
       <Legend style={{ gridArea: 'legend' }} />
+      <div style={{ gridArea: 'footer', fontSize: '12px' }}>
+        <p>
+          Risk, determined by the U.S. forest service, is the probability and
+          intensity of fire times the number of housing units. Risk was summed
+          across the area where every point on the map is closer to each city
+          than any other, then divided by that area.
+        </p>
+        <p>Data: U.S. Forest Service</p>
+      </div>
     </Container>
   )
 }
