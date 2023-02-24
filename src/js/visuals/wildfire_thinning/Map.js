@@ -34,7 +34,6 @@ const Map = ({
 
   const zoomConfig = [
     { id: 'map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
-    { id: 'map-label', transform: true, baseStroke: 0.5, baseFont: 10 },
     {
       id: 'cities',
       transform: false,
@@ -195,41 +194,43 @@ const Map = ({
             stroke='#777777'
           ></path>
         ))}
-      </g>
-      <g id='map-label'>
-        {stateIsZoomed &&
-          !countyIsZoomed &&
-          zones.map((d) => {
-            const words = d.properties.name.split(' ')
+        <g id='map-label'>
+          {stateIsZoomed &&
+            !countyIsZoomed &&
+            zones.map((d) => {
+              const words = d.properties.name.split(' ')
 
-            if (d.properties.state !== codeToName(selectedArea, true)[0]) return
-            return (
-              <text
-                key={d.properties.name}
-                fontWeight={500}
-                paintOrder='stroke fill'
-                stroke='#FFF'
-                fill='#3787C0'
-                y={path.centroid(d)[1]}
-              >
-                <tspan x={path.centroid(d)[0]}>
-                  {words.slice(0, 3).join(' ')}
-                </tspan>
-                <tspan x={path.centroid(d)[0]} dy='1.2em'>
-                  {words.slice(3, words.length).join(' ')}
-                </tspan>
-              </text>
-            )
-          })}
-        {selectedArea.length > 2 && selectedArea !== 'none' && (
-          <MapLabel
-            code={selectedArea}
-            center={path.centroid(
-              counties.find((d) => d.id.toString() === selectedArea)
-            )}
-          />
-        )}
+              if (d.properties.state !== codeToName(selectedArea, true)[0])
+                return
+              return (
+                <text
+                  key={d.properties.name}
+                  fontWeight={500}
+                  paintOrder='stroke fill'
+                  stroke='#FFF'
+                  fill='#3787C0'
+                  y={path.centroid(d)[1]}
+                >
+                  <tspan x={path.centroid(d)[0]}>
+                    {words.slice(0, 3).join(' ')}
+                  </tspan>
+                  <tspan x={path.centroid(d)[0]} dy='1.2em'>
+                    {words.slice(3, words.length).join(' ')}
+                  </tspan>
+                </text>
+              )
+            })}
+          {selectedArea.length > 2 && selectedArea !== 'none' && (
+            <MapLabel
+              code={selectedArea}
+              center={path.centroid(
+                counties.find((d) => d.id.toString() === selectedArea)
+              )}
+            />
+          )}
+        </g>
       </g>
+
       <text fontSize='12px' x={10} y={height - 10}>
         Data: U.S. Forest Service
       </text>

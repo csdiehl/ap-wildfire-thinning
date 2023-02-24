@@ -9,6 +9,12 @@ import ResetButton from '../../components/ResetButton'
 
 const zoomConfig = [
   { id: 'risk-map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
+  {
+    id: 'spikes',
+    transform: false,
+    baseStroke: 1,
+    baseFont: 10,
+  },
 ]
 
 const zoomer = zoom()
@@ -60,7 +66,13 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   }
 
   return (
-    <svg ref={svgRef} width={width} height={height} cursor='pointer'>
+    <svg
+      vectorEffect='non-scaling-stroke'
+      ref={svgRef}
+      width={width}
+      height={height}
+      cursor='pointer'
+    >
       <defs>
         <clipPath id='state-outline'>
           <path d={path(outline)} stroke='darkgrey' />
@@ -95,7 +107,6 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
               fillOpacity={0.5}
               stroke={color(d.properties.risk_area)}
               strokeLinejoin='round'
-              strokeWidth={1}
             ></path>
           ))}
         </g>
