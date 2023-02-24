@@ -2,6 +2,7 @@ import React from 'react'
 import { zones } from '../wildfire_thinning/data'
 import * as d3 from 'd3'
 import styled from 'styled-components'
+import { Header, Caption } from '../styles'
 
 const Container = styled.div`
   width: 100%;
@@ -42,40 +43,46 @@ const ColorBar = styled.div`
 
 const ForestChart = () => {
   return (
-    <Container>
-      {zones.map((d) => {
-        // each grid square has its own projection
-        const projection = d3.geoAlbersUsa().fitSize([100, 100], d)
-        const path = d3.geoPath(projection)
-        return (
-          <Map key={d.properties.name}>
-            <p style={{ margin: '0px', gridArea: 'state' }}>
-              <span style={{ fontWeight: 600 }}>{d.properties.name}</span> |{' '}
-              {d.properties.state}
-            </p>
-            <div style={{ gridArea: 'bar', position: 'relative' }}>
-              <Bar></Bar>
-              <ColorBar width={20} />
-            </div>
+    <div>
+      <Header>Old-Growth Forest</Header>
+      <Caption style={{ marginBottom: '20px' }}>
+        Some thinning zones chop down old-growth forest
+      </Caption>
+      <Container>
+        {zones.map((d) => {
+          // each grid square has its own projection
+          const projection = d3.geoAlbersUsa().fitSize([100, 100], d)
+          const path = d3.geoPath(projection)
+          return (
+            <Map key={d.properties.name}>
+              <p style={{ margin: '0px', gridArea: 'state' }}>
+                <span style={{ fontWeight: 600 }}>{d.properties.name}</span> |{' '}
+                {d.properties.state}
+              </p>
+              <div style={{ gridArea: 'bar', position: 'relative' }}>
+                <Bar></Bar>
+                <ColorBar width={20} />
+              </div>
 
-            <svg
-              style={{ gridArea: 'map' }}
-              viewBox='0 0 100 100'
-              width='100%'
-              height='100%'
-            >
-              <path
-                strokeWidth={0.5}
-                strokeLinejoin='round'
-                stroke='#777'
-                fill='none'
-                d={path(d)}
-              ></path>
-            </svg>
-          </Map>
-        )
-      })}
-    </Container>
+              <svg
+                style={{ gridArea: 'map' }}
+                viewBox='0 0 100 100'
+                width='100%'
+                height='100%'
+              >
+                <path
+                  strokeWidth={0.5}
+                  strokeLinejoin='round'
+                  stroke='#777'
+                  fill='none'
+                  d={path(d)}
+                ></path>
+              </svg>
+            </Map>
+          )
+        })}
+      </Container>
+    </div>
   )
 }
 
