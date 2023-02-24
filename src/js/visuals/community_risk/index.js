@@ -44,7 +44,6 @@ const CommunityRisk = () => {
           This map shows every city and census desginated place,with population
           size, and where wildfires are most likely to occur.{' '}
         </Caption>
-        <p>{selectedState}</p>
       </div>
       <div ref={node} style={{ gridArea: 'map' }}>
         <Map

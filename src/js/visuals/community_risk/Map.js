@@ -8,7 +8,7 @@ import { zoomIn, zoomOut, zoomed } from '../utils'
 import ResetButton from '../../components/ResetButton'
 
 const zoomConfig = [
-  { id: 'map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
+  { id: 'risk-map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
 ]
 
 const zoomer = zoom()
@@ -51,11 +51,12 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   function handleClick(data) {
     setSelectedState(data.id)
 
-    // zoomIn(path.bounds(data), svgRef, zoomer, width, height)
+    zoomIn(path.bounds(data), svgRef, zoomer, width, height)
   }
 
   function reset() {
     setSelectedState(null)
+    zoomOut(svgRef, zoomer)
   }
 
   return (
@@ -65,7 +66,7 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
           <path d={path(outline)} stroke='darkgrey' />
         </clipPath>
       </defs>
-      <g id='map-content'>
+      <g id='risk-map-content'>
         <g
           id='voronoi-polygons'
           clipPath='url(#state-outline)'
