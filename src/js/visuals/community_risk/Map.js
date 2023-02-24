@@ -1,18 +1,9 @@
-import city_data from '../../../live-data/cities.csv'
-import React from 'react'
+import { geoAlbers, geoPath, max, scaleQuantile, scaleSqrt } from 'd3'
 import { geoVoronoi } from 'd3-geo-voronoi'
-import { geoPath, geoAlbers, scaleQuantile, scaleSqrt, max } from 'd3'
+import React from 'react'
+import city_data from '../../../live-data/cities.csv'
 import { outline, states } from '../wildfire_thinning/data'
-
-const makeGeoJSON = ({ lon, lat, ...data }) => {
-  return {
-    type: 'Feature',
-    properties: { ...data },
-    geometry: { type: 'Point', coordinates: [lon, lat] },
-  }
-}
-
-const spike = (length) => `M${-7 / 2},0L0,${-length}L${7 / 2},0`
+import { makeGeoJSON, spike } from './utils'
 
 // data
 const cities = city_data.map((d) => makeGeoJSON(d))
@@ -22,12 +13,8 @@ const populated = cities
 
 // Component
 const Map = ({ width, height }) => {
-  const margin = { left: 0, right: 0, top: 40, bottom: 40 }
   // projection
-  const projection = geoAlbers().fitSize(
-    [width - margin.left - margin.right, height - margin.top - margin.bottom],
-    outline
-  )
+  const projection = geoAlbers().fitSize([width, height], outline)
 
   const Point = (d) => {
     const coords = projection(d.geometry.coordinates)
@@ -88,7 +75,8 @@ const Map = ({ width, height }) => {
           key={d.properties.place_fips}
           paintOrder='stroke fill'
           stroke='#FFF'
-          fontSize='12px'
+          fontSize='14px'
+          fontWeight={600}
           strokeWidth={0.5}
         >
           {d.properties.name}

@@ -6,11 +6,12 @@ import Legend from './Legend'
 import { scaleSequential, interpolateBlues, interpolateOranges } from 'd3'
 import StackedBar from './StackedBar'
 import { colors } from './utils'
+import { Caption, Header } from '../styles'
 
 const Container = styled.div`
   display: grid;
   grid-gap: 10px;
-  content-sizing: border-box;
+  box-sizing: border-box;
   height: calc(100vh - 40px);
   width: 100%;
   grid-template-rows: 18% 8% 57% 15%;
@@ -28,25 +29,6 @@ const Container = styled.div`
       'Header Map'
       'Legend Map'
       'StackedBar StackedBar';
-  }
-`
-
-const Header = styled.h1`
-  font-size: 20px;
-  margin: 0;
-
-  @media (min-width: 768px) {
-    font-size: 28px;
-  }
-`
-
-const Caption = styled.p`
-  font-size: 16px;
-  margin-top: 5px;
-  margin-bottom: 2px;
-
-  @media (min-width: 768px) {
-    font-size: 18px;
   }
 `
 
