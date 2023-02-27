@@ -1,25 +1,32 @@
-import { geoAlbers, geoPath, max, scaleQuantile, scaleSqrt, zoom } from 'd3'
+import {
+  geoAlbers,
+  geoPath,
+  max,
+  scaleQuantile,
+  scaleSqrt,
+  zoom,
+  select,
+} from 'd3'
 import { geoVoronoi } from 'd3-geo-voronoi'
 import React, { useRef } from 'react'
 import city_data from '../../../live-data/cities.csv'
 import { outline, states } from '../wildfire_thinning/data'
 import { makeGeoJSON, spike } from './utils'
-import { zoomIn, zoomOut, zoomed } from '../utils'
+import { zoomIn, zoomOut } from '../utils'
 import ResetButton from '../../components/ResetButton'
 
-const zoomConfig = [
-  { id: 'risk-map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
-  {
-    id: 'spikes',
-    transform: false,
-    baseStroke: 1,
-    baseFont: 10,
-  },
-]
+const zoomed = (e) => {
+  const map = select(document.getElementById('risk-map-content'))
+  const spikes = select(document.getElementById('spikes'))
 
-const zoomer = zoom()
-  .scaleExtent([1, 8])
-  .on('zoom', (e) => zoomed(e, zoomConfig))
+  map.attr('transform', e.transform)
+  map.attr('stroke-width', 0.5 / e.transform.k)
+  map.attr('font-size', `${10 / e.transform.k}px`)
+
+  spikes.selectAll('path').attr('stroke-width', 1 / e.transform.k)
+}
+
+const zoomer = zoom().scaleExtent([1, 8]).on('zoom', zoomed)
 
 //OG settings: spike - 7, height - 250, colors - 5
 // data
@@ -51,7 +58,6 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
 
   // generators
   const path = geoPath(projection)
-
   const voronoi = geoVoronoi(cities).polygons()
 
   function handleClick(data) {
