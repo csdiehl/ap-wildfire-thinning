@@ -8,7 +8,7 @@ import {
   select,
 } from 'd3'
 import { geoVoronoi } from 'd3-geo-voronoi'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import city_data from '../../../live-data/cities.csv'
 import { outline, states } from '../wildfire_thinning/data'
 import { makeGeoJSON, spike } from './utils'
@@ -25,7 +25,6 @@ const populated = cities
 // Component
 const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   const svgRef = useRef()
-  const [city, setCity] = useState()
 
   // projection
   const projection = geoAlbers().fitSize([width, height], outline)
@@ -94,15 +93,14 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
       <g id='risk-map-content'>
         <g id='voronoi-polygons' clipPath='url(#state-outline)'>
           {voronoi.features.map((d) => {
-            const selected = d.properties.site.properties.place_fips === city
             return (
               <path
                 key={d.properties.site.properties.place_fips}
                 d={path(d)}
                 fill={color(d.properties.site.properties.risk_area)}
-                fillOpacity={selected ? 0.8 : 0.3}
-                stroke={selected ? 'black' : 'lightgrey'}
-                strokeWidth={selected ? 1 : 0.2}
+                fillOpacity={0.3}
+                stroke={'lightgrey'}
+                strokeWidth={0.2}
               ></path>
             )
           })}

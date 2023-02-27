@@ -57,11 +57,22 @@ const CommunityRisk = () => {
 
       <Legend style={{ gridArea: 'legend' }} colors={colors} />
       <div style={{ gridArea: 'footer', fontSize: '12px' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '5px',
+            alignItems: 'center',
+            fontSize: '16px',
+          }}
+        >
+          <img height='20px' width='20px' src='./tap.svg' alt='tap icon'></img>
+          <p style={{ margin: '5px' }}>
+            Click on a <strong>state</strong> to zoom in
+          </p>
+        </div>
         <p>
           Risk, determined by the U.S. forest service, is the probability and
-          intensity of fire times the number of housing units. Risk was summed
-          across the area where every point on the map is closer to each city
-          than any other, then divided by that area.
+          intensity of fire times the number of housing units.
         </p>
         <p>Data: U.S. Forest Service</p>
       </div>
