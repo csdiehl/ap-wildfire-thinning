@@ -8,7 +8,7 @@ import {
   select,
 } from 'd3'
 import { geoVoronoi } from 'd3-geo-voronoi'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import city_data from '../../../live-data/cities.csv'
 import { outline, states } from '../wildfire_thinning/data'
 import { makeGeoJSON, spike } from './utils'
@@ -25,6 +25,7 @@ const populated = cities
 // Component
 const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   const svgRef = useRef()
+  const [city, setCity] = useState()
 
   // projection
   const projection = geoAlbers().fitSize([width, height], outline)
@@ -70,7 +71,6 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
       .selectAll('path')
       .data(cities)
       .attr('transform', (d) => {
-        console.log(Point(d))
         return `translate(${Point(d)}) scale(${1 / e.transform.k})`
       })
       .attr('stroke-width', 1 / e.transform.k)
@@ -92,20 +92,20 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
         </clipPath>
       </defs>
       <g id='risk-map-content'>
-        <g
-          id='voronoi-polygons'
-          clipPath='url(#state-outline)'
-          stroke='lightgrey'
-          strokeWidth={0.2}
-        >
-          {voronoi.features.map((d) => (
-            <path
-              key={d.properties.site.properties.place_fips}
-              d={path(d)}
-              fill={color(d.properties.site.properties.risk_area)}
-              fillOpacity={0.3}
-            ></path>
-          ))}
+        <g id='voronoi-polygons' clipPath='url(#state-outline)'>
+          {voronoi.features.map((d) => {
+            const selected = d.properties.site.properties.place_fips === city
+            return (
+              <path
+                key={d.properties.site.properties.place_fips}
+                d={path(d)}
+                fill={color(d.properties.site.properties.risk_area)}
+                fillOpacity={selected ? 0.8 : 0.3}
+                stroke={selected ? 'black' : 'lightgrey'}
+                strokeWidth={selected ? 1 : 0.2}
+              ></path>
+            )
+          })}
         </g>
         {states.map((d) => (
           <path key={d.id} d={path(d)} fill='none' stroke='lightgrey'></path>
@@ -135,12 +135,12 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
             {d.properties.name}
           </text>
         ))}
-
+        {/*Invisible overlay that allows clicking on state shapes */}
         {states.map((d) => (
           <path
             key={d.id}
             d={path(d)}
-            fill='#FFF'
+            fill={selectedState === d.id ? 'none' : '#FFF'}
             fillOpacity={0}
             stroke='none'
             onClick={() => handleClick(d)}
