@@ -15,19 +15,6 @@ import { makeGeoJSON, spike } from './utils'
 import { zoomIn, zoomOut } from '../utils'
 import ResetButton from '../../components/ResetButton'
 
-const zoomed = (e) => {
-  const map = select(document.getElementById('risk-map-content'))
-  const spikes = select(document.getElementById('spikes'))
-
-  map.attr('transform', e.transform)
-  map.attr('stroke-width', 0.5 / e.transform.k)
-  map.attr('font-size', `${10 / e.transform.k}px`)
-
-  spikes.selectAll('path').attr('stroke-width', 1 / e.transform.k)
-}
-
-const zoomer = zoom().scaleExtent([1, 8]).on('zoom', zoomed)
-
 //OG settings: spike - 7, height - 250, colors - 5
 // data
 const cities = city_data.map((d) => makeGeoJSON(d))
@@ -66,10 +53,30 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
     zoomIn(path.bounds(data), svgRef, zoomer, width, height)
   }
 
-  function reset() {
+  const reset = () => {
     setSelectedState(null)
     zoomOut(svgRef, zoomer)
   }
+
+  const zoomed = (e) => {
+    const map = select(document.getElementById('risk-map-content'))
+    const spikes = select(document.getElementById('spikes'))
+
+    map.attr('transform', e.transform)
+    map.attr('stroke-width', 0.5 / e.transform.k)
+    map.attr('font-size', `${14 / e.transform.k}px`)
+
+    spikes
+      .selectAll('path')
+      .data(cities)
+      .attr('transform', (d) => {
+        console.log(Point(d))
+        return `translate(${Point(d)}) scale(${1 / e.transform.k})`
+      })
+      .attr('stroke-width', 1 / e.transform.k)
+  }
+
+  const zoomer = zoom().scaleExtent([1, 8]).on('zoom', zoomed)
 
   return (
     <svg
@@ -106,11 +113,11 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
         <g id='spikes'>
           {cities.map((d) => (
             <path
-              key={d.properties.place_fips}
               transform={`translate(${Point(d)})`}
+              key={d.properties.place_fips}
               d={spike(heightScale(d.properties.population))}
               fill={color(d.properties.risk_area)}
-              fillOpacity={0.5}
+              fillOpacity={0.7}
               stroke={color(d.properties.risk_area)}
               strokeLinejoin='round'
             ></path>
@@ -122,13 +129,13 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
             key={d.properties.place_fips}
             paintOrder='stroke fill'
             stroke='#FFF'
-            fontSize='14px'
             fontWeight={600}
             strokeWidth={0.5}
           >
             {d.properties.name}
           </text>
         ))}
+
         {states.map((d) => (
           <path
             key={d.id}
@@ -140,6 +147,7 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
           ></path>
         ))}
       </g>
+
       {selectedState && <ResetButton onClick={reset} />}
     </svg>
   )
