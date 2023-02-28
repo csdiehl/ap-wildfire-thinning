@@ -123,7 +123,7 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
           })}
         </g>
         {states.map((d) => (
-          <path key={d.id} d={path(d)} fill='none' stroke='lightgrey'></path>
+          <path key={d.id} d={path(d)} fill='none' stroke='#121212'></path>
         ))}
         <g id='spikes'>
           {cities.map((d) => (
