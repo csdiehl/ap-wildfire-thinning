@@ -18,9 +18,9 @@ import ResetButton from '../../components/ResetButton'
 //OG settings: spike - 7, height - 250, colors - 5
 // data
 const cities = city_data.map((d) => makeGeoJSON(d))
-const populated = cities
-  .sort((a, b) => b.properties.population - a.properties.population)
-  .slice(0, 10)
+const citiesByPop = cities.sort(
+  (a, b) => b.properties.population - a.properties.population
+)
 
 // Component
 const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
@@ -28,6 +28,16 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
 
   // projection
   const projection = geoAlbers().fitSize([width, height], outline)
+
+  const populated = selectedState
+    ? citiesByPop
+        .filter(
+          (d) =>
+            d.properties.place_fips.toString().padStart(7, 0).slice(0, 2) ===
+            selectedState.toString().padStart(2, 0)
+        )
+        .slice(0, 6)
+    : citiesByPop.slice(0, 10)
 
   const Point = (d) => {
     const coords = projection(d.geometry.coordinates)
