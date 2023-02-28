@@ -8,10 +8,10 @@ import {
   select,
 } from 'd3'
 import { geoVoronoi } from 'd3-geo-voronoi'
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import city_data from '../../../live-data/cities.csv'
 import { outline, states } from '../wildfire_thinning/data'
-import { makeGeoJSON, spike } from './utils'
+import { makeGeoJSON, spike, dedupeLabels } from './utils'
 import { zoomIn, zoomOut } from '../utils'
 import ResetButton from '../../components/ResetButton'
 
@@ -36,8 +36,15 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
             d.properties.place_fips.toString().padStart(7, 0).slice(0, 2) ===
             selectedState.toString().padStart(2, 0)
         )
-        .slice(0, 6)
+        .slice(0, 10)
     : citiesByPop.slice(0, 10)
+
+  // remove overlapping labels on zoom
+  useEffect(() => {
+    if (!selectedState) return
+    const labels = select(svgRef.current).selectAll('.city-labels')
+    dedupeLabels(labels)
+  }, [selectedState])
 
   const Point = (d) => {
     const coords = projection(d.geometry.coordinates)
@@ -131,18 +138,23 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
             ></path>
           ))}
         </g>
-        {populated.map((d) => (
-          <text
-            transform={`translate(${Point(d)})`}
-            key={d.properties.place_fips}
-            paintOrder='stroke fill'
-            stroke='#FFF'
-            fontWeight={600}
-            strokeWidth={0.5}
-          >
-            {d.properties.name}
-          </text>
-        ))}
+        {populated.map((d) => {
+          const coords = projection(d.geometry.coordinates)
+          return (
+            <text
+              className='city-labels'
+              x={coords[0]}
+              y={coords[1]}
+              key={d.properties.place_fips}
+              paintOrder='stroke fill'
+              stroke='#FFF'
+              fontWeight={600}
+              strokeWidth={0.5}
+            >
+              {d.properties.name}
+            </text>
+          )
+        })}
         {/*Invisible overlay that allows clicking on state shapes */}
         {states.map((d) => (
           <path
