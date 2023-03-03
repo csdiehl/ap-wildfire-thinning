@@ -8,26 +8,32 @@ import {
   select,
 } from 'd3'
 import { geoVoronoi } from 'd3-geo-voronoi'
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useMemo, useCallback } from 'react'
 import city_data from '../../../live-data/cities.csv'
 import { outline, states } from '../wildfire_thinning/data'
 import { makeGeoJSON, spike, dedupeLabels } from './utils'
 import { zoomIn, zoomOut } from '../utils'
 import ResetButton from '../../components/ResetButton'
 
-//OG settings: spike - 7, height - 250, colors - 5
 // data
 const cities = city_data.map((d) => makeGeoJSON(d))
 const citiesByPop = cities.sort(
   (a, b) => b.properties.population - a.properties.population
 )
 
+const heightScale = scaleSqrt()
+  .domain([0, max(cities, (d) => d.properties.population)])
+  .range([1, 220])
+
 // Component
 const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   const svgRef = useRef()
 
   // projection
-  const projection = geoAlbers().fitSize([width, height], outline)
+  const projection = useMemo(
+    () => geoAlbers().fitSize([width, height], outline),
+    [width, height]
+  )
 
   const populated = selectedState
     ? citiesByPop
@@ -46,24 +52,28 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
     dedupeLabels(labels)
   }, [selectedState])
 
-  const Point = (d) => {
-    const coords = projection(d.geometry.coordinates)
-    return `${coords[0]},${coords[1]}`
-  }
+  const Point = useCallback(
+    (d) => {
+      const coords = projection(d.geometry.coordinates)
+      return `${coords[0]},${coords[1]}`
+    },
+    [projection]
+  )
 
   //scales
-  const heightScale = scaleSqrt()
-    .domain([0, max(cities, (d) => d.properties.population)])
-    .range([1, 220])
-
-  const color = scaleQuantile()
-    .domain(cities.map((d) => d.properties.risk_area))
-    .range(colors)
+  const color = useMemo(
+    () =>
+      scaleQuantile()
+        .domain(cities.map((d) => d.properties.risk_area))
+        .range(colors),
+    [colors]
+  )
 
   // generators
   const path = geoPath(projection)
-  const voronoi = geoVoronoi(cities).polygons()
+  const voronoi = useMemo(() => geoVoronoi(cities).polygons(), [])
 
+  // event handlers
   function handleClick(data) {
     setSelectedState(data.id)
 
@@ -75,24 +85,26 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
     zoomOut(svgRef, zoomer)
   }
 
-  const zoomed = (e) => {
-    const map = select(document.getElementById('risk-map-content'))
-    const spikes = select(document.getElementById('spikes'))
+  const zoomer = useMemo(() => {
+    const zoomed = (e) => {
+      const map = select(document.getElementById('risk-map-content'))
+      const spikes = select(document.getElementById('spikes'))
 
-    map.attr('transform', e.transform)
-    map.attr('stroke-width', 0.5 / e.transform.k)
-    map.attr('font-size', `${14 / e.transform.k}px`)
+      map.attr('transform', e.transform)
+      map.attr('stroke-width', 0.5 / e.transform.k)
+      map.attr('font-size', `${14 / e.transform.k}px`)
 
-    spikes
-      .selectAll('path')
-      .data(cities)
-      .attr('transform', (d) => {
-        return `translate(${Point(d)}) scale(${1 / e.transform.k})`
-      })
-      .attr('stroke-width', 1 / e.transform.k)
-  }
+      spikes
+        .selectAll('path')
+        .data(cities)
+        .attr('transform', (d) => {
+          return `translate(${Point(d)}) scale(${1 / e.transform.k})`
+        })
+        .attr('stroke-width', 1 / e.transform.k)
+    }
 
-  const zoomer = zoom().scaleExtent([1, 8]).on('zoom', zoomed)
+    return zoom().scaleExtent([1, 8]).on('zoom', zoomed)
+  }, [Point])
 
   return (
     <svg

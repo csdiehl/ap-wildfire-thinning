@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react'
+import React, { useRef, useEffect, useCallback, useState, useMemo } from 'react'
 import { zoom, geoAlbersUsa, geoPath } from 'd3'
 import {
   counties,
@@ -32,20 +32,22 @@ const Map = ({
   const [cities, setCities] = useState(null)
   const svgRef = useRef()
 
-  const zoomConfig = [
-    { id: 'map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
-    {
-      id: 'cities',
-      transform: false,
-      baseStroke: 2,
-      baseFont: width >= 730 ? 12 : 10,
-    },
-    { id: 'highways', transform: false, baseStroke: 0.8, baseFont: 10 },
-  ]
+  const zoomer = useMemo(() => {
+    const zoomConfig = [
+      { id: 'map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
+      {
+        id: 'cities',
+        transform: false,
+        baseStroke: 2,
+        baseFont: width >= 730 ? 12 : 10,
+      },
+      { id: 'highways', transform: false, baseStroke: 0.8, baseFont: 10 },
+    ]
 
-  const zoomer = zoom()
-    .scaleExtent([1, 8])
-    .on('zoom', (e) => zoomed(e, zoomConfig))
+    return zoom()
+      .scaleExtent([1, 8])
+      .on('zoom', (e) => zoomed(e, zoomConfig))
+  }, [width])
 
   // this is not ideal, but have to call reset on 1st load to get the right strokes
   useEffect(() => {
@@ -69,8 +71,8 @@ const Map = ({
     getCities().then((data) => setCities(data))
   }, [])
 
+  // event handlers
   function onClick(data) {
-    // need to change this for when switching between states
     const id = data.id.toString()
     id?.length >= 4 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
 
@@ -86,10 +88,13 @@ const Map = ({
     setSelectedArea('none')
 
     zoomOut(svgRef, zoomer)
-  }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea])
+  }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea, zoomer])
 
   // projection
-  const projection = geoAlbersUsa().fitSize([width, height], outline)
+  const projection = useMemo(
+    () => geoAlbersUsa().fitSize([width, height], outline),
+    [width, height]
+  )
 
   // generators
   const path = geoPath(projection)

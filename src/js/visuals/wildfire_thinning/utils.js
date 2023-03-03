@@ -1,4 +1,6 @@
-import expCounty from '../../../live-data/exp_by_county.json'
+import expCounty from '../../../live-data/exp_by_county.csv'
+
+console.log(expCounty[0])
 
 export const stateCodes = {
   '32': 'NV',
@@ -43,7 +45,7 @@ export function codeToName(countyCode, name = false) {
     : stateCodes[code.slice(0, 2)]
   const county = expCounty
     .filter((d) => d.state === state)
-    .find((d) => d.county === code.slice(2, 5))
+    .find((d) => d.county.toString().padStart(3, 0) === code.slice(2, 5))
 
   return [state, county?.name ?? 'not found', county?.exp_in_zone]
 }

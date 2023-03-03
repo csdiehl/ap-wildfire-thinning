@@ -1,0 +1,392 @@
+state,name,county,exp_in_zone
+CA,Riverside,065,1961.47
+CA,San Diego,073,1750.75
+CA,San Bernardino,071,1002.1
+CA,Los Angeles,037,685.89
+AZ,Pima,019,357.27
+ID,Washington,087,313.02
+UT,Washington,053,313.02
+OR,Washington,067,313.02
+CO,Washington,121,313.02
+NV,Elko,007,290.96
+CA,Ventura,111,275.86
+AZ,Yavapai,025,268.32
+AZ,Mohave,015,227.81
+CO,Otero,089,210.89
+NM,Otero,035,210.89
+CA,Kern,029,194.42
+WA,Jefferson,031,190.85
+MT,Jefferson,043,190.85
+ID,Jefferson,051,190.85
+OR,Jefferson,031,190.85
+CO,Jefferson,059,190.85
+CA,Santa Cruz,087,190.48
+AZ,Santa Cruz,023,190.48
+AZ,Maricopa,013,188.53
+CA,Orange,059,187.85
+CA,Tuolumne,109,184.5
+AZ,Gila,007,164.71
+CA,El Dorado,017,164.37
+AZ,Coconino,005,159.4
+CA,Calaveras,009,158.24
+CA,Shasta,089,150.66
+MT,Ravalli,081,148.17
+AZ,Cochise,003,147.54
+WA,Chelan,007,143.62
+ID,Clark,033,135.96
+WA,Clark,011,135.96
+NV,Clark,003,135.96
+NV,Douglas,005,132.15
+CO,Douglas,035,132.15
+OR,Douglas,019,132.15
+WA,Douglas,017,132.15
+AZ,Pinal,021,130.44
+ID,Ada,001,128.84
+CA,San Luis Obispo,079,128.55
+CA,Placer,061,126.83
+NV,Lincoln,017,120.48
+CO,Lincoln,073,120.48
+NM,Lincoln,027,120.48
+MT,Lincoln,053,120.48
+ID,Lincoln,063,120.48
+OR,Lincoln,041,120.48
+WA,Lincoln,043,120.48
+CA,Madera,039,120.22
+UT,Utah,049,117.06
+WA,Yakima,077,116.94
+CA,Sonoma,097,116.34
+CA,Santa Clara,085,111.35
+WA,Okanogan,047,110.49
+CO,Jackson,057,109.46
+OR,Jackson,029,109.46
+OR,Josephine,033,108.38
+CA,Santa Barbara,083,107.26
+WA,Kittitas,037,102.2
+CA,Contra Costa,013,99.36
+CA,Nevada,057,90.04
+NM,Santa Fe,049,87.34
+ID,Butte,023,87.08
+CA,Butte,007,87.08
+CO,El Paso,041,84.23
+CA,Trinity,105,84.14
+AZ,Navajo,017,82.5
+CA,Humboldt,023,82.11
+NV,Humboldt,013,82.11
+CA,Tehama,103,81.62
+CA,Monterey,053,80.45
+CA,Siskiyou,093,80.19
+MT,Park,067,79.02
+CO,Park,093,79.02
+CA,Mariposa,043,78.85
+CA,Plumas,063,76.2
+CA,Fresno,019,74.13
+CA,Amador,005,74.11
+CA,Tulare,107,73.7
+CO,Larimer,069,73.6
+CA,Lake,033,72.3
+MT,Lake,047,72.3
+CO,Lake,065,72.3
+OR,Lake,037,72.3
+ID,Boise,015,70.16
+NV,Washoe,031,69.27
+UT,Salt Lake,035,66.82
+WA,Grant,025,66.49
+OR,Grant,023,66.49
+NM,Grant,017,66.49
+ID,Idaho,049,65.35
+MT,Missoula,063,62.72
+CA,Alameda,001,60.83
+ID,Elmore,039,59.7
+CO,Boulder,013,59.57
+MT,Flathead,029,57.56
+OR,Deschutes,017,57.24
+CA,Mendocino,045,54.71
+UT,Tooele,045,49.03
+NM,Taos,055,48.82
+CO,Teller,119,47.41
+CO,Adams,001,47.13
+WA,Adams,001,47.13
+ID,Adams,003,47.13
+CA,Marin,041,43.92
+CA,Yuba,115,43.62
+ID,Canyon,027,41.17
+OR,Wasco,065,40.42
+AZ,Apache,001,37.68
+CA,Sacramento,067,37.23
+ID,Gem,045,35.98
+NM,Rio Arriba,039,35.68
+NM,Sierra,051,34.33
+CA,Sierra,091,34.33
+UT,Iron,021,33.59
+CO,Clear Creek,019,33.35
+CA,Napa,055,33.15
+CO,Summit,117,32.34
+UT,Summit,043,32.34
+MT,Valley,105,32.15
+ID,Valley,085,32.15
+NM,Lea,025,32.15
+ID,Bannock,005,31.89
+CO,La Plata,067,30.87
+WA,Spokane,063,30.82
+CO,San Miguel,113,30.67
+NM,San Miguel,047,30.67
+CA,San Mateo,081,30.63
+WA,Stevens,065,29.98
+ID,Owyhee,073,29.85
+CA,Solano,095,28.65
+ID,Fremont,043,28.39
+CO,Fremont,043,28.39
+CA,Lassen,035,28.22
+CA,Stanislaus,099,28.04
+WA,Klickitat,039,27.99
+CA,San Benito,069,25.81
+MT,Roosevelt,085,24.44
+NM,Roosevelt,041,24.44
+WA,Benton,005,22.17
+OR,Benton,003,22.17
+OR,Crook,013,21.34
+NM,Mora,033,21.33
+ID,Twin Falls,083,20.95
+ID,Blaine,013,20.18
+MT,Blaine,005,20.18
+MT,Gallatin,031,19.83
+UT,Wasatch,051,19.39
+NM,Sandoval,043,19.17
+CA,San Joaquin,077,18.79
+ID,Lemhi,059,18.62
+WA,Ferry,019,17.5
+OR,Umatilla,059,17.21
+CA,Merced,047,16.74
+NM,Colfax,007,16.62
+NM,Catron,003,16.1
+MT,Lewis and Clark,049,15.56
+MT,Yellowstone,111,15.49
+UT,Weber,057,15.05
+AZ,Graham,009,14.7
+NV,Lyon,019,13.85
+NV,Eureka,011,13.66
+ID,Clearwater,035,13.38
+NV,Carson City,510,13.1
+OR,Curry,015,12.78
+NM,Curry,009,12.78
+NM,Bernalillo,001,12.2
+CA,Mono,051,12.01
+OR,Baker,001,11.98
+UT,Davis,011,11.76
+OR,Klamath,035,11.44
+CO,Gilpin,047,10.91
+OR,Hood River,027,10.82
+CO,Archuleta,007,10.54
+ID,Payette,075,9.93
+MT,Granite,039,9.82
+NV,Pershing,027,9.6
+OR,Union,061,9.41
+NM,Union,059,9.41
+MT,Custer,017,9.32
+ID,Custer,037,9.32
+CO,Custer,027,9.32
+NM,Chaves,005,9.17
+NV,Storey,029,9.15
+CO,Montezuma,083,8.87
+CO,Pueblo,101,8.69
+UT,Carbon,007,8.67
+MT,Carbon,009,8.67
+OR,Wallowa,063,8.64
+UT,Morgan,029,8.55
+CO,Morgan,087,8.55
+ID,Nez Perce,069,8.55
+WA,Franklin,021,8.44
+ID,Franklin,041,8.44
+UT,Juab,023,8.41
+NM,Valencia,061,8.38
+CO,Weld,123,8.29
+MT,Powell,077,8.24
+UT,Sanpete,039,8.11
+ID,Madison,065,8.04
+MT,Madison,057,8.04
+UT,Box Elder,003,7.83
+CO,Mesa,077,7.74
+WA,Garfield,023,7.73
+UT,Garfield,017,7.73
+MT,Garfield,033,7.73
+CO,Garfield,045,7.73
+CO,Mineral,079,7.71
+NV,Mineral,021,7.71
+MT,Mineral,061,7.71
+ID,Teton,081,7.5
+MT,Teton,099,7.5
+CA,Sutter,101,7.49
+OR,Harney,025,7.22
+OR,Clackamas,005,7.16
+CA,Glenn,021,7.11
+ID,Gooding,047,6.93
+CA,Alpine,003,6.84
+NV,Lander,015,6.77
+CA,Del Norte,015,6.67
+WA,San Juan,055,6.58
+CO,San Juan,111,6.58
+UT,San Juan,037,6.58
+NM,San Juan,045,6.58
+CO,Las Animas,071,6.45
+CO,Grand,049,6.41
+UT,Grand,019,6.41
+CA,Modoc,049,6.41
+NM,Socorro,053,6.26
+CA,Yolo,113,6.24
+ID,Bonner,017,6.18
+OR,Morrow,049,6.14
+UT,Cache,005,6.09
+MT,Sanders,089,5.88
+ID,Power,077,5.78
+UT,Kane,025,5.78
+OR,Malheur,045,5.73
+WA,Skamania,059,5.55
+ID,Bonneville,019,5.52
+MT,Rosebud,087,5.47
+NM,Doña Ana,013,5.33
+MT,Big Horn,003,5.28
+ID,Jerome,053,5.13
+CA,Inyo,027,4.94
+CO,Arapahoe,005,4.91
+ID,Lewis,061,4.86
+WA,Lewis,041,4.86
+CO,Elbert,039,4.57
+NM,Torrance,057,4.41
+NM,Eddy,015,4.35
+CO,Routt,107,4.22
+AZ,Greenlee,011,4.09
+WA,Asotin,003,3.99
+NM,Los Alamos,028,3.96
+CA,Kings,031,3.96
+CO,Huerfano,055,3.87
+ID,Caribou,029,3.77
+UT,Millard,027,3.68
+ID,Cassia,031,3.65
+OR,Gilliam,021,3.59
+UT,Duchesne,013,3.54
+ID,Bingham,011,3.54
+MT,Glacier,035,3.51
+CA,Colusa,011,3.36
+NM,Luna,029,3.32
+ID,Boundary,021,3.15
+ID,Latah,057,3.15
+MT,Musselshell,065,3.09
+ID,Camas,025,3.03
+MT,Stillwater,095,2.9
+OR,Sherman,055,2.88
+OR,Wheeler,069,2.74
+NM,Hidalgo,023,2.74
+CO,Eagle,037,2.69
+MT,Cascade,013,2.6
+WA,Pend Oreille,051,2.56
+CO,Ouray,091,2.52
+ID,Kootenai,055,2.52
+CO,Moffat,081,2.5
+NM,Guadalupe,019,2.47
+UT,Beaver,001,2.4
+UT,Rich,033,2.38
+UT,Sevier,041,2.36
+UT,Uintah,047,2.34
+CO,Delta,029,2.33
+WA,King,033,2.33
+NM,Quay,037,2.21
+CO,Rio Blanco,103,2.05
+WA,Walla Walla,071,2.01
+CO,Chaffee,015,2
+NM,McKinley,031,1.98
+OR,Lane,039,1.96
+ID,Oneida,071,1.91
+CO,Broomfield,014,1.91
+OR,Multnomah,051,1.9
+CO,Montrose,085,1.69
+ID,Bear Lake,007,1.65
+MT,Beaverhead,001,1.64
+MT,Deer Lodge,023,1.58
+NV,Churchill,001,1.55
+NM,De Baca,011,1.53
+NV,Nye,023,1.52
+MT,Broadwater,007,1.51
+MT,Silver Bow,093,1.51
+CO,Costilla,023,1.44
+AZ,La Paz,012,1.43
+CO,Gunnison,051,1.42
+MT,Powder River,075,1.36
+MT,Sweet Grass,097,1.27
+NV,White Pine,033,1.2
+CO,Yuma,125,1.19
+AZ,Yuma,027,1.19
+NM,Cibola,006,1.18
+ID,Shoshone,079,1.15
+OR,Linn,043,1.12
+CO,Pitkin,097,1.11
+CA,San Francisco,075,1.1
+CO,Saguache,109,1.1
+CO,Dolores,033,1.06
+WA,Pierce,053,1.04
+OR,Columbia,009,1
+WA,Columbia,013,1
+WA,Whitman,075,0.99
+OR,Coos,011,0.92
+CO,Hinsdale,053,0.89
+CO,Baca,009,0.88
+UT,Daggett,009,0.87
+MT,Carter,011,0.85
+WA,Snohomish,061,0.84
+MT,Hill,041,0.77
+CO,Denver,031,0.76
+MT,Phillips,071,0.72
+CO,Phillips,095,0.72
+MT,Pondera,073,0.63
+CO,Bent,011,0.63
+UT,Piute,031,0.63
+UT,Emery,015,0.61
+CO,Rio Grande,105,0.57
+CA,Imperial,025,0.55
+ID,Benewah,009,0.48
+CO,Prowers,099,0.48
+OR,Marion,047,0.44
+WA,Skagit,057,0.44
+MT,Fergus,027,0.4
+UT,Wayne,055,0.39
+WA,Mason,045,0.38
+MT,Dawson,021,0.37
+MT,Petroleum,069,0.37
+WA,Kitsap,035,0.36
+ID,Minidoka,067,0.33
+CO,Crowley,025,0.32
+WA,Clallam,009,0.29
+WA,Thurston,067,0.29
+CO,Conejos,021,0.28
+MT,Meagher,059,0.26
+MT,Judith Basin,045,0.26
+NM,Harding,021,0.25
+MT,Chouteau,015,0.25
+MT,Fallon,025,0.21
+CO,Logan,075,0.19
+CO,Kiowa,061,0.18
+MT,Golden Valley,037,0.17
+WA,Whatcom,073,0.17
+MT,McCone,055,0.15
+MT,Richland,083,0.15
+MT,Sheridan,091,0.14
+MT,Toole,101,0.12
+WA,Grays Harbor,027,0.12
+CO,Alamosa,003,0.11
+MT,Wibaux,109,0.08
+OR,Yamhill,071,0.08
+MT,Wheatland,107,0.07
+WA,Island,029,0.07
+WA,Cowlitz,015,0.07
+CO,Cheyenne,017,0.06
+OR,Polk,053,0.05
+MT,Treasure,103,0.04
+MT,Daniels,019,0.04
+NV,Esmeralda,009,0.03
+MT,Prairie,079,0.03
+CO,Sedgwick,115,0.03
+CO,Kit Carson,063,0.02
+OR,Tillamook,057,0.02
+MT,Liberty,051,0.01
+WA,Pacific,049,0
+OR,Clatsop,007,0
+WA,Wahkiakum,069,0
