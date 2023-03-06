@@ -3,6 +3,7 @@ import { zones } from '../wildfire_thinning/data'
 import * as d3 from 'd3'
 import styled from 'styled-components'
 import { Header, Caption } from '../styles'
+import { oldGrowth } from '../wildfire_thinning/data'
 
 const Container = styled.div`
   width: 100%;
@@ -53,6 +54,11 @@ const ForestChart = () => {
           // each grid square has its own projection
           const projection = d3.geoAlbersUsa().fitSize([100, 100], d)
           const path = d3.geoPath(projection)
+          const forest = oldGrowth.find(
+            (x) =>
+              x.properties?.name.toLowerCase() ===
+              d.properties?.name.toLowerCase()
+          )
           return (
             <Map key={d.properties.name}>
               <p style={{ margin: '0px', gridArea: 'state' }}>
@@ -77,6 +83,7 @@ const ForestChart = () => {
                   fill='none'
                   d={path(d)}
                 ></path>
+                {forest && <path d={path(forest)}></path>}
               </svg>
             </Map>
           )

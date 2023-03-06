@@ -4,6 +4,7 @@ import fireshedExposure from '../../../live-data/exp_firesheds.json'
 import wildernessData from '../../../live-data/wilderness_clipped.json'
 import hwy_west from '../../../live-data/hwy_west.json'
 import zone_totals from '../../../live-data/zone_totals.json'
+import old_growth from '../../../live-data/old_growth.json'
 import * as topojson from 'topojson-client'
 
 const stateCodes = ['32', '08', '41', '53', '06', '49', '16', '04', '35', '30']
@@ -46,6 +47,8 @@ const hwys = topojson.feature(hwy_west, hwy_west.objects.hwy_west).features
 
 const outline = topojson.merge(countyData, stateGeos.geometries)
 
+const oldGrowth = topojson.feature(old_growth, old_growth.objects.all).features
+
 export {
   counties,
   thinning,
@@ -55,4 +58,5 @@ export {
   outline,
   zones,
   hwys,
+  oldGrowth,
 }
