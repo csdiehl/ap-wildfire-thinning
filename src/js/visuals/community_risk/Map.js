@@ -10,10 +10,10 @@ import {
 import { geoVoronoi } from 'd3-geo-voronoi'
 import React, { useRef, useEffect, useMemo, useCallback } from 'react'
 import city_data from '../../../live-data/cities.csv'
-import { outline, states } from '../wildfire_thinning/data'
 import { makeGeoJSON, spike, dedupeLabels } from './utils'
 import { zoomIn, zoomOut } from '../utils'
 import ResetButton from '../../components/ResetButton'
+import useUsData from '../../components/useUsData'
 
 // data
 const cities = city_data.map((d) => makeGeoJSON(d))
@@ -29,10 +29,12 @@ const heightScale = scaleSqrt()
 const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   const svgRef = useRef()
 
+  const { outline, states } = useUsData(false)
+
   // projection
   const projection = useMemo(
-    () => geoAlbers().fitSize([width, height], outline),
-    [width, height]
+    () => outline && geoAlbers().fitSize([width, height], outline),
+    [width, height, outline]
   )
 
   const populated = selectedState
@@ -116,69 +118,73 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
     >
       <defs>
         <clipPath id='state-outline'>
-          <path d={path(outline)} stroke='darkgrey' />
+          {outline && <path d={path(outline)} stroke='darkgrey' />}
         </clipPath>
       </defs>
-      <g id='risk-map-content'>
-        <g id='voronoi-polygons' clipPath='url(#state-outline)'>
-          {voronoi.features.map((d) => {
-            return (
+      {projection && (
+        <g id='risk-map-content'>
+          <g id='voronoi-polygons' clipPath='url(#state-outline)'>
+            {voronoi.features.map((d) => {
+              return (
+                <path
+                  key={d.properties.site.properties.place_fips}
+                  d={path(d)}
+                  fill={color(d.properties.site.properties.risk_area)}
+                  fillOpacity={0.3}
+                  stroke={'lightgrey'}
+                  strokeWidth={0.2}
+                ></path>
+              )
+            })}
+          </g>
+          {states &&
+            states.map((d) => (
+              <path key={d.id} d={path(d)} fill='none' stroke='#121212'></path>
+            ))}
+          <g id='spikes'>
+            {cities.map((d) => (
               <path
-                key={d.properties.site.properties.place_fips}
-                d={path(d)}
-                fill={color(d.properties.site.properties.risk_area)}
-                fillOpacity={0.3}
-                stroke={'lightgrey'}
-                strokeWidth={0.2}
+                transform={`translate(${Point(d)})`}
+                key={d.properties.place_fips}
+                d={spike(heightScale(d.properties.population))}
+                fill={color(d.properties.risk_area)}
+                fillOpacity={0.7}
+                stroke={color(d.properties.risk_area)}
+                strokeLinejoin='round'
               ></path>
+            ))}
+          </g>
+          {populated.map((d) => {
+            const coords = projection(d.geometry.coordinates)
+            return (
+              <text
+                className='city-labels'
+                x={coords[0]}
+                y={coords[1]}
+                key={d.properties.place_fips}
+                paintOrder='stroke fill'
+                stroke='#FFF'
+                fontWeight={600}
+                strokeWidth={0.5}
+              >
+                {d.properties.name}
+              </text>
             )
           })}
+          {/*Invisible overlay that allows clicking on state shapes */}
+          {states &&
+            states.map((d) => (
+              <path
+                key={d.id}
+                d={path(d)}
+                fill={selectedState === d.id ? 'none' : '#FFF'}
+                fillOpacity={0}
+                stroke='none'
+                onClick={() => handleClick(d)}
+              ></path>
+            ))}
         </g>
-        {states.map((d) => (
-          <path key={d.id} d={path(d)} fill='none' stroke='#121212'></path>
-        ))}
-        <g id='spikes'>
-          {cities.map((d) => (
-            <path
-              transform={`translate(${Point(d)})`}
-              key={d.properties.place_fips}
-              d={spike(heightScale(d.properties.population))}
-              fill={color(d.properties.risk_area)}
-              fillOpacity={0.7}
-              stroke={color(d.properties.risk_area)}
-              strokeLinejoin='round'
-            ></path>
-          ))}
-        </g>
-        {populated.map((d) => {
-          const coords = projection(d.geometry.coordinates)
-          return (
-            <text
-              className='city-labels'
-              x={coords[0]}
-              y={coords[1]}
-              key={d.properties.place_fips}
-              paintOrder='stroke fill'
-              stroke='#FFF'
-              fontWeight={600}
-              strokeWidth={0.5}
-            >
-              {d.properties.name}
-            </text>
-          )
-        })}
-        {/*Invisible overlay that allows clicking on state shapes */}
-        {states.map((d) => (
-          <path
-            key={d.id}
-            d={path(d)}
-            fill={selectedState === d.id ? 'none' : '#FFF'}
-            fillOpacity={0}
-            stroke='none'
-            onClick={() => handleClick(d)}
-          ></path>
-        ))}
-      </g>
+      )}
 
       {selectedState && <ResetButton onClick={reset} />}
     </svg>

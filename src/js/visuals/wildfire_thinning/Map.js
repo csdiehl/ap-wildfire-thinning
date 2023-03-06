@@ -1,21 +1,11 @@
 import React, { useRef, useEffect, useCallback, useState, useMemo } from 'react'
 import { zoom, geoAlbersUsa, geoPath } from 'd3'
-import {
-  counties,
-  wilderness,
-  thinning,
-  firesheds,
-  states,
-  outline,
-  zones,
-  hwys,
-} from './data'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
 import { zoomIn, zoomOut, zoomed } from '../utils'
 import ResetButton from '../../components/ResetButton'
-
-// FFF4EB
+import useGeoData from '../../components/useGeoData'
+import useUsData from '../../components/useUsData'
 
 const Map = ({
   width,
@@ -30,6 +20,13 @@ const Map = ({
   selectedArea,
 }) => {
   const [cities, setCities] = useState(null)
+  const { counties, states, outline } = useUsData()
+  const firesheds = useGeoData('exp_firesheds.json'),
+    wilderness = useGeoData('wilderness_clipped.json'),
+    thinning = useGeoData('firesheds_thinning.json'),
+    hwys = useGeoData('hwy_west.json'),
+    zones = useGeoData('zone_totals.json')
+
   const svgRef = useRef()
 
   const zoomer = useMemo(() => {
@@ -92,8 +89,8 @@ const Map = ({
 
   // projection
   const projection = useMemo(
-    () => geoAlbersUsa().fitSize([width, height], outline),
-    [width, height]
+    () => outline && geoAlbersUsa().fitSize([width, height], outline),
+    [width, height, outline]
   )
 
   // generators
@@ -107,61 +104,70 @@ const Map = ({
       height={height}
     >
       <g id='map-content' cursor='pointer'>
-        {firesheds.map((d) => (
-          <path
-            key={d.properties.fireshed_code}
-            d={path(d)}
-            fill={fireshedColor(parseInt(d.properties.exp_level_out))}
-            stroke='#FFF'
-          ></path>
-        ))}
-        {thinning.map((d) => (
-          <path
-            key={d.properties.fireshed_code + d.properties.objectid}
-            d={path(d)}
-            stroke='lightgrey'
-            fill={thinningColor(parseInt(d.properties.exp_level))}
-          ></path>
-        ))}
-        {wilderness.map((d) => (
-          <path
-            key={d.properties.name + d.properties.agency}
-            d={path(d)}
-            fill='darkgrey'
-            stroke='#FFF'
-          ></path>
-        ))}
-        <g id='highways'>
-          {hwys.map((d, i) => (
-            <path key={i} d={path(d)} fill='none' stroke='#454545'></path>
-          ))}
-        </g>
-        {counties.map((d) => (
-          <path
-            onClick={() => onClick(d)}
-            key={d.id}
-            d={path(d)}
-            fill='#EEE'
-            fillOpacity={
-              countyIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
-            }
-            stroke={d.id.toString() === selectedArea ? '#121212' : 'lightgrey'}
-          ></path>
-        ))}
-
-        {zones.map((d) => {
-          return (
+        {firesheds &&
+          firesheds.map((d) => (
             <path
-              key={d.properties.name}
+              key={d.properties.fireshed_code}
               d={path(d)}
-              fill='none'
-              stroke={colors.blue}
+              fill={fireshedColor(parseInt(d.properties.exp_level_out))}
+              stroke='#FFF'
             ></path>
-          )
-        })}
+          ))}
+        {thinning &&
+          thinning.map((d) => (
+            <path
+              key={d.properties.fireshed_code + d.properties.objectid}
+              d={path(d)}
+              stroke='lightgrey'
+              fill={thinningColor(parseInt(d.properties.exp_level))}
+            ></path>
+          ))}
+        {wilderness &&
+          wilderness.map((d) => (
+            <path
+              key={d.properties.name + d.properties.agency}
+              d={path(d)}
+              fill='darkgrey'
+              stroke='#FFF'
+            ></path>
+          ))}
+        <g id='highways'>
+          {hwys &&
+            hwys.map((d, i) => (
+              <path key={i} d={path(d)} fill='none' stroke='#454545'></path>
+            ))}
+        </g>
+        {counties &&
+          counties.map((d) => (
+            <path
+              onClick={() => onClick(d)}
+              key={d.id}
+              d={path(d)}
+              fill='#EEE'
+              fillOpacity={
+                countyIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
+              }
+              stroke={
+                d.id.toString() === selectedArea ? '#121212' : 'lightgrey'
+              }
+            ></path>
+          ))}
+
+        {zones &&
+          zones.map((d) => {
+            return (
+              <path
+                key={d.properties.name}
+                d={path(d)}
+                fill='none'
+                stroke={colors.blue}
+              ></path>
+            )
+          })}
 
         <g id='cities'>
-          {cities &&
+          {projection &&
+            cities &&
             cities.features.map((d) => {
               const coords = projection([d.geometry.x, d.geometry.y])
               return (
@@ -179,26 +185,27 @@ const Map = ({
               )
             })}
         </g>
-        {states.map((d) => (
-          <path
-            onClick={() => onClick(d)}
-            key={d.id}
-            d={path(d)}
-            fill={
-              stateIsZoomed
-                ? d.id.toString() === selectedArea
-                  ? 'none'
-                  : countyIsZoomed
-                  ? 'none'
+        {states &&
+          states.map((d) => (
+            <path
+              onClick={() => onClick(d)}
+              key={d.id}
+              d={path(d)}
+              fill={
+                stateIsZoomed
+                  ? d.id.toString() === selectedArea
+                    ? 'none'
+                    : countyIsZoomed
+                    ? 'none'
+                    : '#EEE'
                   : '#EEE'
-                : '#EEE'
-            }
-            fillOpacity={
-              stateIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
-            }
-            stroke='#777777'
-          ></path>
-        ))}
+              }
+              fillOpacity={
+                stateIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
+              }
+              stroke='#777777'
+            ></path>
+          ))}
         <g id='map-label'>
           {stateIsZoomed &&
             !countyIsZoomed &&
@@ -225,7 +232,7 @@ const Map = ({
                 </text>
               )
             })}
-          {selectedArea.length > 2 && selectedArea !== 'none' && (
+          {counties && selectedArea.length > 2 && selectedArea !== 'none' && (
             <MapLabel
               code={selectedArea}
               center={path.centroid(
