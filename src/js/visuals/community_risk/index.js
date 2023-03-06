@@ -5,6 +5,7 @@ import { useNodeDimensions } from 'ap-react-hooks'
 import styled from 'styled-components'
 import { Caption, Header } from '../styles'
 import { scale } from 'chroma-js'
+import LazyLoad from 'react-lazy-load'
 
 const Container = styled.div`
   height: calc(100vh - 20px);
@@ -46,16 +47,20 @@ const CommunityRisk = () => {
         </Caption>
       </div>
       <div ref={node} style={{ gridArea: 'map' }}>
-        <Map
-          width={width}
-          height={height}
-          colors={colors}
-          setSelectedState={setSelectedState}
-          selectedState={selectedState}
-        />
+        <LazyLoad>
+          <Map
+            width={width}
+            height={height}
+            colors={colors}
+            setSelectedState={setSelectedState}
+            selectedState={selectedState}
+          />
+        </LazyLoad>
       </div>
+      <LazyLoad>
+        <Legend style={{ gridArea: 'legend' }} colors={colors} />
+      </LazyLoad>
 
-      <Legend style={{ gridArea: 'legend' }} colors={colors} />
       <div style={{ gridArea: 'footer', fontSize: '12px' }}>
         <div
           style={{

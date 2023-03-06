@@ -7,6 +7,7 @@ import { scaleSequential, interpolateBlues, interpolateOranges } from 'd3'
 import StackedBar from './StackedBar'
 import { colors } from './utils'
 import { Caption, Header } from '../styles'
+import LazyLoad from 'react-lazy-load'
 
 const Container = styled.div`
   display: grid;
@@ -85,18 +86,20 @@ function WildfireThinning() {
       </div>
 
       <div style={{ gridArea: 'Map' }} ref={node}>
-        <Map
-          thinningColor={thinningColor}
-          fireshedColor={fireshedColor}
-          width={width}
-          height={height}
-          setSelectedArea={setSelectedArea}
-          stateIsZoomed={stateIsZoomed}
-          countyIsZoomed={countyIsZoomed}
-          setCountyIsZoomed={setCountyIsZoomed}
-          setStateIsZoomed={setStateIsZoomed}
-          selectedArea={selectedArea}
-        />
+        <LazyLoad>
+          <Map
+            thinningColor={thinningColor}
+            fireshedColor={fireshedColor}
+            width={width}
+            height={height}
+            setSelectedArea={setSelectedArea}
+            stateIsZoomed={stateIsZoomed}
+            countyIsZoomed={countyIsZoomed}
+            setCountyIsZoomed={setCountyIsZoomed}
+            setStateIsZoomed={setStateIsZoomed}
+            selectedArea={selectedArea}
+          />
+        </LazyLoad>
       </div>
       <div style={{ gridArea: 'StackedBar' }}>
         <StackedBar fireshedColor={fireshedColor} selectedArea={selectedArea} />
