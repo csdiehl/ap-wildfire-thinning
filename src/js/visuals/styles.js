@@ -9,7 +9,7 @@ export const Header = styled.h1`
   }
 `
 
-export const Caption = styled.p`
+export const Caption = styled.div`
   font-size: 16px;
   margin-top: 5px;
   margin-bottom: 2px;
