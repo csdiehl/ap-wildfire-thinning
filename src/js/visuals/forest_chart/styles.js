@@ -22,21 +22,11 @@ const Map = styled.div`
     'bar';
 `
 
-const Scale = styled.div`
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  height: 1px;
-  background-color: black;
-`
-
 const Bar = styled.div`
-  position: relative;
+  transform: translateY(2px);
   background-color: lightgrey;
   width: ${(props) => props.width}%;
-  height: 5px;
+  height: 1px;
 `
 
 const ColorBar = styled.div`
@@ -49,21 +39,21 @@ const ColorBar = styled.div`
   left: 0;
 `
 
-const ScaleBar = styled.div`
-  position: absolute;
-  top: 2px;
-  background-color: lightgrey;
-  height: 1px;
-  width: 100%;
-`
-
 const Note = styled.div`
   position: absolute;
   left: ${(props) => props.width}%;
-  width: 1px;
-  height: 8px;
-  background-color: black;
   font-size: 11px;
+  text-align: center;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const Tick = styled.div`
+  width: 1px;
+  height: 5px;
+  background-color: black;
 `
 
 const Name = styled.p`
@@ -89,15 +79,4 @@ const Highlight = styled.span`
   color: #fff;
 `
 
-export {
-  Container,
-  Map,
-  Note,
-  ScaleBar,
-  Bar,
-  ColorBar,
-  Name,
-  State,
-  Highlight,
-  Scale,
-}
+export { Container, Map, Note, Bar, ColorBar, Name, State, Highlight, Tick }

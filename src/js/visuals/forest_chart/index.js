@@ -1,4 +1,3 @@
-import { max, scaleLinear } from 'd3'
 import React, { useState } from 'react'
 import old_growth_ratio from '../../../live-data/old_growth_ratio.csv'
 import useGeoData from '../../components/useGeoData'
@@ -7,14 +6,14 @@ import {
   Bar,
   ColorBar,
   Container,
-  Map,
-  Note,
-  ScaleBar,
-  Name,
-  State,
   Highlight,
-  Scale,
+  Map,
+  Name,
+  Note,
+  State,
+  Tick,
 } from './styles'
+import { format } from 'd3'
 
 const getRatio = (d) => {
   const data = old_growth_ratio.find((x) => x['name'] === d.properties?.name)
@@ -27,12 +26,6 @@ const ForestChart = () => {
 
   const zones = useGeoData('zone_totals.json')
   const oldGrowth = useGeoData('old_growth_2.json', 'all')
-
-  const xScale =
-    zones &&
-    scaleLinear()
-      .domain([0, max(zones, (d) => d.properties.landscapeacres)])
-      .range([0, 100])
 
   const sorted = zones && zones.sort((a, b) => getRatio(b) - getRatio(a))
 
@@ -50,18 +43,7 @@ const ForestChart = () => {
         >
           <Bar width={100} />
         </div>{' '}
-        shows the <Highlight>zone area</Highlight>, compared to the area of the
-        largest zone{' '}
-        <div
-          style={{
-            width: '50px',
-            backgroundColor: 'lightgrey',
-            height: '2px',
-            display: 'inline-block',
-            verticalAlign: 'middle',
-          }}
-        ></div>{' '}
-        . The dark bar{' '}
+        shows the <Highlight>zone area</Highlight> in hecatares. The dark bar{' '}
         <div
           style={{
             width: '50px',
@@ -89,22 +71,27 @@ const ForestChart = () => {
                 </div>
 
                 <div style={{ gridArea: 'bar', position: 'relative' }}>
-                  <ScaleBar />
+                  <Bar width={100} />
+                  <Note width={100}>
+                    <Tick />
+                    <p style={{ margin: '0px', color: '#777' }}>
+                      {format('.1s')(area / 2.471)}
+                    </p>
+                  </Note>
 
-                  <Bar width={xScale(area)}>
-                    <ColorBar color='#121212' width={ratio * 100} />
-                    <Note width={ratio * 100}>
-                      <p
-                        style={{
-                          position: 'absolute',
-                          margin: '0px',
-                          top: '7px',
-                        }}
-                      >
-                        {Math.round(ratio * 100, 1)}%
-                      </p>
-                    </Note>
-                  </Bar>
+                  <ColorBar color='#121212' width={ratio * 100} />
+                  <Note width={ratio * 100}>
+                    <Tick />
+                    <p
+                      style={{
+                        position: 'absolute',
+                        margin: '0px',
+                        top: '7px',
+                      }}
+                    >
+                      {Math.round(ratio * 100, 1)}%
+                    </p>
+                  </Note>
                 </div>
 
                 <div style={{ position: 'relative', gridArea: 'map' }}>
@@ -118,7 +105,6 @@ const ForestChart = () => {
                       border: '1px solid #F5F5F5',
                     }}
                   />
-                  <Scale />
                 </div>
               </Map>
             )
