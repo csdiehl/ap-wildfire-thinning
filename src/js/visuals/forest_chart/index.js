@@ -1,20 +1,26 @@
-import { geoAlbersUsa, geoPath, max, scaleLinear } from 'd3'
+import { max, scaleLinear } from 'd3'
 import React, { useState } from 'react'
 import old_growth_ratio from '../../../live-data/old_growth_ratio.csv'
 import useGeoData from '../../components/useGeoData'
 import { Caption, Header } from '../styles'
-import { Bar, ColorBar, Container, Map, Note, ScaleBar } from './styles'
-import Tooltip from './Tooltip'
+import {
+  Bar,
+  ColorBar,
+  Container,
+  Map,
+  Note,
+  ScaleBar,
+  Name,
+  State,
+  Highlight,
+  Scale,
+} from './styles'
 
-const getRatio = (d) =>
-  old_growth_ratio.find((x) => x['NAME'] === d.properties?.name)
-
-const xScale = scaleLinear()
-  .domain([0, max(old_growth_ratio, (d) => d['LANDSCAPEA'])])
-  .range([0, 100])
-
-const orange = '#E85E0B'
-const threshold = 0.3
+const getRatio = (d) => {
+  const data = old_growth_ratio.find((x) => x['name'] === d.properties?.name)
+  console.log(data?.mature_forest_ratio)
+  return +data?.mature_forest_ratio.toFixed(2) ?? 0
+}
 
 const ForestChart = () => {
   const [hover, setHover] = useState(null)
@@ -22,9 +28,13 @@ const ForestChart = () => {
   const zones = useGeoData('zone_totals.json')
   const oldGrowth = useGeoData('old_growth_2.json', 'all')
 
-  const sorted =
+  const xScale =
     zones &&
-    zones.sort((a, b) => getRatio(b)?.LANDSCAPEA - getRatio(a)?.LANDSCAPEA)
+    scaleLinear()
+      .domain([0, max(zones, (d) => d.properties.landscapeacres)])
+      .range([0, 100])
+
+  const sorted = zones && zones.sort((a, b) => getRatio(b) - getRatio(a))
 
   return (
     <div>
@@ -40,7 +50,8 @@ const ForestChart = () => {
         >
           <Bar width={100} />
         </div>{' '}
-        shows the zone area, compared to the area of the largest zone{' '}
+        shows the <Highlight>zone area</Highlight>, compared to the area of the
+        largest zone{' '}
         <div
           style={{
             width: '50px',
@@ -60,39 +71,28 @@ const ForestChart = () => {
             verticalAlign: 'middle',
           }}
         ></div>{' '}
-        shows the % of the zone that is old-growth forest. In some areas,{' '}
-        <span style={{ color: orange }}>more than 30% </span>of forest is
-        at-risk.
+        shows the % of the zone that is old-growth forest.
       </Caption>
       <Container>
         {sorted &&
           oldGrowth &&
           sorted.map((d) => {
             // each grid square has its own projection
-            const projection = geoAlbersUsa().fitSize([100, 100], d)
-            const path = geoPath(projection)
-            const forest = oldGrowth.find(
-              (x) =>
-                x.properties?.name.toLowerCase() ===
-                d.properties?.name.toLowerCase()
-            )
+            const ratio = getRatio(d)
+            const area = d.properties.landscapeacres
 
-            const ratio = getRatio(d)?.mature_forest_ratio.toFixed(2),
-              area = getRatio(d)?.LANDSCAPEA
-            const color = ratio >= threshold ? orange : 'black'
             return (
               <Map key={d.properties.name}>
-                <p style={{ margin: '0px', gridArea: 'state' }}>
-                  <span style={{ fontWeight: 500, color: color }}>
-                    {d.properties.name}
-                  </span>{' '}
-                  | {d.properties.state}
-                </p>
+                <div style={{ gridArea: 'name' }}>
+                  <Name> {d.properties.name}</Name>
+                  <State>{d.properties.state}</State>
+                </div>
+
                 <div style={{ gridArea: 'bar', position: 'relative' }}>
                   <ScaleBar />
 
                   <Bar width={xScale(area)}>
-                    <ColorBar color={color} width={ratio * 100} />
+                    <ColorBar color='#121212' width={ratio * 100} />
                     <Note width={ratio * 100}>
                       <p
                         style={{
@@ -107,27 +107,19 @@ const ForestChart = () => {
                   </Bar>
                 </div>
 
-                <svg
-                  style={{ gridArea: 'map' }}
-                  viewBox='0 0 100 100'
-                  width='100%'
-                  height='100%'
-                  cursor='pointer'
-                  onMouseOver={() => setHover(d)}
-                  onMouseOut={() => setHover(null)}
-                >
-                  <path
-                    strokeWidth={0.5}
-                    strokeLinejoin='round'
-                    stroke='#777'
-                    fill='none'
-                    d={path(d)}
-                  ></path>
-                  {forest && <path fill={color} d={path(forest)}></path>}
-                  {hover && hover.properties.name === d.properties.name && (
-                    <Tooltip data={getRatio(hover)?.mature_forest_area} />
-                  )}
-                </svg>
+                <div style={{ position: 'relative', gridArea: 'map' }}>
+                  <img
+                    alt='a forest'
+                    width='100%'
+                    height='100%'
+                    src={`./forest_images/${d.properties.name}.png`}
+                    style={{
+                      borderRadius: '5px',
+                      border: '1px solid #F5F5F5',
+                    }}
+                  />
+                  <Scale />
+                </div>
               </Map>
             )
           })}
