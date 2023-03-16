@@ -70,6 +70,7 @@
     "csv-loader": "^3.0.5",
     "d3": "^7.8.2",
     "d3-geo-voronoi": "1",
+    "d3-tile": "^1.0.0",
     "interact-analytics": "^0.0.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

@@ -6,6 +6,11 @@ import { zoomIn, zoomOut, zoomed } from '../utils'
 import ResetButton from '../../components/ResetButton'
 import useGeoData from '../../components/useGeoData'
 import useUsData from '../../components/useUsData'
+import * as d3Tile from 'd3-tile'
+
+function getHillShade(x, y, z) {
+  return `https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/${z}/${y}/${x}.png`
+}
 
 const Map = ({
   width,
@@ -95,6 +100,10 @@ const Map = ({
 
   // generators
   const path = geoPath(projection)
+
+  const tile = d3Tile.tile()
+  const tiles = tile({ k: 512, x: width, y: height })
+  console.log(tiles)
 
   return (
     <svg
@@ -254,3 +263,18 @@ const Map = ({
 export default Map
 
 //    "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Major_Cities/FeatureServer/0/query?where=%20(ST%20%3D%20'CA'%20OR%20ST%20%3D%20'UT'%20OR%20ST%20%3D%20'CO'%20OR%20ST%20%3D%20'OR'%20OR%20ST%20%3D%20'WA'%20OR%20ST%20%3D%20'NV'%20OR%20ST%20%3D%20'AZ'%20OR%20ST%20%3D%20'NM'%20OR%20ST%20%3D%20'MT'%20OR%20ST%20%3D%20'ID')%20%20AND%20%20(POP_CLASS%20%3D%207%20OR%20POP_CLASS%20%3D%2010)%20&outFields=CLASS,ST,STFIPS,PLACEFIPS,POP_CLASS,POPULATION,NAME&outSR=4326&f=json"
+
+/***
+ *   {tiles().map(([x, y, z], i, { translate: [tx, ty], scale: k }) => {
+          return (
+            <image
+              key={i}
+              xlinkHref={getHillShade(x, y, z)}
+              x={Math.round((x + tx) * k)}
+              y={Math.round((y + ty) * k)}
+              width={k}
+              height={k}
+            ></image>
+          )
+        })}
+ */
