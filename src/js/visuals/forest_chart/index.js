@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import old_growth_ratio from '../../../live-data/old_growth_ratio.csv'
 import useGeoData from '../../components/useGeoData'
 import { Caption, Header } from '../styles'
@@ -12,12 +12,13 @@ import {
   Note,
   State,
   Tick,
+  Legend,
+  Tooltip,
 } from './styles'
 import { format } from 'd3'
 
 const getRatio = (d) => {
   const data = old_growth_ratio.find((x) => x['name'] === d.properties?.name)
-  console.log(data?.mature_forest_ratio)
   return +data?.mature_forest_ratio.toFixed(2) ?? 0
 }
 
@@ -27,7 +28,10 @@ const ForestChart = () => {
   const zones = useGeoData('zone_totals.json')
   const oldGrowth = useGeoData('old_growth_2.json', 'all')
 
-  const sorted = zones && zones.sort((a, b) => getRatio(b) - getRatio(a))
+  const sorted = useMemo(
+    () => zones && zones.sort((a, b) => getRatio(b) - getRatio(a)),
+    [zones]
+  )
 
   return (
     <div>
@@ -53,7 +57,9 @@ const ForestChart = () => {
             verticalAlign: 'middle',
           }}
         ></div>{' '}
-        shows the % of the zone that is old-growth forest.
+        shows the % of the zone that is old-growth forest. The darker the shaded
+        area <Legend>0% to 100%</Legend>, the greater percentage of old-growth
+        forest it contains.
       </Caption>
       <Container>
         {sorted &&
@@ -61,13 +67,17 @@ const ForestChart = () => {
           sorted.map((d) => {
             // each grid square has its own projection
             const ratio = getRatio(d)
-            const area = d.properties.landscapeacres
+            const { landscapeacres, name, state } = d.properties
 
             return (
-              <Map key={d.properties.name}>
+              <Map
+                key={name}
+                onMouseOver={() => setHover(name)}
+                onMouseOut={() => setHover(null)}
+              >
                 <div style={{ gridArea: 'name' }}>
-                  <Name> {d.properties.name}</Name>
-                  <State>{d.properties.state}</State>
+                  <Name> {name}</Name>
+                  <State>{state}</State>
                 </div>
 
                 <div style={{ gridArea: 'bar', position: 'relative' }}>
@@ -75,7 +85,7 @@ const ForestChart = () => {
                   <Note width={100}>
                     <Tick />
                     <p style={{ margin: '0px', color: '#777' }}>
-                      {format('.1s')(area / 2.471)}
+                      {format('.1s')(landscapeacres / 2.471)}
                     </p>
                   </Note>
 
@@ -99,12 +109,16 @@ const ForestChart = () => {
                     alt='a forest'
                     width='100%'
                     height='100%'
-                    src={`./forest_images/${d.properties.name}.png`}
+                    src={`./forest_images/${name}.png`}
                     style={{
                       borderRadius: '5px',
                       border: '1px solid #F5F5F5',
                     }}
                   />
+                  <Tooltip hovered={name === hover}>
+                    {format('.1s')((ratio * landscapeacres) / 2.471)} hecatares
+                    of old-growth
+                  </Tooltip>
                 </div>
               </Map>
             )

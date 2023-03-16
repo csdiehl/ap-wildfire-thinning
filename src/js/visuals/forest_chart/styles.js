@@ -11,6 +11,7 @@ const Container = styled.div`
 
 const Map = styled.div`
   display: grid;
+  cursor: pointer;
   width: 100%;
   height: 100%;
   grid-template-columns: 100%;
@@ -79,4 +80,42 @@ const Highlight = styled.span`
   color: #fff;
 `
 
-export { Container, Map, Note, Bar, ColorBar, Name, State, Highlight, Tick }
+const Legend = styled.div`
+  width: 100px;
+  background: linear-gradient(to right, #fff, #121212);
+  height: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  color: #fff;
+`
+
+const Tooltip = styled.div`
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 12px;
+  background-color: #fff;
+  opacity: ${(props) => (props.hovered ? 0.7 : 0)};
+  transition: opacity 200ms ease-in;
+`
+
+export {
+  Container,
+  Map,
+  Note,
+  Bar,
+  ColorBar,
+  Name,
+  State,
+  Highlight,
+  Tick,
+  Legend,
+  Tooltip,
+}
