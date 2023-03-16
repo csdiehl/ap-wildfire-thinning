@@ -11,6 +11,8 @@ const Container = styled.div`
 
 const Map = styled.div`
   display: grid;
+  opacity: ${(props) => (props.show ? 1 : 0)};
+  transition: opacity 1s ease-in ${(props) => props.delay}ms;
   cursor: pointer;
   width: 100%;
   height: 100%;

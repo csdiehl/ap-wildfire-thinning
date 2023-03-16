@@ -8,6 +8,7 @@ import StackedBar from './StackedBar'
 import { colors } from './utils'
 import { Caption, Header } from '../styles'
 import LazyLoad from 'react-lazy-load'
+import '../lazy-load.css'
 
 const Container = styled.div`
   display: grid;
