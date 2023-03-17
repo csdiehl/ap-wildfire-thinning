@@ -8,6 +8,7 @@ import StackedBar from './StackedBar'
 import { colors } from './utils'
 import { Caption, Header } from '../styles'
 import LazyLoad from 'react-lazy-load'
+import '../lazy-load.css'
 
 const Container = styled.div`
   display: grid;
@@ -15,6 +16,8 @@ const Container = styled.div`
   box-sizing: border-box;
   height: calc(100vh - 40px);
   width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
   grid-template-rows: 18% 8% 57% 15%;
   grid-template-columns: 100%;
   grid-template-areas:

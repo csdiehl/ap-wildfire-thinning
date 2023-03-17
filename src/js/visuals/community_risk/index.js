@@ -10,6 +10,8 @@ import LazyLoad from 'react-lazy-load'
 const Container = styled.div`
   height: calc(100vh - 20px);
   width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
   display: grid;
   grid-column-gap: 10px;
   grid-template-columns: auto minmax(0, 1fr);
@@ -27,6 +29,10 @@ const Container = styled.div`
       'header map'
       'legend map'
       'footer map';
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 300px minmax(0, 1fr);
   }
 `
 
