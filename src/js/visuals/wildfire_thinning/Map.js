@@ -1,12 +1,21 @@
 import React, { useRef, useEffect, useCallback, useState, useMemo } from 'react'
-import { zoom, geoAlbersUsa, geoPath } from 'd3'
+import { zoom, geoAlbers, geoPath, geoMercator } from 'd3'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
 import { zoomIn, zoomOut, zoomed } from '../utils'
 import ResetButton from '../../components/ResetButton'
 import useGeoData from '../../components/useGeoData'
 import useUsData from '../../components/useUsData'
-import * as d3Tile from 'd3-tile'
+import { tile } from 'd3-tile'
+
+function position(tile, tiles) {
+  const [x, y] = tile
+  const {
+    translate: [tx, ty],
+    scale: k,
+  } = tiles
+  return [(x + tx) * k, (y + ty) * k]
+}
 
 function getHillShade(x, y, z) {
   return `https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/${z}/${y}/${x}.png`
@@ -93,17 +102,23 @@ const Map = ({
   }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea, zoomer])
 
   // projection
-  const projection = useMemo(
-    () => outline && geoAlbersUsa().fitSize([width, height], outline),
-    [width, height, outline]
-  )
+  const projection = geoMercator()
+    .center([-116.4194, 38.8])
+    .scale(Math.pow(2, 14) / (2 * Math.PI))
+    .translate([width / 2, height / 2])
+
+  // make tiles
+  const tiler =
+    projection &&
+    tile()
+      .size([width, height])
+      .scale(projection.scale() * 2 * Math.PI)
+      .translate(projection([0, 0]))
+
+  const tiles = tiler()
 
   // generators
   const path = geoPath(projection)
-
-  const tile = d3Tile.tile()
-  const tiles = tile({ k: 512, x: width, y: height })
-  console.log(tiles)
 
   return (
     <svg
@@ -113,6 +128,21 @@ const Map = ({
       height={height}
     >
       <g id='map-content' cursor='pointer'>
+        {tiles.map((t, i) => {
+          const P = position(t, tiles)
+          const url = getHillShade(...t)
+          console.log(url)
+          return (
+            <image
+              xlinkHref={url}
+              key={i}
+              x={P[0]}
+              y={P[1]}
+              width={t[2]}
+              height={t[2]}
+            ></image>
+          )
+        })}
         {firesheds &&
           firesheds.map((d) => (
             <path
