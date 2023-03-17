@@ -21,6 +21,8 @@ function getHillShade(x, y, z) {
   return `https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/${z}/${y}/${x}.png`
 }
 
+const center = [-114.04, 40.71]
+
 const Map = ({
   width,
   height,
@@ -34,7 +36,7 @@ const Map = ({
   selectedArea,
 }) => {
   const [cities, setCities] = useState(null)
-  const { counties, states, outline } = useUsData()
+  const { counties, states } = useUsData()
   const firesheds = useGeoData('exp_firesheds.json'),
     wilderness = useGeoData('wilderness_clipped.json'),
     thinning = useGeoData('firesheds_thinning.json'),
@@ -42,6 +44,7 @@ const Map = ({
     zones = useGeoData('zone_totals.json')
 
   const svgRef = useRef()
+  const zoomLevel = window.innerWidth >= 768 ? 13.2 : 12.5
 
   const zoomer = useMemo(() => {
     const zoomConfig = [
@@ -102,10 +105,15 @@ const Map = ({
   }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea, zoomer])
 
   // projection
-  const projection = geoMercator()
-    .center([-116.4194, 38.8])
-    .scale(Math.pow(2, 13) / (2 * Math.PI))
-    .translate([width / 2, height / 2])
+  const projection = useMemo(
+    () =>
+      geoMercator()
+        .center(center)
+        .scale(Math.pow(2, zoomLevel) / (2 * Math.PI))
+        .translate([width / 2, height / 2]),
+
+    [width, height]
+  )
 
   // make tiles
   const tiler =
@@ -133,26 +141,17 @@ const Map = ({
           const url = getHillShade(...t)
           console.log(P)
           return (
-            <g key={i}>
-              <rect
-                stroke='red'
-                fill='none'
-                x={P[0]}
-                y={P[1]}
-                width={P[2]}
-                height={P[2]}
-              ></rect>
-              <image
-                xlinkHref={url}
-                key={i}
-                x={P[0]}
-                y={P[1]}
-                width={P[2]}
-                height={P[2]}
-              ></image>
-            </g>
+            <image
+              xlinkHref={url}
+              key={i}
+              x={P[0]}
+              y={P[1]}
+              width={P[2]}
+              height={P[2]}
+            ></image>
           )
         })}
+        {/*layer to cover tiles outside the states */}
         {firesheds &&
           firesheds.map((d) => (
             <path
