@@ -14,7 +14,7 @@ function position(tile, tiles) {
     translate: [tx, ty],
     scale: k,
   } = tiles
-  return [(x + tx) * k, (y + ty) * k]
+  return [(x + tx) * k, (y + ty) * k, k]
 }
 
 function getHillShade(x, y, z) {
@@ -104,7 +104,7 @@ const Map = ({
   // projection
   const projection = geoMercator()
     .center([-116.4194, 38.8])
-    .scale(Math.pow(2, 14) / (2 * Math.PI))
+    .scale(Math.pow(2, 13) / (2 * Math.PI))
     .translate([width / 2, height / 2])
 
   // make tiles
@@ -131,16 +131,26 @@ const Map = ({
         {tiles.map((t, i) => {
           const P = position(t, tiles)
           const url = getHillShade(...t)
-          console.log(url)
+          console.log(P)
           return (
-            <image
-              xlinkHref={url}
-              key={i}
-              x={P[0]}
-              y={P[1]}
-              width={t[2]}
-              height={t[2]}
-            ></image>
+            <g key={i}>
+              <rect
+                stroke='red'
+                fill='none'
+                x={P[0]}
+                y={P[1]}
+                width={P[2]}
+                height={P[2]}
+              ></rect>
+              <image
+                xlinkHref={url}
+                key={i}
+                x={P[0]}
+                y={P[1]}
+                width={P[2]}
+                height={P[2]}
+              ></image>
+            </g>
           )
         })}
         {firesheds &&
