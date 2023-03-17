@@ -41,7 +41,7 @@ const ForestChart = () => {
 
   return (
     <div>
-      <Header>Risk to old-growth forest from thinning</Header>
+      <Header>Mature forest density in thinning zones</Header>
       <Caption style={{ marginBottom: '20px' }}>
         The grey bar{' '}
         <div
@@ -63,9 +63,18 @@ const ForestChart = () => {
             verticalAlign: 'middle',
           }}
         ></div>{' '}
-        shows the % of the zone that is old-growth forest. The darker the shaded
-        area <Legend>0% to 100%</Legend>, the greater percentage of old-growth
-        forest it contains.
+        shows the % of the zone that is mature forest. The darker the shaded
+        area <Legend>0% to 100%</Legend>, the greater percentage of mature
+        forest it contains. Researchers{' '}
+        <a
+          rel='noreferrer'
+          target='_blank'
+          href='https://www.matureforests.org/importance-of-mature-forests '
+        >
+          classify mature forest
+        </a>{' '}
+        as high on three metrics — tree height, canopy cover and biomass
+        compared to surrounding areas.
       </Caption>
       <LazyLoad offset={-100} onContentVisible={fadeIn}>
         <Container>
@@ -126,7 +135,7 @@ const ForestChart = () => {
                     />
                     <Tooltip hovered={name === hover}>
                       {format('.1s')((ratio * landscapeacres) / 2.471)}{' '}
-                      hecatares of old-growth
+                      hecatares of mature forest
                     </Tooltip>
                   </div>
                 </Map>
