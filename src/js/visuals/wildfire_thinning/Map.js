@@ -4,9 +4,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ResetButton from '../../components/ResetButton'
 import useGeoData from '../../components/useGeoData'
 import useUsData from '../../components/useUsData'
-import { zoomIn, zoomOut } from '../utils'
+import { zoomed, zoomIn, zoomOut } from '../utils'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
+import arcgisPbfDecode from 'arcgis-pbf-parser'
 
 function position(tile, tiles) {
   const [x, y] = tile
@@ -37,7 +38,6 @@ const Map = ({
 }) => {
   const [cities, setCities] = useState(null)
   const { counties, states } = useUsData()
-  const [tiles, setTiles] = useState(null)
   const firesheds = useGeoData('exp_firesheds.json'),
     wilderness = useGeoData('wilderness_clipped.json'),
     thinning = useGeoData('firesheds_thinning.json'),
@@ -58,33 +58,31 @@ const Map = ({
     [width, height, zoomLevel]
   )
 
-  const zoomed = (transform, config) => {
-    for (let item of config) {
-      const el = select(document.getElementById(item.id))
-      if (item.transform) el.attr('transform', transform)
-      el.attr('stroke-width', item.baseStroke / transform.k)
-      el.attr('font-size', `${item.baseFont / transform.k}px`)
-    }
+  // create the tiler function and pass it the transform
+  const tiler =
+    projection &&
+    tile()
+      .size([width, height])
+      .scale(projection.scale() * 2 * Math.PI)
+      .translate(projection([0, 0]))
 
-    const initial = projection([0, 0])
-    const T = [initial[0] + transform.x, initial[1] + transform.y]
+  const tiles = tiler()
+  console.log(tiles)
+  // make tiles
 
-    // create the tiler function and pass it the transform
-    const tiler =
-      projection &&
-      tile()
-        .size([width, height])
-        .scale(projection.scale() * 2 * Math.PI)
-        .translate(T)
+  const test = Promise.all(
+    tiler().map(async (d) => {
+      d.data = await fetch(
+        `basemaps.arcgis.com/arcgis/rest/services/World_Hillshade_v2/VectorTileServer/tile/${d[2]}/${d[0]}/${d[1]}.pbf`
+      )
+        .then((response) => response.arrayBuffer())
+        .then((data) => arcgisPbfDecode(new Uint8Array(data)).featureCollection)
 
-    // make tiles
-    const tiles = tiler()
-    setTiles(tiles)
-    console.log(tiles)
-    // select the empty image by id
+      return d
+    })
+  )
 
-    // attach the tiles
-  }
+  console.log(test)
 
   const zoomer = useMemo(() => {
     const zoomConfig = [
