@@ -66,21 +66,17 @@ const Map = ({
       el.attr('font-size', `${item.baseFont / transform.k}px`)
     }
 
-    const initial = projection([0, 0])
-    const T = [initial[0] + transform.x, initial[1] + transform.y]
-
     // create the tiler function and pass it the transform
     const tiler =
       projection &&
       tile()
         .size([width, height])
         .scale(projection.scale() * 2 * Math.PI)
-        .translate(T)
+        .translate(projection([0, 0]))
 
     // make tiles
     const tiles = tiler()
     setTiles(tiles)
-    console.log(tiles)
     // select the empty image by id
 
     // attach the tiles
