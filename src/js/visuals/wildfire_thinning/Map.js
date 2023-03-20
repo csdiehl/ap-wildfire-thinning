@@ -8,21 +8,36 @@ import { zoomed, zoomIn, zoomOut } from '../utils'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
 import Protobuf from 'pbf'
-
 import mapbox from '@mapbox/vector-tile'
+// import rewind from '@turf/rewind'
 
-// old stuff for raster tiles version
-function position(tile, tiles) {
-  const [x, y] = tile
-  const {
-    translate: [tx, ty],
-    scale: k,
-  } = tiles
-  return [(x + tx) * k, (y + ty) * k, k]
+// M Bostock function for turning the json results from the PBF into geojson
+function geojson([x, y, z], layer) {
+  if (!layer) return
+  const features = []
+  for (let i = 0; i < layer.length; ++i) {
+    const f = layer.feature(i).toGeoJSON(x, y, z)
+    features.push(f)
+  }
+
+  const GeoJSON = { type: 'FeatureCollection', features }
+  // GeoJSON.features = GeoJSON.features.map((f) => rewind(f, { reverse: true }))
+  return GeoJSON
 }
 
-function getHillShade(x, y, z) {
-  return `https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/${z}/${y}/${x}.png`
+const hillColor = (symbol) => {
+  switch (symbol) {
+    case 6:
+      return '#dcd5cc'
+    case 5:
+      return '#eae8e3'
+    case 4:
+      return '#f9f8f6'
+    case 3:
+      return '#d0c7bb'
+    default:
+      return '#FFF'
+  }
 }
 
 const center = [-114.04, 40.71]
@@ -41,6 +56,7 @@ const Map = ({
   selectedArea,
 }) => {
   const [cities, setCities] = useState(null)
+  const [tiles, setTiles] = useState(null)
   const { counties, states } = useUsData()
   const firesheds = useGeoData('exp_firesheds.json'),
     wilderness = useGeoData('wilderness_clipped.json'),
@@ -62,29 +78,31 @@ const Map = ({
     [width, height, zoomLevel]
   )
 
-  // create the tiler function and pass it the transform
-  const tiler =
-    projection &&
-    tile()
-      .size([width, height])
-      .scale(projection.scale() * 2 * Math.PI)
-      .translate(projection([0, 0]))
-
   // Get the vector tiles
-  Promise.all(
-    tiler().map(async (d) => {
-      const VTile = mapbox.VectorTile
-      d.layers = new VTile(
-        new Protobuf(
-          await buffer(
-            `https://basemaps.arcgis.com/arcgis/rest/services/World_Hillshade_v2/VectorTileServer/tile/${d[2]}/${d[0]}/${d[1]}.pbf`
-          )
-        )
-      ).layers
+  useEffect(() => {
+    // create the tiler function and pass it the transform
+    const tiler =
+      projection &&
+      tile()
+        .size([width, height])
+        .scale(projection.scale() * 2 * Math.PI)
+        .translate(projection([0, 0]))
 
-      return d
-    })
-  ).then((tiles) => console.log(tiles))
+    Promise.all(
+      tiler().map(async (d) => {
+        const VTile = mapbox.VectorTile
+        d.layers = new VTile(
+          new Protobuf(
+            await buffer(
+              `https://basemaps.arcgis.com/arcgis/rest/services/World_Hillshade_v2/VectorTileServer/tile/${d[2]}/${d[0]}/${d[1]}.pbf`
+            )
+          )
+        ).layers
+
+        return d
+      })
+    ).then((tiles) => setTiles(tiles))
+  }, [height, projection, width])
 
   const zoomer = useMemo(() => {
     const zoomConfig = [
@@ -155,7 +173,15 @@ const Map = ({
       height={height}
     >
       <g id='map-content' cursor='pointer'>
-        <g id='hillshade-tiles'></g>
+        <g id='hillshade-tiles'>
+          {tiles &&
+            tiles.map((t) => {
+              const json = geojson(t, t.layers.Hillshade)
+              return (
+                <path key={t} fill='black' stroke='#FFF' d={path(json)}></path>
+              )
+            })}
+        </g>
         {firesheds &&
           firesheds.map((d) => (
             <path
