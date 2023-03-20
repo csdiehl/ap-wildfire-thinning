@@ -27,11 +27,15 @@ export const zoomOut = (svgRef, zoom) => {
     .call(zoom.transform, zoomIdentity.translate(0, 0).scale(1))
 }
 
-export const zoomed = (e, config) => {
+export const zoomed = (transform, config) => {
   for (let item of config) {
     const el = select(document.getElementById(item.id))
-    if (item.transform) el.attr('transform', e.transform)
-    el.attr('stroke-width', item.baseStroke / e.transform.k)
-    el.attr('font-size', `${item.baseFont / e.transform.k}px`)
+    if (item.transform) el.attr('transform', transform)
+    el.attr('stroke-width', item.baseStroke / transform.k)
+    el.attr('font-size', `${item.baseFont / transform.k}px`)
   }
+
+  // create the tiler function and pass it the transform
+  // select the empty image by id
+  // attach the tiles
 }

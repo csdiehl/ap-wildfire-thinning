@@ -1,12 +1,12 @@
-import React, { useRef, useEffect, useCallback, useState, useMemo } from 'react'
-import { zoom, geoAlbers, geoPath, geoMercator } from 'd3'
-import MapLabel from './MapLabel'
-import { codeToName, colors } from './utils'
-import { zoomIn, zoomOut, zoomed } from '../utils'
+import { geoMercator, geoPath, zoom, select } from 'd3'
+import { tile } from 'd3-tile'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ResetButton from '../../components/ResetButton'
 import useGeoData from '../../components/useGeoData'
 import useUsData from '../../components/useUsData'
-import { tile } from 'd3-tile'
+import { zoomIn, zoomOut } from '../utils'
+import MapLabel from './MapLabel'
+import { codeToName, colors } from './utils'
 
 function position(tile, tiles) {
   const [x, y] = tile
@@ -37,6 +37,7 @@ const Map = ({
 }) => {
   const [cities, setCities] = useState(null)
   const { counties, states } = useUsData()
+  const [tiles, setTiles] = useState(null)
   const firesheds = useGeoData('exp_firesheds.json'),
     wilderness = useGeoData('wilderness_clipped.json'),
     thinning = useGeoData('firesheds_thinning.json'),
@@ -45,6 +46,45 @@ const Map = ({
 
   const svgRef = useRef()
   const zoomLevel = window.innerWidth >= 768 ? 13.2 : 12.5
+
+  // projection
+  const projection = useMemo(
+    () =>
+      geoMercator()
+        .center(center)
+        .scale(Math.pow(2, zoomLevel) / (2 * Math.PI))
+        .translate([width / 2, height / 2]),
+
+    [width, height, zoomLevel]
+  )
+
+  const zoomed = (transform, config) => {
+    for (let item of config) {
+      const el = select(document.getElementById(item.id))
+      if (item.transform) el.attr('transform', transform)
+      el.attr('stroke-width', item.baseStroke / transform.k)
+      el.attr('font-size', `${item.baseFont / transform.k}px`)
+    }
+
+    const initial = projection([0, 0])
+    const T = [initial[0] + transform.x, initial[1] + transform.y]
+
+    // create the tiler function and pass it the transform
+    const tiler =
+      projection &&
+      tile()
+        .size([width, height])
+        .scale(projection.scale() * 2 * Math.PI)
+        .translate(T)
+
+    // make tiles
+    const tiles = tiler()
+    setTiles(tiles)
+    console.log(tiles)
+    // select the empty image by id
+
+    // attach the tiles
+  }
 
   const zoomer = useMemo(() => {
     const zoomConfig = [
@@ -60,7 +100,7 @@ const Map = ({
 
     return zoom()
       .scaleExtent([1, 8])
-      .on('zoom', (e) => zoomed(e, zoomConfig))
+      .on('zoom', ({ transform }) => zoomed(transform, zoomConfig))
   }, [width])
 
   // this is not ideal, but have to call reset on 1st load to get the right strokes
@@ -104,27 +144,6 @@ const Map = ({
     zoomOut(svgRef, zoomer)
   }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea, zoomer])
 
-  // projection
-  const projection = useMemo(
-    () =>
-      geoMercator()
-        .center(center)
-        .scale(Math.pow(2, zoomLevel) / (2 * Math.PI))
-        .translate([width / 2, height / 2]),
-
-    [width, height]
-  )
-
-  // make tiles
-  const tiler =
-    projection &&
-    tile()
-      .size([width, height])
-      .scale(projection.scale() * 2 * Math.PI)
-      .translate(projection([0, 0]))
-
-  const tiles = tiler()
-
   // generators
   const path = geoPath(projection)
 
@@ -136,22 +155,23 @@ const Map = ({
       height={height}
     >
       <g id='map-content' cursor='pointer'>
-        {tiles.map((t, i) => {
-          const P = position(t, tiles)
-          const url = getHillShade(...t)
-          console.log(P)
-          return (
-            <image
-              xlinkHref={url}
-              key={i}
-              x={P[0]}
-              y={P[1]}
-              width={P[2]}
-              height={P[2]}
-            ></image>
-          )
-        })}
-        {/*layer to cover tiles outside the states */}
+        <g id='hillshade-tiles'>
+          {tiles &&
+            tiles.map((t, i) => {
+              const P = position(t, tiles)
+              const url = getHillShade(...t)
+              return (
+                <image
+                  xlinkHref={url}
+                  key={i}
+                  x={P[0]}
+                  y={P[1]}
+                  width={P[2]}
+                  height={P[2]}
+                ></image>
+              )
+            })}
+        </g>
         {firesheds &&
           firesheds.map((d) => (
             <path
