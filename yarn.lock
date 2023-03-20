@@ -1246,6 +1246,18 @@
     hoist-non-react-statics "^3.3.1"
     react-is "^16.12.0"
 
+"@mapbox/point-geometry@~0.1.0":
+  version "0.1.0"
+  resolved "https://associatedpress.jfrog.io/artifactory/api/npm/npm/@mapbox/point-geometry/-/point-geometry-0.1.0.tgz#8a83f9335c7860effa2eeeca254332aa0aeed8f2"
+  integrity sha512-6j56HdLTwWGO0fJPlrZtdU/B13q8Uwmo18Ck2GnGgN9PCFyKTZ3UbXeEdRFh18i9XQ92eH2VdtpJHpBD3aripQ==
+
+"@mapbox/vector-tile@^1.3.1":
+  version "1.3.1"
+  resolved "https://associatedpress.jfrog.io/artifactory/api/npm/npm/@mapbox/vector-tile/-/vector-tile-1.3.1.tgz#d3a74c90402d06e89ec66de49ec817ff53409666"
+  integrity sha512-MCEddb8u44/xfQ3oD+Srl/tNcQoqTw3goGk2oLsrFxOTc3dUp+kAnby3PvAeeBYSMSjSPD1nd1AJA6W49WnoUw==
+  dependencies:
+    "@mapbox/point-geometry" "~0.1.0"
+
 "@material-ui/core@^4.12.2":
   version "4.12.4"
   resolved "https://associatedpress.jfrog.io/artifactory/api/npm/npm/@material-ui/core/-/core-4.12.4.tgz#4ac17488e8fcaf55eb6a7f5efb2a131e10138a73"

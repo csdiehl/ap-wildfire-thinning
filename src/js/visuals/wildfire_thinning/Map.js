@@ -1,4 +1,4 @@
-import { geoMercator, geoPath, zoom, select } from 'd3'
+import { geoMercator, geoPath, zoom, buffer } from 'd3'
 import { tile } from 'd3-tile'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ResetButton from '../../components/ResetButton'
@@ -7,8 +7,11 @@ import useUsData from '../../components/useUsData'
 import { zoomed, zoomIn, zoomOut } from '../utils'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
-import arcgisPbfDecode from 'arcgis-pbf-parser'
+import Protobuf from 'pbf'
 
+import mapbox from '@mapbox/vector-tile'
+
+// old stuff for raster tiles version
 function position(tile, tiles) {
   const [x, y] = tile
   const {
@@ -24,6 +27,7 @@ function getHillShade(x, y, z) {
 
 const center = [-114.04, 40.71]
 
+// component
 const Map = ({
   width,
   height,
@@ -66,23 +70,21 @@ const Map = ({
       .scale(projection.scale() * 2 * Math.PI)
       .translate(projection([0, 0]))
 
-  const tiles = tiler()
-  console.log(tiles)
-  // make tiles
-
-  const test = Promise.all(
+  // Get the vector tiles
+  Promise.all(
     tiler().map(async (d) => {
-      d.data = await fetch(
-        `basemaps.arcgis.com/arcgis/rest/services/World_Hillshade_v2/VectorTileServer/tile/${d[2]}/${d[0]}/${d[1]}.pbf`
-      )
-        .then((response) => response.arrayBuffer())
-        .then((data) => arcgisPbfDecode(new Uint8Array(data)).featureCollection)
+      const VTile = mapbox.VectorTile
+      d.layers = new VTile(
+        new Protobuf(
+          await buffer(
+            `https://basemaps.arcgis.com/arcgis/rest/services/World_Hillshade_v2/VectorTileServer/tile/${d[2]}/${d[0]}/${d[1]}.pbf`
+          )
+        )
+      ).layers
 
       return d
     })
-  )
-
-  console.log(test)
+  ).then((tiles) => console.log(tiles))
 
   const zoomer = useMemo(() => {
     const zoomConfig = [
@@ -153,23 +155,7 @@ const Map = ({
       height={height}
     >
       <g id='map-content' cursor='pointer'>
-        <g id='hillshade-tiles'>
-          {tiles &&
-            tiles.map((t, i) => {
-              const P = position(t, tiles)
-              const url = getHillShade(...t)
-              return (
-                <image
-                  xlinkHref={url}
-                  key={i}
-                  x={P[0]}
-                  y={P[1]}
-                  width={P[2]}
-                  height={P[2]}
-                ></image>
-              )
-            })}
-        </g>
+        <g id='hillshade-tiles'></g>
         {firesheds &&
           firesheds.map((d) => (
             <path
@@ -318,20 +304,3 @@ const Map = ({
 }
 
 export default Map
-
-//    "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Major_Cities/FeatureServer/0/query?where=%20(ST%20%3D%20'CA'%20OR%20ST%20%3D%20'UT'%20OR%20ST%20%3D%20'CO'%20OR%20ST%20%3D%20'OR'%20OR%20ST%20%3D%20'WA'%20OR%20ST%20%3D%20'NV'%20OR%20ST%20%3D%20'AZ'%20OR%20ST%20%3D%20'NM'%20OR%20ST%20%3D%20'MT'%20OR%20ST%20%3D%20'ID')%20%20AND%20%20(POP_CLASS%20%3D%207%20OR%20POP_CLASS%20%3D%2010)%20&outFields=CLASS,ST,STFIPS,PLACEFIPS,POP_CLASS,POPULATION,NAME&outSR=4326&f=json"
-
-/***
- *   {tiles().map(([x, y, z], i, { translate: [tx, ty], scale: k }) => {
-          return (
-            <image
-              key={i}
-              xlinkHref={getHillShade(x, y, z)}
-              x={Math.round((x + tx) * k)}
-              y={Math.round((y + ty) * k)}
-              width={k}
-              height={k}
-            ></image>
-          )
-        })}
- */
