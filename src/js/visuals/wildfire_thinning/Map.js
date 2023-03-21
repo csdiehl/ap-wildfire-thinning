@@ -1,6 +1,7 @@
 import { geoMercator, geoPath, zoom, select } from 'd3'
 import { tile } from 'd3-tile'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { transform } from 'topojson-client'
 import ResetButton from '../../components/ResetButton'
 import useGeoData from '../../components/useGeoData'
 import useUsData from '../../components/useUsData'
@@ -37,7 +38,8 @@ const Map = ({
 }) => {
   const [cities, setCities] = useState(null)
   const { counties, states } = useUsData()
-  const [tiles, setTiles] = useState(null)
+  // const [tiles, setTiles] = useState(null)
+  const [zoomTransform, setZoomTransform] = useState({ x: 0, y: 0, k: 1 })
   const firesheds = useGeoData('exp_firesheds.json'),
     wilderness = useGeoData('wilderness_clipped.json'),
     thinning = useGeoData('firesheds_thinning.json'),
@@ -58,6 +60,15 @@ const Map = ({
     [width, height, zoomLevel]
   )
 
+  // create the tiler function
+  let tiler = tile()
+    .size([width, height])
+    .scale(projection.scale() * 2 * Math.PI)
+    .translate(projection([0, 0]))
+
+  const tiles = tiler()
+  tiles.scale = tiles.scale / zoomTransform.k
+
   const zoomed = (transform, config) => {
     for (let item of config) {
       const el = select(document.getElementById(item.id))
@@ -66,20 +77,7 @@ const Map = ({
       el.attr('font-size', `${item.baseFont / transform.k}px`)
     }
 
-    // create the tiler function and pass it the transform
-    const tiler =
-      projection &&
-      tile()
-        .size([width, height])
-        .scale(projection.scale() * 2 * Math.PI)
-        .translate(projection([0, 0]))
-
-    // make tiles
-    const tiles = tiler()
-    setTiles(tiles)
-    // select the empty image by id
-
-    // attach the tiles
+    setZoomTransform(transform)
   }
 
   const zoomer = useMemo(() => {
@@ -155,16 +153,16 @@ const Map = ({
           {tiles &&
             tiles.map((t, i) => {
               const P = position(t, tiles)
-              const url = getHillShade(...t)
               return (
-                <image
-                  xlinkHref={url}
+                <rect
+                  stroke='red'
+                  fill='none'
                   key={i}
                   x={P[0]}
                   y={P[1]}
                   width={P[2]}
                   height={P[2]}
-                ></image>
+                ></rect>
               )
             })}
         </g>

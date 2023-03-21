@@ -6,7 +6,7 @@ export const zoomIn = (bounds, svgRef, zoom, width, height) => {
   const svg = select(svgRef.current)
   svg
     .transition()
-    .duration(1000)
+    .duration(2000)
     .call(
       zoom.transform,
       zoomIdentity
