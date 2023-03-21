@@ -21,7 +21,7 @@ function getHillShade(x, y, z) {
 }
 
 const center = [-114.04, 40.71]
-const initialScale = 1 << 12
+const initialScale = 1 << 13
 
 // projection
 const projection = geoMercator()
@@ -105,6 +105,14 @@ const Map = ({
 
     getCities().then((data) => setCities(data))
   }, [])
+
+  // zoom in when clicking on a city
+  function onClick(data) {
+    const id = data.id.toString()
+    id?.length >= 4 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
+
+    setSelectedArea(id)
+  }
 
   // reset back to normal zoom
 
@@ -216,6 +224,7 @@ const Map = ({
         {states &&
           states.map((d) => (
             <path
+              onClick={() => onClick(d)}
               key={d.id}
               d={path(d)}
               fill={

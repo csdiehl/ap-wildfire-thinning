@@ -34,8 +34,4 @@ export const zoomed = (transform, config) => {
     el.attr('stroke-width', item.baseStroke / transform.k)
     el.attr('font-size', `${item.baseFont / transform.k}px`)
   }
-
-  // create the tiler function and pass it the transform
-  // select the empty image by id
-  // attach the tiles
 }
