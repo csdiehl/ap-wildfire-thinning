@@ -22,11 +22,8 @@ function getHillShade(x, y, z) {
 
 const center = [-114.04, 40.71]
 const initialScale = 1 << 13
-
-// projection
-const projection = geoMercator()
-  .scale(1 / (2 * Math.PI))
-  .translate([0, 0])
+// projection - has to be outside the map
+const mercator = geoMercator()
 
 const Map = ({
   width,
@@ -40,6 +37,7 @@ const Map = ({
   stateIsZoomed,
   selectedArea,
 }) => {
+  // Get Data
   const [cities, setCities] = useState(null)
   const { counties, states } = useUsData()
   const [tiles, setTiles] = useState(null)
@@ -49,7 +47,15 @@ const Map = ({
     hwys = useGeoData('hwy_west.json'),
     zones = useGeoData('zone_totals.json')
 
+  // Projection Settings
+  const [proj, setProj] = useState({
+    scale: 1 / (2 * Math.PI),
+    translate: [0, 0],
+  })
+
   const svgRef = useRef()
+
+  const projection = mercator.scale(proj.scale).translate(proj.translate)
 
   const path = geoPath(projection)
 
@@ -60,6 +66,7 @@ const Map = ({
     ])
     .tileSize(512)
 
+  // zoom behavior
   const zoomer = zoom()
     .scaleExtent([1 << 10, 1 << 15])
     .extent([
@@ -67,6 +74,17 @@ const Map = ({
       [width, height],
     ])
     .on('zoom', ({ transform }) => zoomed(transform))
+
+  // zoom actions
+  function zoomed(transform) {
+    const newTiles = tiler(transform)
+    setTiles(newTiles)
+
+    const newScale = transform.k / (2 * Math.PI),
+      newTrans = [transform.x, transform.y]
+
+    setProj({ scale: newScale, translate: newTrans })
+  }
 
   useEffect(() => {
     const svg = select(svgRef.current)
@@ -79,15 +97,6 @@ const Map = ({
         .scale(-1)
     )
   }, [])
-
-  function zoomed(transform) {
-    const newTiles = tiler(transform)
-    setTiles(newTiles)
-
-    projection
-      .scale(transform.k / (2 * Math.PI))
-      .translate([transform.x, transform.y])
-  }
 
   // get the cities data - filter for our states is already in the url
   //www.arcgis.com/home/item.html?id=9df5e769bfe8412b8de36a2e618c7672#overview
@@ -110,6 +119,19 @@ const Map = ({
   function onClick(data) {
     const id = data.id.toString()
     id?.length >= 4 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
+
+    const svg = select(svgRef.current)
+    svg
+      .transition()
+      .duration(750)
+      .call(
+        zoomer.transform,
+        zoomIdentity
+          .translate(width / 2, height / 2)
+          .scale(-initialScale)
+          .translate(...projection(center))
+          .scale(-1)
+      )
 
     setSelectedArea(id)
   }
@@ -282,7 +304,9 @@ const Map = ({
       <text fontSize='12px' x={10} y={height - 10}>
         Data: U.S. Forest Service
       </text>
-      {(stateIsZoomed || countyIsZoomed) && <ResetButton />}
+      {(stateIsZoomed || countyIsZoomed) && (
+        <ResetButton onClick={() => reset()} />
+      )}
     </svg>
   )
 }
