@@ -45,7 +45,8 @@ const Map = ({
     zones = useGeoData('zone_totals.json')
 
   const svgRef = useRef()
-  const zoomLevel = window.innerWidth >= 768 ? 13.2 : 12.5
+  const zoomLevel =
+    window.innerWidth >= 768 ? 13.2 : window.innerWidth > 500 ? 12.8 : 12.5
 
   // projection
   const projection = useMemo(

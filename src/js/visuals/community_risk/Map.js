@@ -1,5 +1,5 @@
 import {
-  geoAlbers,
+  geoMercator,
   geoPath,
   max,
   scaleQuantile,
@@ -33,7 +33,7 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
 
   // projection
   const projection = useMemo(
-    () => outline && geoAlbers().fitSize([width, height], outline),
+    () => outline && geoMercator().fitSize([width, height], outline),
     [width, height, outline]
   )
 
@@ -139,7 +139,13 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
           </g>
           {states &&
             states.map((d) => (
-              <path key={d.id} d={path(d)} fill='none' stroke='#121212'></path>
+              <path
+                key={d.id}
+                d={path(d)}
+                fill='none'
+                stroke='#121212'
+                strokeWidth={0.5}
+              ></path>
             ))}
           <g id='spikes'>
             {cities.map((d) => (
