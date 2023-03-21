@@ -1,10 +1,9 @@
-import { geoMercator, geoPath, zoom, select } from 'd3'
+import { geoMercator, geoPath, select, zoom, zoomIdentity } from 'd3'
 import { tile } from 'd3-tile'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ResetButton from '../../components/ResetButton'
 import useGeoData from '../../components/useGeoData'
 import useUsData from '../../components/useUsData'
-import { zoomIn, zoomOut } from '../utils'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
 
@@ -22,6 +21,12 @@ function getHillShade(x, y, z) {
 }
 
 const center = [-114.04, 40.71]
+const initialScale = 1 << 12
+
+// projection
+const projection = geoMercator()
+  .scale(1 / (2 * Math.PI))
+  .translate([0, 0])
 
 const Map = ({
   width,
@@ -45,64 +50,44 @@ const Map = ({
     zones = useGeoData('zone_totals.json')
 
   const svgRef = useRef()
-  const zoomLevel = window.innerWidth >= 768 ? 13.2 : 12.5
 
-  // projection
-  const projection = useMemo(
-    () =>
-      geoMercator()
-        .center(center)
-        .scale(Math.pow(2, zoomLevel) / (2 * Math.PI))
-        .translate([width / 2, height / 2]),
+  const path = geoPath(projection)
 
-    [width, height, zoomLevel]
-  )
+  const tiler = tile()
+    .extent([
+      [0, 0],
+      [width, height],
+    ])
+    .tileSize(512)
 
-  const zoomed = (transform, config) => {
-    for (let item of config) {
-      const el = select(document.getElementById(item.id))
-      if (item.transform) el.attr('transform', transform)
-      el.attr('stroke-width', item.baseStroke / transform.k)
-      el.attr('font-size', `${item.baseFont / transform.k}px`)
-    }
+  const zoomer = zoom()
+    .scaleExtent([1 << 10, 1 << 15])
+    .extent([
+      [0, 0],
+      [width, height],
+    ])
+    .on('zoom', ({ transform }) => zoomed(transform))
 
-    // create the tiler function and pass it the transform
-    const tiler =
-      projection &&
-      tile()
-        .size([width, height])
-        .scale(projection.scale() * 2 * Math.PI)
-        .translate(projection([0, 0]))
-
-    // make tiles
-    const tiles = tiler()
-    setTiles(tiles)
-    // select the empty image by id
-
-    // attach the tiles
-  }
-
-  const zoomer = useMemo(() => {
-    const zoomConfig = [
-      { id: 'map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
-      {
-        id: 'cities',
-        transform: false,
-        baseStroke: 2,
-        baseFont: width >= 730 ? 12 : 10,
-      },
-      { id: 'highways', transform: false, baseStroke: 0.8, baseFont: 10 },
-    ]
-
-    return zoom()
-      .scaleExtent([1, 8])
-      .on('zoom', ({ transform }) => zoomed(transform, zoomConfig))
-  }, [width])
-
-  // this is not ideal, but have to call reset on 1st load to get the right strokes
   useEffect(() => {
-    reset()
-  }, [reset])
+    const svg = select(svgRef.current)
+    svg.call(zoomer).call(
+      zoomer.transform,
+      zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(-initialScale)
+        .translate(...projection(center))
+        .scale(-1)
+    )
+  }, [])
+
+  function zoomed(transform) {
+    const newTiles = tiler(transform)
+    setTiles(newTiles)
+
+    projection
+      .scale(transform.k / (2 * Math.PI))
+      .translate([transform.x, transform.y])
+  }
 
   // get the cities data - filter for our states is already in the url
   //www.arcgis.com/home/item.html?id=9df5e769bfe8412b8de36a2e618c7672#overview
@@ -121,27 +106,7 @@ const Map = ({
     getCities().then((data) => setCities(data))
   }, [])
 
-  // event handlers
-  function onClick(data) {
-    const id = data.id.toString()
-    id?.length >= 4 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
-
-    setSelectedArea(id)
-
-    zoomIn(path.bounds(data), svgRef, zoomer, width, height)
-  }
-
   // reset back to normal zoom
-  const reset = useCallback(() => {
-    setStateIsZoomed(false)
-    setCountyIsZoomed(false)
-    setSelectedArea('none')
-
-    zoomOut(svgRef, zoomer)
-  }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea, zoomer])
-
-  // generators
-  const path = geoPath(projection)
 
   return (
     <svg
@@ -204,7 +169,6 @@ const Map = ({
         {counties &&
           counties.map((d) => (
             <path
-              onClick={() => onClick(d)}
               key={d.id}
               d={path(d)}
               fill='#EEE'
@@ -252,7 +216,6 @@ const Map = ({
         {states &&
           states.map((d) => (
             <path
-              onClick={() => onClick(d)}
               key={d.id}
               d={path(d)}
               fill={
@@ -310,26 +273,9 @@ const Map = ({
       <text fontSize='12px' x={10} y={height - 10}>
         Data: U.S. Forest Service
       </text>
-      {(stateIsZoomed || countyIsZoomed) && <ResetButton onClick={reset} />}
+      {(stateIsZoomed || countyIsZoomed) && <ResetButton />}
     </svg>
   )
 }
 
 export default Map
-
-//    "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Major_Cities/FeatureServer/0/query?where=%20(ST%20%3D%20'CA'%20OR%20ST%20%3D%20'UT'%20OR%20ST%20%3D%20'CO'%20OR%20ST%20%3D%20'OR'%20OR%20ST%20%3D%20'WA'%20OR%20ST%20%3D%20'NV'%20OR%20ST%20%3D%20'AZ'%20OR%20ST%20%3D%20'NM'%20OR%20ST%20%3D%20'MT'%20OR%20ST%20%3D%20'ID')%20%20AND%20%20(POP_CLASS%20%3D%207%20OR%20POP_CLASS%20%3D%2010)%20&outFields=CLASS,ST,STFIPS,PLACEFIPS,POP_CLASS,POPULATION,NAME&outSR=4326&f=json"
-
-/***
- *   {tiles().map(([x, y, z], i, { translate: [tx, ty], scale: k }) => {
-          return (
-            <image
-              key={i}
-              xlinkHref={getHillShade(x, y, z)}
-              x={Math.round((x + tx) * k)}
-              y={Math.round((y + ty) * k)}
-              width={k}
-              height={k}
-            ></image>
-          )
-        })}
- */
