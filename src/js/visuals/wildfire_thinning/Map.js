@@ -58,29 +58,32 @@ const Map = ({
     [width, height, zoomLevel]
   )
 
-  const zoomed = (transform, config) => {
-    for (let item of config) {
-      const el = select(document.getElementById(item.id))
-      if (item.transform) el.attr('transform', transform)
-      el.attr('stroke-width', item.baseStroke / transform.k)
-      el.attr('font-size', `${item.baseFont / transform.k}px`)
-    }
+  const zoomed = useCallback(
+    (transform, config) => {
+      for (let item of config) {
+        const el = select(document.getElementById(item.id))
+        if (item.transform) el.attr('transform', transform)
+        el.attr('stroke-width', item.baseStroke / transform.k)
+        el.attr('font-size', `${item.baseFont / transform.k}px`)
+      }
 
-    // create the tiler function and pass it the transform
-    const tiler =
-      projection &&
-      tile()
-        .size([width, height])
-        .scale(projection.scale() * 2 * Math.PI)
-        .translate(projection([0, 0]))
+      // create the tiler function and pass it the transform
+      const tiler =
+        projection &&
+        tile()
+          .size([width, height])
+          .scale(projection.scale() * 2 * Math.PI)
+          .translate(projection([0, 0]))
 
-    // make tiles
-    const tiles = tiler()
-    setTiles(tiles)
-    // select the empty image by id
+      // make tiles
+      const tiles = tiler()
+      setTiles(tiles)
+      // select the empty image by id
 
-    // attach the tiles
-  }
+      // attach the tiles
+    },
+    [height, width, projection]
+  )
 
   const zoomer = useMemo(() => {
     const zoomConfig = [
@@ -97,12 +100,12 @@ const Map = ({
     return zoom()
       .scaleExtent([1, 8])
       .on('zoom', ({ transform }) => zoomed(transform, zoomConfig))
-  }, [width])
+  }, [width, zoomed])
 
   // this is not ideal, but have to call reset on 1st load to get the right strokes
   useEffect(() => {
     reset()
-  }, [reset])
+  }, [reset, width])
 
   // get the cities data - filter for our states is already in the url
   //www.arcgis.com/home/item.html?id=9df5e769bfe8412b8de36a2e618c7672#overview

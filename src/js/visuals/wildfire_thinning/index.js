@@ -26,12 +26,17 @@ const Container = styled.div`
     'Legend';
 
   @media (min-width: 768px) {
-    grid-template-columns: 30% 70%;
-    grid-template-rows: 50px 200px 500px;
+    grid-template-columns: 25% 75%;
+    grid-template-rows: 50px 350px 350px;
     grid-template-areas:
       'Header StackedBar'
       'Header Map'
       'Legend Map';
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 30% 70%;
+    grid-template-rows: 50px 200px 500px;
   }
 `
 
@@ -75,7 +80,7 @@ function WildfireThinning() {
         >
           <img height='20px' width='20px' src='./tap.svg' alt='tap icon'></img>
           {!stateIsZoomed && !countyIsZoomed && (
-            <p>
+            <p style={{ margin: '0px' }}>
               Click on a <strong>state</strong> to zoom in
             </p>
           )}
