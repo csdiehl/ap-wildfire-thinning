@@ -14,11 +14,10 @@ const Container = styled.div`
   display: grid;
   grid-gap: 10px;
   box-sizing: border-box;
-  height: calc(100vh - 40px);
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
-  grid-template-rows: 18% 8% 57% 15%;
+  grid-template-rows: auto 50px 500px auto;
   grid-template-columns: 100%;
   grid-template-areas:
     'Header'
@@ -28,11 +27,11 @@ const Container = styled.div`
 
   @media (min-width: 768px) {
     grid-template-columns: 30% 70%;
-    grid-template-rows: 50% 40% 10%;
+    grid-template-rows: 50px 200px 500px;
     grid-template-areas:
+      'Header StackedBar'
       'Header Map'
-      'Legend Map'
-      'StackedBar StackedBar';
+      'Legend Map';
   }
 `
 

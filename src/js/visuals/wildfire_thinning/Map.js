@@ -151,7 +151,10 @@ const Map = ({
       height={height}
     >
       <g id='map-content' cursor='pointer'>
-        <g id='hillshade-tiles'>
+        <g
+          id='hillshade-tiles'
+          style={{ opacity: stateIsZoomed ? 0 : 1, transition: 'opacity 1s' }}
+        >
           {tiles &&
             tiles.map((t, i) => {
               const P = position(t, tiles)
