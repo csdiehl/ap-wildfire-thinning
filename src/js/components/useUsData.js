@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { feature, merge } from 'topojson-client'
+import { feature, merge, mesh } from 'topojson-client'
 
 function useUsData(getCounties = true) {
   // retreive data stored in static folder
@@ -7,6 +7,7 @@ function useUsData(getCounties = true) {
     states: null,
     counties: null,
     outline: null,
+    mesh: null,
   })
   useEffect(() => {
     async function getData() {
@@ -44,12 +45,20 @@ function useUsData(getCounties = true) {
 
       const outline = await merge(data, stateGeos.geometries)
       const states = await feature(data, stateGeos).features
+      const stateMesh = await mesh(data, stateGeos, function (a, b) {
+        return a !== b
+      })
 
-      return [counties, outline, states]
+      return [counties, outline, states, stateMesh]
     }
 
-    getData().then(([counties, outline, states]) =>
-      setAllData({ counties: counties, outline: outline, states: states })
+    getData().then(([counties, outline, states, stateMesh]) =>
+      setAllData({
+        counties: counties,
+        outline: outline,
+        states: states,
+        mesh: stateMesh,
+      })
     )
   }, [getCounties])
 

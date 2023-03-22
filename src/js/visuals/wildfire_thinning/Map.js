@@ -36,13 +36,15 @@ const Map = ({
   selectedArea,
 }) => {
   const [cities, setCities] = useState(null)
-  const { counties, states } = useUsData()
+  const { counties, states, outline, mesh } = useUsData()
   const [tiles, setTiles] = useState(null)
   const firesheds = useGeoData('exp_firesheds.json'),
     wilderness = useGeoData('wilderness_clipped.json'),
     thinning = useGeoData('firesheds_thinning.json'),
     hwys = useGeoData('hwy_west.json'),
     zones = useGeoData('zone_totals.json')
+
+  console.log(mesh)
 
   const svgRef = useRef()
   const zoomLevel =
@@ -147,6 +149,23 @@ const Map = ({
   // generators
   const path = geoPath(projection)
 
+  const tileImages =
+    tiles &&
+    tiles.map((t, i) => {
+      const P = position(t, tiles)
+      const url = getHillShade(...t)
+      return (
+        <image
+          xlinkHref={url}
+          key={i}
+          x={P[0]}
+          y={P[1]}
+          width={P[2]}
+          height={P[2]}
+        ></image>
+      )
+    })
+
   return (
     <svg
       vectorEffect='non-scaling-stroke'
@@ -154,26 +173,24 @@ const Map = ({
       width={width}
       height={height}
     >
+      <defs>
+        <clipPath id='states-outline'>
+          {outline && <path d={path(outline)} stroke='darkgrey' />}
+        </clipPath>
+      </defs>
       <g id='map-content' cursor='pointer'>
         <g
+          id='hillshade-background'
+          style={{ opacity: stateIsZoomed ? 0 : 0.4, transition: 'opacity 1s' }}
+        >
+          {tileImages}
+        </g>
+        <g
           id='hillshade-tiles'
+          clipPath='url(#states-outline)'
           style={{ opacity: stateIsZoomed ? 0 : 1, transition: 'opacity 1s' }}
         >
-          {tiles &&
-            tiles.map((t, i) => {
-              const P = position(t, tiles)
-              const url = getHillShade(...t)
-              return (
-                <image
-                  xlinkHref={url}
-                  key={i}
-                  x={P[0]}
-                  y={P[1]}
-                  width={P[2]}
-                  height={P[2]}
-                ></image>
-              )
-            })}
+          {tileImages}
         </g>
         {firesheds &&
           firesheds.map((d) => (
@@ -224,6 +241,8 @@ const Map = ({
             ></path>
           ))}
 
+        {mesh && <path d={path(mesh)} fill='none' stroke='#333'></path>}
+
         {zones &&
           zones.map((d) => {
             return (
@@ -256,6 +275,7 @@ const Map = ({
               )
             })}
         </g>
+
         {states &&
           states.map((d) => (
             <path
@@ -274,7 +294,7 @@ const Map = ({
               fillOpacity={
                 stateIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
               }
-              stroke='#777777'
+              stroke='none'
             ></path>
           ))}
         <g id='map-label'>
