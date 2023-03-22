@@ -29,7 +29,7 @@ const heightScale = scaleSqrt()
 const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   const svgRef = useRef()
 
-  const { outline, states } = useUsData(false)
+  const { outline, states, mesh } = useUsData(false)
 
   // projection
   const projection = useMemo(
@@ -137,16 +137,7 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
               )
             })}
           </g>
-          {states &&
-            states.map((d) => (
-              <path
-                key={d.id}
-                d={path(d)}
-                fill='none'
-                stroke='#121212'
-                strokeWidth={0.5}
-              ></path>
-            ))}
+          {mesh && <path fill='none' stroke='#777' d={path(mesh)}></path>}
           <g id='spikes'>
             {cities.map((d) => (
               <path

@@ -217,6 +217,7 @@ const Map = ({
               d={path(d)}
               fill='darkgrey'
               stroke='#FFF'
+              fillOpacity={0.7}
             ></path>
           ))}
         <g id='highways'>
