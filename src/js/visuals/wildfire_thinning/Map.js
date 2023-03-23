@@ -37,7 +37,6 @@ const Map = ({
 }) => {
   const [cities, setCities] = useState(null)
   const { counties, states, outline, mesh } = useUsData()
-  const [tiles, setTiles] = useState(null)
   const firesheds = useGeoData('exp_firesheds.json'),
     wilderness = useGeoData('wilderness_clipped.json'),
     thinning = useGeoData('firesheds_thinning.json'),
@@ -69,6 +68,8 @@ const Map = ({
       .scale(projection.scale() * 2 * Math.PI)
       .translate(projection([0, 0]))
 
+  const tiles = tiler()
+
   const zoomed = useCallback(
     (transform, config) => {
       for (let item of config) {
@@ -77,13 +78,6 @@ const Map = ({
         el.attr('stroke-width', item.baseStroke / transform.k)
         el.attr('font-size', `${item.baseFont / transform.k}px`)
       }
-
-      // make tiles
-      const tiles = tiler()
-      setTiles(tiles)
-      // select the empty image by id
-
-      // attach the tiles
     },
     [height, width, projection]
   )
