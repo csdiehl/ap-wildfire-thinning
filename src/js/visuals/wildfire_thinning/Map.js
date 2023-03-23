@@ -61,6 +61,14 @@ const Map = ({
     [width, height, zoomLevel]
   )
 
+  // create the tiler function and pass it the transform
+  const tiler =
+    projection &&
+    tile()
+      .size([width, height])
+      .scale(projection.scale() * 2 * Math.PI)
+      .translate(projection([0, 0]))
+
   const zoomed = useCallback(
     (transform, config) => {
       for (let item of config) {
@@ -69,14 +77,6 @@ const Map = ({
         el.attr('stroke-width', item.baseStroke / transform.k)
         el.attr('font-size', `${item.baseFont / transform.k}px`)
       }
-
-      // create the tiler function and pass it the transform
-      const tiler =
-        projection &&
-        tile()
-          .size([width, height])
-          .scale(projection.scale() * 2 * Math.PI)
-          .translate(projection([0, 0]))
 
       // make tiles
       const tiles = tiler()
