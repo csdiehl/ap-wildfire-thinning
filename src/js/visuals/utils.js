@@ -11,11 +11,13 @@ export const zoomIn = (bounds, svgRef, zoom, width, height) => {
       zoom.transform,
       zoomIdentity
         .translate(width / 2, height / 2)
-        .scale(
-          Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height))
-        )
+        // .scale(
+        //   Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height))
+        // )
+        .scale(1.6)
         .translate(-(x0 + x1) / 2, -(y0 + y1) / 2)
     )
+  
 }
 
 export const zoomOut = (svgRef, zoom) => {

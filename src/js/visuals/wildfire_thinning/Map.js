@@ -8,6 +8,7 @@ import { zoomIn, zoomOut } from '../utils'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
 
+
 function position(tile, tiles) {
   const [x, y] = tile
   const {
@@ -43,20 +44,19 @@ const Map = ({
     thinning = useGeoData('firesheds_thinning.json'),
     hwys = useGeoData('hwy_west.json'),
     zones = useGeoData('zone_totals.json')
+  
+  const [mapCenter, centerMap] = useState({
+      center: [-114.04, 40.71]
+    })
 
   const svgRef = useRef()
   const zoomLevel = window.innerWidth >= 768 ? 13.2 : 12.5
 
   // projection
-  const projection = useMemo(
-    () =>
-      geoMercator()
-        .center(center)
-        .scale(Math.pow(2, zoomLevel) / (2 * Math.PI))
-        .translate([width / 2, height / 2]),
-
-    [width, height, zoomLevel]
-  )
+  const projection = geoMercator()
+    .center(center)
+    .scale(Math.pow(2, zoomLevel) / (2 * Math.PI))
+    .translate([width / 2, height / 2])
 
   const zoomed = (transform, config) => {
     for (let item of config) {
@@ -65,6 +65,10 @@ const Map = ({
       el.attr('stroke-width', item.baseStroke / transform.k)
       el.attr('font-size', `${item.baseFont / transform.k}px`)
     }
+
+    projection
+      .center(mapCenter.center)
+      .scale(transform.k * Math.pow(2, zoomLevel) / (2 * Math.PI))
 
     // create the tiler function and pass it the transform
     const tiler =
@@ -77,6 +81,8 @@ const Map = ({
     // make tiles
     const tiles = tiler()
     setTiles(tiles)
+
+    console.log(tiles[0])
     // select the empty image by id
 
     // attach the tiles
@@ -126,6 +132,9 @@ const Map = ({
     const id = data.id.toString()
     id?.length >= 4 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
 
+    const coords = projection.invert(path.centroid(data))
+    centerMap({ center: coords })
+
     setSelectedArea(id)
 
     zoomIn(path.bounds(data), svgRef, zoomer, width, height)
@@ -137,6 +146,7 @@ const Map = ({
     setCountyIsZoomed(false)
     setSelectedArea('none')
 
+    centerMap({ center: [-114.04, 40.71] })
     zoomOut(svgRef, zoomer)
   }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea, zoomer])
 
