@@ -1,10 +1,9 @@
-import { geoMercator, geoPath, zoom, select } from 'd3'
+import { geoMercator, geoPath, select, zoom } from 'd3'
 import { tile } from 'd3-tile'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ResetButton from '../../components/ResetButton'
 import useGeoData from '../../components/useGeoData'
 import useUsData from '../../components/useUsData'
-import { zoomIn, zoomOut } from '../utils'
 import MapLabel from './MapLabel'
 import { codeToName, colors } from './utils'
 
@@ -21,8 +20,6 @@ function getHillShade(x, y, z) {
   return `https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/${z}/${y}/${x}.png`
 }
 
-const center = [-114.04, 40.71]
-
 const Map = ({
   width,
   height,
@@ -37,7 +34,10 @@ const Map = ({
 }) => {
   const [cities, setCities] = useState(null)
   const { counties, states } = useUsData()
-  const [tiles, setTiles] = useState(null)
+  const [mapCenter, centerMap] = useState({
+    center: [-114.04, 40.71],
+    zoomLevel: 13,
+  })
   const firesheds = useGeoData('exp_firesheds.json'),
     wilderness = useGeoData('wilderness_clipped.json'),
     thinning = useGeoData('firesheds_thinning.json'),
@@ -45,46 +45,34 @@ const Map = ({
     zones = useGeoData('zone_totals.json')
 
   const svgRef = useRef()
-  const zoomLevel = window.innerWidth >= 768 ? 13.2 : 12.5
 
   // projection
-  const projection = useMemo(
-    () =>
-      geoMercator()
-        .center(center)
-        .scale(Math.pow(2, zoomLevel) / (2 * Math.PI))
-        .translate([width / 2, height / 2]),
+  const projection = geoMercator()
+    .center(mapCenter.center)
+    .scale(Math.pow(2, mapCenter.zoomLevel) / (2 * Math.PI))
+    .translate([width / 2, height / 2])
 
-    [width, height, zoomLevel]
-  )
+  // create the tiler function and pass it the transform
+  const tiler =
+    projection &&
+    tile()
+      .size([width, height])
+      .scale(projection.scale() * 2 * Math.PI)
+      .translate(projection([0, 0]))
 
-  const zoomed = useCallback(
-    (transform, config) => {
-      for (let item of config) {
-        const el = select(document.getElementById(item.id))
-        if (item.transform) el.attr('transform', transform)
-        el.attr('stroke-width', item.baseStroke / transform.k)
-        el.attr('font-size', `${item.baseFont / transform.k}px`)
-      }
+  // make tiles
+  const tiles = tiler()
 
-      // create the tiler function and pass it the transform
-      const tiler =
-        projection &&
-        tile()
-          .size([width, height])
-          .scale(projection.scale() * 2 * Math.PI)
-          .translate(projection([0, 0]))
+  const zoomed = useCallback((transform, config) => {
+    for (let item of config) {
+      const el = select(document.getElementById(item.id))
+      if (item.transform) el.attr('transform', transform)
+      el.attr('stroke-width', item.baseStroke / transform.k)
+      el.attr('font-size', `${item.baseFont / transform.k}px`)
+    }
+  }, [])
 
-      // make tiles
-      const tiles = tiler()
-      setTiles(tiles)
-      // select the empty image by id
-
-      // attach the tiles
-    },
-    [height, width, projection]
-  )
-
+  // now we're never calling this function because we're not using D3 to zoom at all
   const zoomer = useMemo(() => {
     const zoomConfig = [
       { id: 'map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
@@ -129,9 +117,11 @@ const Map = ({
     const id = data.id.toString()
     id?.length >= 4 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
 
-    setSelectedArea(id)
+    const coords = projection.invert(path.centroid(data))
 
-    zoomIn(path.bounds(data), svgRef, zoomer, width, height)
+    // update state
+    setSelectedArea(id)
+    centerMap({ center: coords, zoomLevel: 15 })
   }
 
   // reset back to normal zoom
@@ -140,8 +130,8 @@ const Map = ({
     setCountyIsZoomed(false)
     setSelectedArea('none')
 
-    zoomOut(svgRef, zoomer)
-  }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea, zoomer])
+    centerMap({ center: [-114.04, 40.71], zoomLevel: 13 })
+  }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea])
 
   // generators
   const path = geoPath(projection)
@@ -154,23 +144,29 @@ const Map = ({
       height={height}
     >
       <g id='map-content' cursor='pointer'>
-        <g
-          id='hillshade-tiles'
-          style={{ opacity: stateIsZoomed ? 0 : 1, transition: 'opacity 1s' }}
-        >
+        <g id='hillshade-tiles'>
           {tiles &&
             tiles.map((t, i) => {
               const P = position(t, tiles)
               const url = getHillShade(...t)
               return (
-                <image
-                  xlinkHref={url}
-                  key={i}
-                  x={P[0]}
-                  y={P[1]}
-                  width={P[2]}
-                  height={P[2]}
-                ></image>
+                <g key={i}>
+                  <rect
+                    x={P[0]}
+                    y={P[1]}
+                    width={P[2]}
+                    height={P[2]}
+                    stroke='red'
+                    fill='none'
+                  ></rect>
+                  <image
+                    xlinkHref={url}
+                    x={P[0]}
+                    y={P[1]}
+                    width={P[2]}
+                    height={P[2]}
+                  ></image>
+                </g>
               )
             })}
         </g>
