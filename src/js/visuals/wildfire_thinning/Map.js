@@ -21,7 +21,7 @@ function getHillShade(x, y, z) {
   return `https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/${z}/${y}/${x}.png`
 }
 
-const center = [-114.04, 40.71]
+const center = [-113.59762871871054, 41.126364011596266]
 
 const Map = ({
   width,
