@@ -1,4 +1,4 @@
-import { geoMercator, geoPath, select, zoom } from 'd3'
+import { geoMercator, geoPath, select, zoom, zoomIdentity } from 'd3'
 import { tile } from 'd3-tile'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ResetButton from '../../components/ResetButton'
