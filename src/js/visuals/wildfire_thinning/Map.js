@@ -28,7 +28,7 @@ const Map = ({
 }) => {
   const [mapCenter, centerMap] = useState({
     center: [-114.04, 40.71],
-    zoomLevel: 4096,
+    zoomLevel: 7000,
   })
   // const firesheds = useGeoData('exp_firesheds.json')
   const svgRef = useRef()
@@ -84,6 +84,7 @@ const Map = ({
         .translate([transform.x, transform.y])
 
       const paths = select(svgRef.current).selectAll('.fireshed')
+      const P = projection(mapCenter.center)
       paths.data(firesheds).attr('d', (d) => path(d))
     }
 
@@ -103,7 +104,7 @@ const Map = ({
   }, [mapCenter, height, width])
 
   function zoomIn() {
-    centerMap({ center: [-115.04, 39.71], zoomLevel: 2 * 4096 })
+    centerMap({ center: [-115.04, 39.71], zoomLevel: 2 * 7000 })
   }
 
   return (
