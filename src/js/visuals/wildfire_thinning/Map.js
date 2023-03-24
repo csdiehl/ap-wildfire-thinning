@@ -34,7 +34,7 @@ const Map = ({
   const svgRef = useRef()
 
   useEffect(() => {
-    // now we're never calling this function because we're not using D3 to zoom at all
+    // zoom behavior
     const zoomer = zoom()
       .scaleExtent([1 << 10, 1 << 15])
       .extent([
@@ -49,14 +49,12 @@ const Map = ({
       .translate([0, 0])
 
     // create the tiler function and pass it the transform
-    const tiler =
-      projection &&
-      tile()
-        .extent([
-          [0, 0],
-          [width, height],
-        ])
-        .tileSize(512)
+    const tiler = tile()
+      .extent([
+        [0, 0],
+        [width, height],
+      ])
+      .tileSize(256)
 
     // generators
     const path = geoPath(projection)
@@ -84,7 +82,6 @@ const Map = ({
         .translate([transform.x, transform.y])
 
       const paths = select(svgRef.current).selectAll('.fireshed')
-      const P = projection(mapCenter.center)
       paths.data(firesheds).attr('d', (d) => path(d))
     }
 
