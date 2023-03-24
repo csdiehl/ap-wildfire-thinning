@@ -98,19 +98,6 @@ const Map = ({
   // get the cities data - filter for our states is already in the url
   //www.arcgis.com/home/item.html?id=9df5e769bfe8412b8de36a2e618c7672#overview
   // https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-.htm
-  useEffect(() => {
-    async function getCities() {
-      const res = await fetch(
-        "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Major_Cities/FeatureServer/0/query?where=%20(ST%20%3D%20'CA'%20OR%20ST%20%3D%20'UT'%20OR%20ST%20%3D%20'CO'%20OR%20ST%20%3D%20'OR'%20OR%20ST%20%3D%20'WA'%20OR%20ST%20%3D%20'NV'%20OR%20ST%20%3D%20'AZ'%20OR%20ST%20%3D%20'NM'%20OR%20ST%20%3D%20'MT'%20OR%20ST%20%3D%20'ID')%20%20AND%20%20(POP_CLASS%20%3D%209%20OR%20POP_CLASS%20%3D%2010)%20&outFields=CLASS,ST,STFIPS,PLACEFIPS,POP_CLASS,POPULATION,NAME&outSR=4326&f=json"
-      )
-
-      const data = await res.json()
-
-      return data
-    }
-
-    getCities().then((data) => setCities(data))
-  }, [])
 
   // event handlers
   function onClick(data) {
