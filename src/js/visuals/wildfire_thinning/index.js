@@ -36,7 +36,7 @@ const Container = styled.div`
 
   @media (min-width: 1024px) {
     grid-template-columns: 30% 70%;
-    grid-template-rows: 80px 200px 500px;
+    grid-template-rows: 80px 350px 350px;
   }
 `
 
