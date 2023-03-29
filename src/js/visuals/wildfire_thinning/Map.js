@@ -1,12 +1,12 @@
-import { geoMercator, geoPath, zoom, select } from 'd3'
-import { tile } from 'd3-tile'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import ResetButton from '../../components/ResetButton'
-import useGeoData from '../../components/useGeoData'
-import useUsData from '../../components/useUsData'
-import { zoomIn, zoomOut } from '../utils'
-import MapLabel from './MapLabel'
-import { codeToName, colors } from './utils'
+import { geoMercator, geoPath, zoom, select } from "d3"
+import { tile } from "d3-tile"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import ResetButton from "../../components/ResetButton"
+import useGeoData from "../../components/useGeoData"
+import useUsData from "../../components/useUsData"
+import { zoomIn, zoomOut } from "../utils"
+import MapLabel from "./MapLabel"
+import { codeToName, colors } from "./utils"
 
 function position(tile, tiles) {
   const [x, y] = tile
@@ -37,11 +37,11 @@ const Map = ({
 }) => {
   const [cities, setCities] = useState(null)
   const { counties, states, outline, mesh } = useUsData()
-  const firesheds = useGeoData('exp_firesheds.json'),
-    wilderness = useGeoData('wilderness_clipped.json'),
-    thinning = useGeoData('firesheds_thinning.json'),
-    hwys = useGeoData('hwy_west.json'),
-    zones = useGeoData('zone_totals.json')
+  const firesheds = useGeoData("exp_firesheds.json"),
+    wilderness = useGeoData("wilderness_clipped.json"),
+    thinning = useGeoData("firesheds_thinning.json"),
+    hwys = useGeoData("hwy_west.json"),
+    zones = useGeoData("zone_totals.json")
 
   console.log(mesh)
 
@@ -74,9 +74,9 @@ const Map = ({
     (transform, config) => {
       for (let item of config) {
         const el = select(document.getElementById(item.id))
-        if (item.transform) el.attr('transform', transform)
-        el.attr('stroke-width', item.baseStroke / transform.k)
-        el.attr('font-size', `${item.baseFont / transform.k}px`)
+        if (item.transform) el.attr("transform", transform)
+        el.attr("stroke-width", item.baseStroke / transform.k)
+        el.attr("font-size", `${item.baseFont / transform.k}px`)
       }
     },
     [height, width, projection]
@@ -84,19 +84,24 @@ const Map = ({
 
   const zoomer = useMemo(() => {
     const zoomConfig = [
-      { id: 'map-content', transform: true, baseStroke: 0.5, baseFont: 10 },
       {
-        id: 'cities',
+        id: "map-content",
+        transform: true,
+        baseStroke: 0.5,
+        baseFont: width >= 500 ? 20 : 14,
+      },
+      {
+        id: "cities",
         transform: false,
         baseStroke: 2,
         baseFont: width >= 730 ? 12 : 10,
       },
-      { id: 'highways', transform: false, baseStroke: 0.8, baseFont: 10 },
+      { id: "highways", transform: false, baseStroke: 0.8, baseFont: 10 },
     ]
 
     return zoom()
       .scaleExtent([1, 8])
-      .on('zoom', ({ transform }) => zoomed(transform, zoomConfig))
+      .on("zoom", ({ transform }) => zoomed(transform, zoomConfig))
   }, [width, zoomed])
 
   // this is not ideal, but have to call reset on 1st load to get the right strokes
@@ -135,7 +140,7 @@ const Map = ({
   const reset = useCallback(() => {
     setStateIsZoomed(false)
     setCountyIsZoomed(false)
-    setSelectedArea('none')
+    setSelectedArea("none")
 
     zoomOut(svgRef, zoomer)
   }, [setCountyIsZoomed, setStateIsZoomed, setSelectedArea, zoomer])
@@ -162,27 +167,27 @@ const Map = ({
 
   return (
     <svg
-      vectorEffect='non-scaling-stroke'
+      vectorEffect="non-scaling-stroke"
       ref={svgRef}
       width={width}
       height={height}
     >
       <defs>
-        <clipPath id='states-outline'>
-          {outline && <path d={path(outline)} stroke='darkgrey' />}
+        <clipPath id="states-outline">
+          {outline && <path d={path(outline)} stroke="darkgrey" />}
         </clipPath>
       </defs>
-      <g id='map-content' cursor='pointer'>
+      <g id="map-content" cursor="pointer">
         <g
-          id='hillshade-background'
-          style={{ opacity: stateIsZoomed ? 0 : 0.4, transition: 'opacity 1s' }}
+          id="hillshade-background"
+          style={{ opacity: stateIsZoomed ? 0 : 0.4, transition: "opacity 1s" }}
         >
           {tileImages}
         </g>
         <g
-          id='hillshade-tiles'
-          clipPath='url(#states-outline)'
-          style={{ opacity: stateIsZoomed ? 0 : 1, transition: 'opacity 1s' }}
+          id="hillshade-tiles"
+          clipPath="url(#states-outline)"
+          style={{ opacity: stateIsZoomed ? 0 : 1, transition: "opacity 1s" }}
         >
           {tileImages}
         </g>
@@ -192,7 +197,7 @@ const Map = ({
               key={d.properties.fireshed_code}
               d={path(d)}
               fill={fireshedColor(parseInt(d.properties.exp_level_out))}
-              stroke='#FFF'
+              stroke="#FFF"
             ></path>
           ))}
         {thinning &&
@@ -200,7 +205,7 @@ const Map = ({
             <path
               key={d.properties.fireshed_code + d.properties.objectid}
               d={path(d)}
-              stroke='lightgrey'
+              stroke="lightgrey"
               fill={thinningColor(parseInt(d.properties.exp_level))}
             ></path>
           ))}
@@ -209,15 +214,15 @@ const Map = ({
             <path
               key={d.properties.name + d.properties.agency}
               d={path(d)}
-              fill='darkgrey'
-              stroke='#FFF'
+              fill="darkgrey"
+              stroke="#FFF"
               fillOpacity={0.7}
             ></path>
           ))}
-        <g id='highways'>
+        <g id="highways">
           {hwys &&
             hwys.map((d, i) => (
-              <path key={i} d={path(d)} fill='none' stroke='#454545'></path>
+              <path key={i} d={path(d)} fill="none" stroke="#454545"></path>
             ))}
         </g>
         {counties &&
@@ -226,17 +231,17 @@ const Map = ({
               onClick={() => onClick(d)}
               key={d.id}
               d={path(d)}
-              fill='#EEE'
+              fill="#EEE"
               fillOpacity={
                 countyIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
               }
               stroke={
-                d.id.toString() === selectedArea ? '#121212' : 'lightgrey'
+                d.id.toString() === selectedArea ? "#121212" : "lightgrey"
               }
             ></path>
           ))}
 
-        {mesh && <path d={path(mesh)} fill='none' stroke='#333'></path>}
+        {mesh && <path d={path(mesh)} fill="none" stroke="#333"></path>}
 
         {zones &&
           zones.map((d) => {
@@ -244,26 +249,26 @@ const Map = ({
               <path
                 key={d.properties.name}
                 d={path(d)}
-                fill='none'
+                fill="none"
                 stroke={colors.blue}
               ></path>
             )
           })}
 
-        <g id='cities'>
+        <g id="cities">
           {projection &&
             cities &&
             cities.features.map((d) => {
               const coords = projection([d.geometry.x, d.geometry.y])
               return (
                 <g
-                  key={d.attributes['FID']}
+                  key={d.attributes["FID"]}
                   transform={`translate(${coords[0]},${coords[1]})`}
                 >
                   <circle cx={0} cy={0} r={1} />
-                  {d.attributes['POP_CLASS'] >= 9 && (
-                    <text x={2} y={2} paintOrder='stroke fill' stroke='#FFF'>
-                      {d.attributes['NAME']}
+                  {d.attributes["POP_CLASS"] >= 9 && (
+                    <text x={2} y={2} paintOrder="stroke fill" stroke="#FFF">
+                      {d.attributes["NAME"]}
                     </text>
                   )}
                 </g>
@@ -280,23 +285,23 @@ const Map = ({
               fill={
                 stateIsZoomed
                   ? d.id.toString() === selectedArea
-                    ? 'none'
+                    ? "none"
                     : countyIsZoomed
-                    ? 'none'
-                    : '#EEE'
-                  : '#EEE'
+                    ? "none"
+                    : "#EEE"
+                  : "#EEE"
               }
               fillOpacity={
                 stateIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
               }
-              stroke='none'
+              stroke="none"
             ></path>
           ))}
-        <g id='map-label'>
+        <g id="map-label">
           {stateIsZoomed &&
             !countyIsZoomed &&
             zones.map((d) => {
-              const words = d.properties.name.split(' ')
+              const words = d.properties.name.split(" ")
 
               if (d.properties.state !== codeToName(selectedArea, true)[0])
                 return
@@ -304,21 +309,21 @@ const Map = ({
                 <text
                   key={d.properties.name}
                   fontWeight={500}
-                  paintOrder='stroke fill'
-                  stroke='#FFF'
-                  fill='#3787C0'
+                  paintOrder="stroke fill"
+                  stroke="#FFF"
+                  fill="#3787C0"
                   y={path.centroid(d)[1]}
                 >
                   <tspan x={path.centroid(d)[0]}>
-                    {words.slice(0, 3).join(' ')}
+                    {words.slice(0, 3).join(" ")}
                   </tspan>
-                  <tspan x={path.centroid(d)[0]} dy='1.2em'>
-                    {words.slice(3, words.length).join(' ')}
+                  <tspan x={path.centroid(d)[0]} dy="1.2em">
+                    {words.slice(3, words.length).join(" ")}
                   </tspan>
                 </text>
               )
             })}
-          {counties && selectedArea.length > 2 && selectedArea !== 'none' && (
+          {counties && selectedArea.length > 2 && selectedArea !== "none" && (
             <MapLabel
               code={selectedArea}
               center={path.centroid(
@@ -329,7 +334,7 @@ const Map = ({
         </g>
       </g>
 
-      <text fontSize='12px' x={10} y={height - 10}>
+      <text fontSize="12px" x={10} y={height - 10}>
         Data: U.S. Forest Service
       </text>
       {(stateIsZoomed || countyIsZoomed) && <ResetButton onClick={reset} />}

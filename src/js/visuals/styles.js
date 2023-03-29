@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components"
 
 export const Header = styled.h1`
   font-size: 20px;
@@ -12,7 +12,8 @@ export const Header = styled.h1`
 export const Caption = styled.div`
   font-size: 16px;
   margin-top: 5px;
-  margin-bottom: 2px;
+  margin-bottom: 5px;
+  line-height: 1.5rem;
 
   @media (min-width: 768px) {
     font-size: 18px;

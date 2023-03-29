@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from "styled-components"
 
 // 32 + 15 + 120 + 20
 
@@ -11,8 +11,6 @@ const Container = styled.div`
 
 const Map = styled.div`
   display: grid;
-  opacity: ${(props) => (props.show ? 1 : 0)};
-  transition: opacity 1s ease-in ${(props) => props.delay}ms;
   cursor: pointer;
   width: 100%;
   height: 100%;
@@ -20,9 +18,9 @@ const Map = styled.div`
   grid-template-rows: 32px 150px 20px;
   grid-gap: 5px;
   grid-template-areas:
-    'name'
-    'map'
-    'bar';
+    "name"
+    "map"
+    "bar";
 `
 
 const Bar = styled.div`
@@ -85,9 +83,7 @@ const Highlight = styled.span`
 const Legend = styled.div`
   width: 100px;
   background: linear-gradient(to right, #fff, #121212);
-  height: 15px;
   display: inline-block;
-  vertical-align: middle;
   font-size: 11px;
   font-weight: 600;
   text-align: center;

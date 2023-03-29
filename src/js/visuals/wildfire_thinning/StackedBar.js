@@ -1,13 +1,34 @@
-import React, { useEffect, useRef } from 'react'
-import { useNodeDimensions } from 'ap-react-hooks'
-import riskTotals from '../../../live-data/risk_totals.json'
-import { codeToName, stateCodes } from './utils'
-import * as d3 from 'd3'
-import { colors } from './utils'
-import PropTypes from 'prop-types'
+import React, { useEffect, useRef } from "react"
+import { useNodeDimensions } from "ap-react-hooks"
+import riskTotals from "../../../live-data/risk_totals.json"
+import { codeToName, stateCodes } from "./utils"
+import * as d3 from "d3"
+import { colors } from "./utils"
+import PropTypes from "prop-types"
+import styled from "styled-components"
 
-const formatNum = (n) => Math.round(n).toLocaleString('en')
-const cols = ['exp_outside', 'exp_in_zone', 'exp_in_wild']
+const Header = styled.div`
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin: 5px;
+`
+
+const Subhead = styled.div`
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+`
+
+const Highlight = styled.span`
+  background-color: ${(props) => props.color};
+  border-radius: 2px;
+  padding: 2px;
+  margin: 2px;
+  color: #fff;
+`
+
+const formatNum = (n) => Math.round(n).toLocaleString("en")
+const cols = ["exp_outside", "exp_in_zone", "exp_in_wild"]
 
 const StackedBar = ({ selectedArea }) => {
   const [node, dimensions] = useNodeDimensions()
@@ -22,7 +43,7 @@ const StackedBar = ({ selectedArea }) => {
     ? riskTotals.filter((d) => d.state.padStart(2, 0) === stateCodes[stateCode])
     : [
         {
-          state: 'All States',
+          state: "All States",
           exp_in_zone: d3.sum(riskTotals, (d) => d.exp_in_zone),
           exp_outside: d3.sum(riskTotals, (d) => d.exp_outside),
           exp_in_wild: d3.sum(riskTotals, (d) => d.exp_in_wild),
@@ -41,48 +62,49 @@ const StackedBar = ({ selectedArea }) => {
 
   useEffect(() => {
     d3.select(svgRef.current)
-      .selectAll('rect')
+      .selectAll("rect")
       .data(stackedData)
       .transition()
       .duration(1000)
-      .attr('x', (d) => X(d[0][0]))
-      .attr('width', (d) => X(d[0][1] - d[0][0]))
+      .attr("x", (d) => X(d[0][0]))
+      .attr("width", (d) => X(d[0][1] - d[0][0]))
   }, [stackedData, X])
 
   return (
-    <div style={{ height: '100%' }} ref={node}>
-      <svg ref={svgRef} height={dimensions.height} width={dimensions.width}>
-        <text x={0} y={15}>
-          {codeToName(stateCode, true)[0] ?? 'All States'}{' '}
-          {stateCodes[stateCode] &&
-            `- Thinning zones target ${(data[0].pct_saved * 100).toFixed(
-              1
-            )}% of building exposure`}
-        </text>
+    <div ref={node}>
+      <Header>
+        {codeToName(stateCode, true)[0] ?? "All States"}{" "}
+        {stateCodes[stateCode] &&
+          `- Thinning zones target ${(data[0].pct_saved * 100).toFixed(
+            1
+          )}% of building exposure`}
+      </Header>
+      <svg ref={svgRef} height={10} width={dimensions.width}>
         {stackedData.map((d) => {
           return (
             <rect
-              y={20}
+              y={0}
               height={8}
               key={d.key}
-              stroke='#FFF'
+              stroke="#FFF"
               fill={color(d.key)}
             ></rect>
           )
         })}
-        <text x={0} y={40} fontSize='12px' fill='#121212'>
-          <tspan>Buildings exposed: </tspan>
-          <tspan fill={colors.red}>
-            {formatNum(data[0].exp_outside)} outside zones |
-          </tspan>{' '}
-          <tspan fill={colors.blue}>
-            {formatNum(data[0].exp_in_zone)} inside zones |{' '}
-          </tspan>
-          <tspan fill={colors.grey}>
-            {formatNum(data[0].exp_in_wild)} in wilderness
-          </tspan>{' '}
-        </text>
       </svg>
+      <Subhead>
+        Buildings exposed
+        <Highlight color={colors.red}>
+          {formatNum(data[0].exp_outside)} outside zones{" "}
+        </Highlight>
+        <Highlight color={colors.blue}>
+          {formatNum(data[0].exp_in_zone)} inside zones
+        </Highlight>
+        <Highlight color={colors.grey}>
+          {" "}
+          {formatNum(data[0].exp_in_wild)} in wilderness
+        </Highlight>
+      </Subhead>
     </div>
   )
 }
