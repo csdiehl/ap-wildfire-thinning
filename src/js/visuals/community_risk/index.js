@@ -88,19 +88,12 @@ const CommunityRisk = () => {
           </p>
         </ClickMessage>
         <p>
-          Risk, determined by the U.S. forest service, is the probability and
+          Risk, determined by the U.S. Forest Service, is the probability and
           intensity of fire times the number of housing units.
         </p>
         <p>
           City area = region in which every point is closer to that city than
-          any other.{" "}
-          <a
-            rel="noreferrer"
-            target="_blank"
-            href="https://mathworld.wolfram.com/VoronoiDiagram.html"
-          >
-            Read more.
-          </a>
+          any other.
         </p>
         <p>Data: U.S. Forest Service</p>
       </div>

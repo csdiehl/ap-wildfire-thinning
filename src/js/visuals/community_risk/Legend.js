@@ -1,7 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
-import { spike } from './utils'
-import { format } from 'd3'
+import React from "react"
+import styled from "styled-components"
+import { spike } from "./utils"
+import { format } from "d3"
 
 const Container = styled.div`
   width: 200px;
@@ -11,18 +11,18 @@ const Container = styled.div`
   grid-template-rows: 60% 1fr;
   grid-column-gap: 5px;
   grid-template-areas:
-    'picture population'
-    'picture color';
+    "picture population"
+    "picture color";
 `
 
 const Annotation = ({ x, y, label }) => {
   return (
     <g transform={`translate(${x},${y})`}>
-      <line x1={0} y1={2} y2={2} x2={70} stroke='darkgrey' />
-      <text x={70} y={0} fontSize='12px' fontWeight={700} textAnchor='end'>
+      <line x1={0} y1={2} y2={2} x2={70} stroke="darkgrey" />
+      <text x={70} y={0} fontSize="12px" fontWeight={700} textAnchor="end">
         {label}
       </text>
-      <circle cx={0} cy={2} r={2} fill='darkgrey' />
+      <circle cx={0} cy={2} r={2} fill="darkgrey" />
     </g>
   )
 }
@@ -30,47 +30,47 @@ const Annotation = ({ x, y, label }) => {
 const Legend = ({ colors }) => {
   const sizes = [5, 14, 41, 127]
   const labels = [1000, 10000, 100000, 1000000],
-    primary = '#7F2604'
+    primary = "#7F2604"
 
   return (
     <Container>
       <svg
-        width='100%'
-        height='100%'
-        viewBox='0 0 100 100'
-        style={{ gridArea: 'picture' }}
+        width="100%"
+        height="100%"
+        viewBox="0 0 100 100"
+        style={{ gridArea: "picture" }}
       >
         <polygon
-          points='30,90 0,70 0,50 30,30 60,50 60,70'
+          points="30,90 0,70 0,50 30,30 60,50 60,70"
           fill={primary}
           stroke={primary}
           fillOpacity={0.5}
         ></polygon>
         <path
-          transform='translate(30, 60)'
+          transform="translate(30, 60)"
           d={spike(50)}
           fill={primary}
           stroke={primary}
           fillOpacity={0.8}
-          strokeLinejoin='round'
+          strokeLinejoin="round"
         ></path>
-        <Annotation x={30} y={20} label='Population' />
+        <Annotation x={30} y={20} label="Population" />
         <text
           x={30}
           y={70}
-          textAnchor='middle'
+          textAnchor="middle"
           fontWeight={700}
-          fontSize='11px'
+          fontSize="11px"
         >
-          City Area
+          City area
         </text>
-        <Annotation x={30} y={85} label='Risk Level' />
+        <Annotation x={30} y={85} label="Risk level" />
       </svg>
       <svg
-        width='100%'
-        height='100%'
-        viewBox='0 0 100 90'
-        style={{ gridArea: 'population' }}
+        width="100%"
+        height="100%"
+        viewBox="0 0 100 90"
+        style={{ gridArea: "population" }}
       >
         {sizes.map((d, i) => (
           <>
@@ -79,17 +79,17 @@ const Legend = ({ colors }) => {
               transform={`translate(${10 + i * 25},80)`}
               d={spike(d)}
             ></path>
-            <text textAnchor='middle' fontSize='12px' x={10 + i * 25} y={90}>
-              {format('.1s')(labels[i])}
+            <text textAnchor="middle" fontSize="12px" x={10 + i * 25} y={90}>
+              {format(".1s")(labels[i])}
             </text>
           </>
         ))}
       </svg>
       <svg
-        width='100%'
-        height='100%'
-        viewBox='0 0 100 60'
-        style={{ gridArea: 'color' }}
+        width="100%"
+        height="100%"
+        viewBox="0 0 100 60"
+        style={{ gridArea: "color" }}
       >
         {colors.map((c, i) => (
           <rect
@@ -99,13 +99,13 @@ const Legend = ({ colors }) => {
             width={100 / colors.length}
             height={100 / colors.length}
             fill={c}
-            stroke='#fff'
+            stroke="#fff"
           ></rect>
         ))}
-        <text x={0} y={40} fontSize='12px'>
+        <text x={0} y={40} fontSize="12px">
           Low
         </text>
-        <text x={100} y={40} fontSize='12px' textAnchor='end'>
+        <text x={100} y={40} fontSize="12px" textAnchor="end">
           High
         </text>
       </svg>

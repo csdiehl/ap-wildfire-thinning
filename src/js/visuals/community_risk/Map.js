@@ -6,14 +6,14 @@ import {
   scaleSqrt,
   zoom,
   select,
-} from 'd3'
-import { geoVoronoi } from 'd3-geo-voronoi'
-import React, { useRef, useEffect, useMemo, useCallback } from 'react'
-import city_data from '../../../live-data/cities.csv'
-import { makeGeoJSON, spike, dedupeLabels } from './utils'
-import { zoomIn, zoomOut } from '../utils'
-import ResetButton from '../../components/ResetButton'
-import useUsData from '../../components/useUsData'
+} from "d3"
+import { geoVoronoi } from "d3-geo-voronoi"
+import React, { useRef, useEffect, useMemo, useCallback } from "react"
+import city_data from "../../../live-data/cities.csv"
+import { makeGeoJSON, spike, dedupeLabels } from "./utils"
+import { zoomIn, zoomOut } from "../utils"
+import ResetButton from "../../components/ResetButton"
+import useUsData from "../../components/useUsData"
 
 // data
 const cities = city_data.map((d) => makeGeoJSON(d))
@@ -50,7 +50,7 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   // remove overlapping labels on zoom
   useEffect(() => {
     if (!selectedState) return
-    const labels = select(svgRef.current).selectAll('.city-labels')
+    const labels = select(svgRef.current).selectAll(".city-labels")
     dedupeLabels(labels)
   }, [selectedState])
 
@@ -77,6 +77,7 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
 
   // event handlers
   function handleClick(data) {
+    if (data.id === 56) return
     setSelectedState(data.id)
 
     zoomIn(path.bounds(data), svgRef, zoomer, width, height)
@@ -89,41 +90,41 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
 
   const zoomer = useMemo(() => {
     const zoomed = (e) => {
-      const map = select(document.getElementById('risk-map-content'))
-      const spikes = select(document.getElementById('spikes'))
+      const map = select(document.getElementById("risk-map-content"))
+      const spikes = select(document.getElementById("spikes"))
 
-      map.attr('transform', e.transform)
-      map.attr('stroke-width', 0.5 / e.transform.k)
-      map.attr('font-size', `${14 / e.transform.k}px`)
+      map.attr("transform", e.transform)
+      map.attr("stroke-width", 0.5 / e.transform.k)
+      map.attr("font-size", `${14 / e.transform.k}px`)
 
       spikes
-        .selectAll('path')
+        .selectAll("path")
         .data(cities)
-        .attr('transform', (d) => {
+        .attr("transform", (d) => {
           return `translate(${Point(d)}) scale(${1 / e.transform.k})`
         })
-        .attr('stroke-width', 1 / e.transform.k)
+        .attr("stroke-width", 1 / e.transform.k)
     }
 
-    return zoom().scaleExtent([1, 8]).on('zoom', zoomed)
+    return zoom().scaleExtent([1, 8]).on("zoom", zoomed)
   }, [Point])
 
   return (
     <svg
-      vectorEffect='non-scaling-stroke'
+      vectorEffect="non-scaling-stroke"
       ref={svgRef}
       width={width}
       height={height}
-      cursor='pointer'
+      cursor="pointer"
     >
       <defs>
-        <clipPath id='state-outline'>
-          {outline && <path d={path(outline)} stroke='darkgrey' />}
+        <clipPath id="state-outline">
+          {outline && <path d={path(outline)} stroke="darkgrey" />}
         </clipPath>
       </defs>
       {projection && (
-        <g id='risk-map-content'>
-          <g id='voronoi-polygons' clipPath='url(#state-outline)'>
+        <g id="risk-map-content">
+          <g id="voronoi-polygons" clipPath="url(#state-outline)">
             {voronoi.features.map((d) => {
               return (
                 <path
@@ -131,14 +132,14 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
                   d={path(d)}
                   fill={color(d.properties.site.properties.risk_area)}
                   fillOpacity={0.3}
-                  stroke={'lightgrey'}
+                  stroke={"lightgrey"}
                   strokeWidth={0.2}
                 ></path>
               )
             })}
           </g>
-          {mesh && <path fill='none' stroke='#777' d={path(mesh)}></path>}
-          <g id='spikes'>
+          {mesh && <path fill="none" stroke="#777" d={path(mesh)}></path>}
+          <g id="spikes">
             {cities.map((d) => (
               <path
                 transform={`translate(${Point(d)})`}
@@ -147,7 +148,7 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
                 fill={color(d.properties.risk_area)}
                 fillOpacity={0.7}
                 stroke={color(d.properties.risk_area)}
-                strokeLinejoin='round'
+                strokeLinejoin="round"
               ></path>
             ))}
           </g>
@@ -155,12 +156,12 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
             const coords = projection(d.geometry.coordinates)
             return (
               <text
-                className='city-labels'
+                className="city-labels"
                 x={coords[0]}
                 y={coords[1]}
                 key={d.properties.place_fips}
-                paintOrder='stroke fill'
-                stroke='#FFF'
+                paintOrder="stroke fill"
+                stroke="#FFF"
                 fontWeight={600}
                 strokeWidth={0.5}
               >
@@ -174,9 +175,9 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
               <path
                 key={d.id}
                 d={path(d)}
-                fill={selectedState === d.id ? 'none' : '#FFF'}
-                fillOpacity={0}
-                stroke='none'
+                fill={selectedState === d.id && d.id !== 56 ? "none" : "#777"}
+                fillOpacity={d.id === 56 ? 0.2 : 0}
+                stroke="none"
                 onClick={() => handleClick(d)}
               ></path>
             ))}

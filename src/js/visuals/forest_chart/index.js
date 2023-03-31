@@ -37,17 +37,7 @@ const ForestChart = () => {
     <div>
       <Header>Mature forest density in thinning zones</Header>
       <Caption style={{ marginBottom: "20px" }}>
-        The grey bar{" "}
-        <div
-          style={{
-            width: "50px",
-            display: "inline-block",
-            verticalAlign: "middle",
-          }}
-        >
-          <Bar width={100} />
-        </div>{" "}
-        shows the <Highlight>zone area</Highlight> in hecatares. The dark bar{" "}
+        The dark bar{" "}
         <div
           style={{
             width: "50px",
@@ -57,9 +47,20 @@ const ForestChart = () => {
             verticalAlign: "middle",
           }}
         ></div>{" "}
-        shows the % of the zone that is mature forest. The darker the shaded
-        area <Legend>0% to 100%</Legend>, the greater percentage of mature
-        forest it contains. Researchers{" "}
+        shows the percentage of the zone that is mature forest, compared to the
+        grey bar
+        <div
+          style={{
+            width: "50px",
+            display: "inline-block",
+            verticalAlign: "middle",
+          }}
+        >
+          <Bar width={100} />
+        </div>
+        , which shows the <Highlight>zone area</Highlight> in square miles. The
+        darker the shaded area <Legend>0% to 100%</Legend>, the greater
+        percentage of mature forest it contains. Researchers{" "}
         <a
           style={{ fontweight: 500, color: "black" }}
           rel="noreferrer"
@@ -68,8 +69,8 @@ const ForestChart = () => {
         >
           classify mature forest
         </a>{" "}
-        as high on three metrics — tree height, canopy cover and biomass
-        compared to surrounding areas.
+        as high on three metrics: tree height, canopy cover and biomass compared
+        to surrounding areas.
       </Caption>
       <LazyLoad offset={-100}>
         <Container>
@@ -97,7 +98,7 @@ const ForestChart = () => {
                     <Note width={100}>
                       <Tick />
                       <p style={{ margin: "0px", color: "#777" }}>
-                        {format(".1s")(landscapeacres / 2.471)}
+                        {format(".1s")(landscapeacres / 640)}
                       </p>
                     </Note>
 
@@ -128,8 +129,8 @@ const ForestChart = () => {
                       }}
                     />
                     <Tooltip hovered={name === hover}>
-                      {format(".1s")((ratio * landscapeacres) / 2.471)}{" "}
-                      hecatares of mature forest
+                      {format(".1s")((ratio * landscapeacres) / 640)} square
+                      miles of mature forest
                     </Tooltip>
                   </div>
                 </Map>

@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from "react"
+import styled from "styled-components"
 
 const Patch = styled.div`
   width: 20px;
@@ -47,58 +47,58 @@ const Legend = ({ warmColors, coolColors, labels }) => {
         <Subhead>Wildfire risk level</Subhead>
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'top',
-            justifyContent: 'top',
-            maxWidth: '370px',
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "top",
+            justifyContent: "top",
+            maxWidth: "370px",
           }}
         >
           {warmColors.map((c, i) => (
             <div key={i}>
-              <Patch width='100%' height={height} color={c} />
-              <Patch width='100%' height={height} color={coolColors[i]} />
+              <Patch width="100%" height={height} color={c} />
+              <Patch width="100%" height={height} color={coolColors[i]} />
             </div>
           ))}
         </div>
         <div
           style={{
-            display: 'flex',
-            width: '150px',
-            justifyContent: 'space-between',
+            display: "flex",
+            width: "150px",
+            justifyContent: "space-between",
           }}
         >
-          <p style={{ margin: 0, fontSize: '12px' }}>Lowest</p>
-          <p style={{ margin: 0, fontSize: '12px' }}>Highest</p>
+          <p style={{ margin: 0, fontSize: "12px" }}>Lowest</p>
+          <p style={{ margin: 0, fontSize: "12px" }}>Highest</p>
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <Subhead>Legend</Subhead>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <Box color='darkgrey' />
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <Box color="darkgrey" />
           <Caption>Wilderness over 50k acres</Caption>
         </div>
 
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px',
+            display: "flex",
+            alignItems: "center",
+            gap: "5px",
           }}
         >
           <div
             style={{
-              borderRadius: '50%',
-              backgroundColor: '#121212',
-              width: '10px',
-              height: '10px',
+              borderRadius: "50%",
+              backgroundColor: "#121212",
+              width: "10px",
+              height: "10px",
             }}
           ></div>
           <Caption>City over 500k population</Caption>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <Box width='5px' height={height} color='black' />
-          <Caption>Interstate highways</Caption>
+        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+          <Box width="5px" height={height} color="black" />
+          <Caption>Interstate highway</Caption>
         </div>
       </div>
     </Container>

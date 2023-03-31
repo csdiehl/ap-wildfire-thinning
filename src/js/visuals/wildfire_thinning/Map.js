@@ -128,6 +128,7 @@ const Map = ({
 
   // event handlers
   function onClick(data) {
+    if (data.id === 56) return
     const id = data.id.toString()
     id?.length >= 4 ? setCountyIsZoomed(true) : setStateIsZoomed(true)
 
@@ -283,7 +284,9 @@ const Map = ({
               key={d.id}
               d={path(d)}
               fill={
-                stateIsZoomed
+                d.id === 56
+                  ? "#FFF"
+                  : stateIsZoomed
                   ? d.id.toString() === selectedArea
                     ? "none"
                     : countyIsZoomed
@@ -292,7 +295,11 @@ const Map = ({
                   : "#EEE"
               }
               fillOpacity={
-                stateIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
+                d.id === 56
+                  ? 0.5
+                  : stateIsZoomed && d.id.toString() !== selectedArea
+                  ? 0.7
+                  : 0
               }
               stroke="none"
             ></path>
