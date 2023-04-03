@@ -20,7 +20,7 @@ import LazyLoad from "react-lazy-load"
 
 const getRatio = (d) => {
   const data = old_growth_ratio.find((x) => x["name"] === d.properties?.name)
-  return +data?.mature_forest_ratio.toFixed(2) ?? 0
+  return +data?.mature_forest_ratio
 }
 
 const ForestChart = () => {
@@ -98,7 +98,7 @@ const ForestChart = () => {
                     <Note width={100}>
                       <Tick />
                       <p style={{ margin: "0px", color: "#777" }}>
-                        {format(".1s")(landscapeacres / 640)}
+                        {format(".2s")(landscapeacres / 640)}
                       </p>
                     </Note>
 
@@ -129,7 +129,7 @@ const ForestChart = () => {
                       }}
                     />
                     <Tooltip hovered={name === hover}>
-                      {format(".1s")((ratio * landscapeacres) / 640)} square
+                      {format(".2s")(ratio * (landscapeacres / 640))} square
                       miles of mature forest
                     </Tooltip>
                   </div>

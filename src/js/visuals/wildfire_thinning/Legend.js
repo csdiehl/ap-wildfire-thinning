@@ -5,7 +5,7 @@ const Patch = styled.div`
   width: 20px;
   height: 20px;
   background-color: ${(props) => props.color};
-  border: 1px solid white;
+  border: 0.5px solid black;
 `
 
 const Box = styled.div`
@@ -39,8 +39,7 @@ font-weight: 500;
 `
 
 const Legend = ({ warmColors, coolColors, labels }) => {
-  const width = 100 / 7,
-    height = 15
+  const height = 15
   return (
     <Container>
       <div>
@@ -100,6 +99,7 @@ const Legend = ({ warmColors, coolColors, labels }) => {
           <Box width="5px" height={height} color="black" />
           <Caption>Interstate highway</Caption>
         </div>
+        <p style={{ fontSize: "12px" }}>Data: U.S. Forest Service</p>
       </div>
     </Container>
   )
