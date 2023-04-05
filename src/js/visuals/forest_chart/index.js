@@ -16,7 +16,6 @@ import {
   Tooltip,
 } from "./styles"
 import { format } from "d3"
-import LazyLoad from "react-lazy-load"
 
 const getRatio = (d) => {
   const data = old_growth_ratio.find((x) => x["name"] === d.properties?.name)
@@ -72,72 +71,70 @@ const ForestChart = () => {
         as high on three metrics: tree height, canopy cover and biomass compared
         to surrounding areas.
       </Caption>
-      <LazyLoad offset={-100}>
-        <Container>
-          {sorted &&
-            oldGrowth &&
-            sorted.map((d, i) => {
-              // each grid square has its own projection
-              const ratio = getRatio(d)
-              const { landscapeacres, name, state } = d.properties
+      <Container>
+        {sorted &&
+          oldGrowth &&
+          sorted.map((d, i) => {
+            // each grid square has its own projection
+            const ratio = getRatio(d)
+            const { landscapeacres, name, state } = d.properties
 
-              return (
-                <Map
-                  delay={i * 200}
-                  key={name}
-                  onMouseOver={() => setHover(name)}
-                  onMouseOut={() => setHover(null)}
-                >
-                  <div style={{ gridArea: "name" }}>
-                    <Name> {name}</Name>
-                    <State>{state}</State>
-                  </div>
+            return (
+              <Map
+                delay={i * 200}
+                key={name}
+                onMouseOver={() => setHover(name)}
+                onMouseOut={() => setHover(null)}
+              >
+                <div style={{ gridArea: "name" }}>
+                  <Name> {name}</Name>
+                  <State>{state}</State>
+                </div>
 
-                  <div style={{ gridArea: "bar", position: "relative" }}>
-                    <Bar width={100} />
-                    <Note width={100}>
-                      <Tick />
-                      <p style={{ margin: "0px", color: "#777" }}>
-                        {format(".2s")(landscapeacres / 640)}
-                      </p>
-                    </Note>
+                <div style={{ gridArea: "bar", position: "relative" }}>
+                  <Bar width={100} />
+                  <Note width={100}>
+                    <Tick />
+                    <p style={{ margin: "0px", color: "#777" }}>
+                      {format(".2s")(landscapeacres / 640)}
+                    </p>
+                  </Note>
 
-                    <ColorBar color="#121212" width={ratio * 100} />
-                    <Note width={ratio * 100}>
-                      <Tick />
-                      <p
-                        style={{
-                          position: "absolute",
-                          margin: "0px",
-                          top: "7px",
-                        }}
-                      >
-                        {Math.round(ratio * 100, 1)}%
-                      </p>
-                    </Note>
-                  </div>
-
-                  <div style={{ position: "relative", gridArea: "map" }}>
-                    <img
-                      alt="a forest"
-                      width="100%"
-                      height="100%"
-                      src={`./forest_images/${name}.png`}
+                  <ColorBar color="#121212" width={ratio * 100} />
+                  <Note width={ratio * 100}>
+                    <Tick />
+                    <p
                       style={{
-                        borderRadius: "5px",
-                        border: "1px solid #F5F5F5",
+                        position: "absolute",
+                        margin: "0px",
+                        top: "7px",
                       }}
-                    />
-                    <Tooltip hovered={name === hover}>
-                      {format(".2s")(ratio * (landscapeacres / 640))} square
-                      miles of mature forest
-                    </Tooltip>
-                  </div>
-                </Map>
-              )
-            })}
-        </Container>
-      </LazyLoad>
+                    >
+                      {Math.round(ratio * 100, 1)}%
+                    </p>
+                  </Note>
+                </div>
+
+                <div style={{ position: "relative", gridArea: "map" }}>
+                  <img
+                    alt="a forest"
+                    width="100%"
+                    height="100%"
+                    src={`./forest_images/${name}.png`}
+                    style={{
+                      borderRadius: "5px",
+                      border: "1px solid #F5F5F5",
+                    }}
+                  />
+                  <Tooltip hovered={name === hover}>
+                    {format(".2s")(ratio * (landscapeacres / 640))} square miles
+                    of mature forest
+                  </Tooltip>
+                </div>
+              </Map>
+            )
+          })}
+      </Container>
     </div>
   )
 }

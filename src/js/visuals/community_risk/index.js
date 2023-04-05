@@ -1,11 +1,10 @@
-import React, { useState } from "react"
-import Map from "./Map"
-import Legend from "./Legend"
 import { useNodeDimensions } from "ap-react-hooks"
+import { scale } from "chroma-js"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { Caption, Header } from "../styles"
-import { scale } from "chroma-js"
-import LazyLoad from "react-lazy-load"
+import Legend from "./Legend"
+import Map from "./Map"
 
 const Container = styled.div`
   height: calc(100vh - 20px);
@@ -66,19 +65,16 @@ const CommunityRisk = () => {
         </Caption>
       </div>
       <div ref={node} style={{ gridArea: "map" }}>
-        <LazyLoad>
-          <Map
-            width={width}
-            height={height}
-            colors={colors}
-            setSelectedState={setSelectedState}
-            selectedState={selectedState}
-          />
-        </LazyLoad>
+        <Map
+          width={width}
+          height={height}
+          colors={colors}
+          setSelectedState={setSelectedState}
+          selectedState={selectedState}
+        />
       </div>
-      <LazyLoad>
-        <Legend style={{ gridArea: "legend" }} colors={colors} />
-      </LazyLoad>
+
+      <Legend style={{ gridArea: "legend" }} colors={colors} />
 
       <div style={{ gridArea: "footer", fontSize: "12px" }}>
         <ClickMessage>

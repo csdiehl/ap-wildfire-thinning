@@ -1,5 +1,5 @@
-import React from 'react'
-import { toSentence } from 'ap-react-utils'
+import React from "react"
+import { toSentence } from "ap-react-utils"
 import {
   Nav,
   Article,
@@ -10,58 +10,32 @@ import {
   Graphic,
   EndNotes,
   Footer,
-} from 'tailor'
-import apLogo from 'ap-interactive-assets/images/AP_LOGO_86x100.png'
-import WildfireThinning from 'js/visuals/wildfire_thinning'
-import ForestChart from '../js/visuals/forest_chart'
-import CommunityRisk from '../js/visuals/community_risk'
+} from "tailor"
+import apLogo from "ap-interactive-assets/images/AP_LOGO_86x100.png"
+import WildfireThinning from "js/visuals/wildfire_thinning"
+import ForestChart from "../js/visuals/forest_chart"
+import CommunityRisk from "../js/visuals/community_risk"
 
 const metadata = {
-  title: 'Wildfire Thinning',
-  description: '',
-  authors: [{ 'name': 'Caleb Diehl' }],
-  published: '2023-01-31T22:23:41.922Z',
+  title: "Wildfire Thinning",
+  description: "",
+  authors: [{ "name": "Caleb Diehl" }],
+  published: "2023-01-31T22:23:41.922Z",
 }
 const notes = [
   {
-    title: 'Produced by',
-    note: 'The AP Data Team',
+    title: "Produced by",
+    note: "The AP Data Team",
   },
 ]
 
 function Index() {
   return (
     <div>
-      <Nav img={apLogo} dark />
+      <Nav img={apLogo} />
       <Article>
         <SeoHeadline>{metadata.seoTitle || metadata.title}</SeoHeadline>
-        <HeroTitle
-          headline={{
-            eyebrow: 'AP Explains',
-            headline: metadata.title,
-            dek: metadata.description,
-            light: true,
-          }}
-          image={{
-            src: `data:image/svg+xml;charset=UTF-8,%3Csvg width='2000' height='1400' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='gradient' x1='1' x2='0' y1='0' y2='1'%3E%3Cstop stop-color='%2300caa0' offset='0%25' /%3E%3Cstop stop-color='%239198e5' offset='100%25' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='0' y='0' width='2000' height='1400' fill='url(%23gradient)' /%3E%3C/svg%3E%0A`,
-            alt: 'Example gradient',
-          }}
-          bottom
-        />
-        <Metadata
-          byline={`By ${toSentence(metadata.authors.map((a) => a.name))}`}
-          date={metadata.published}
-        />
-        <BodyText>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-            viverra diam vel libero tristique venenatis. Curabitur vitae quam
-            vel nibh suscipit efficitur. Vestibulum ante ipsum primis in
-            faucibus orci luctus et ultrices posuere cubilia curae; Proin eu
-            sapien in dui tristique fringilla. Fusce eget tellus a libero
-            dignissim porta.
-          </p>
-        </BodyText>
+
         <Graphic widest>
           <CommunityRisk />
         </Graphic>
