@@ -14,6 +14,7 @@ import { makeGeoJSON, spike, dedupeLabels } from "./utils"
 import { zoomIn, zoomOut } from "../utils"
 import ResetButton from "../../components/ResetButton"
 import useUsData from "../../components/useUsData"
+import useData from "../../components/useData"
 
 // data
 const cities = city_data.map((d) => makeGeoJSON(d))
@@ -30,12 +31,24 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   const svgRef = useRef()
 
   const { outline, states, mesh } = useUsData(false)
+  const countries = useData(
+    "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Countries_(Generalized)/FeatureServer/0/query?where=ISO%20IN%20(%27US%27,%20%27MX%27,%20%27CA%27)&outFields=*&f=geojson"
+  )
 
   // projection
-  const projection = useMemo(
-    () => outline && geoMercator().fitSize([width, height], outline),
-    [width, height, outline]
-  )
+  const projection = useMemo(() => {
+    const margin = { top: 30, bottom: 0 }
+    return (
+      outline &&
+      geoMercator().fitExtent(
+        [
+          [0, margin.top],
+          [width, height - margin.top - margin.bottom],
+        ],
+        outline
+      )
+    )
+  }, [width, height, outline])
 
   const populated = selectedState
     ? citiesByPop
@@ -122,8 +135,18 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
           {outline && <path d={path(outline)} stroke="darkgrey" />}
         </clipPath>
       </defs>
+
       {projection && (
         <g id="risk-map-content">
+          {countries &&
+            countries.features.map((d) => (
+              <path
+                key={d.properties.country}
+                d={path(d)}
+                fill={d.properties["ISO"] === "US" ? "none" : "#F5F5F5"}
+                stroke="#777"
+              ></path>
+            ))}
           <g id="voronoi-polygons" clipPath="url(#state-outline)">
             {voronoi.features.map((d) => {
               return (
@@ -138,7 +161,14 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
               )
             })}
           </g>
+
           {mesh && <path fill="none" stroke="#777" d={path(mesh)}></path>}
+          {states && (
+            <path
+              d={path(states.find((d) => d.id === 56))}
+              fill="#F5F5F5"
+            ></path>
+          )}
           <g id="spikes">
             {cities.map((d) => (
               <path
@@ -175,8 +205,8 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
               <path
                 key={d.id}
                 d={path(d)}
-                fill={selectedState === d.id && d.id !== 56 ? "none" : "#777"}
-                fillOpacity={d.id === 56 ? 0.2 : 0}
+                fill="#FFF"
+                fillOpacity={0}
                 stroke="none"
                 onClick={() => handleClick(d)}
               ></path>

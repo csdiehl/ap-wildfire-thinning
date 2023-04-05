@@ -33,7 +33,10 @@ const ForestChart = () => {
     [zones]
   )
   return (
-    <div>
+    <div
+      id="forest-container"
+      style={{ boxSizing: "border-box", padding: "10px" }}
+    >
       <Header>Mature forest density in thinning zones</Header>
       <Caption style={{ marginBottom: "20px" }}>
         The dark bar{" "}
@@ -120,7 +123,7 @@ const ForestChart = () => {
                     alt="a forest"
                     width="100%"
                     height="100%"
-                    src={`./forest_images/${name}.png`}
+                    src={`../forest_images/${name}.png`}
                     style={{
                       borderRadius: "5px",
                       border: "1px solid #F5F5F5",

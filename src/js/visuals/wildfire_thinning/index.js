@@ -10,6 +10,8 @@ import { Caption, Header } from "../styles"
 
 const Container = styled.div`
   display: grid;
+  box-sizing: border-box;
+  padding: 10px;
   grid-gap: 10px;
   box-sizing: border-box;
   width: 100%;
@@ -92,7 +94,7 @@ function WildfireThinning() {
           thinned so are excluded from the totals.
         </Caption>
         <ClickMessage>
-          <img height="20px" width="20px" src="./tap.svg" alt="tap icon"></img>
+          <img height="20px" width="20px" src="../tap.svg" alt="tap icon"></img>
           <p style={{ margin: "5px" }}>
             {!stateIsZoomed && !countyIsZoomed
               ? "Click on a state to zoom in"
@@ -138,9 +140,7 @@ function WildfireThinning() {
 }
 
 WildfireThinning.visual = {
-  headline: "Wildfire Thinning",
-  chatter: "",
-  footerProps: { credit: "AP Data Team" },
+  footerProps: { credit: "Caleb Diehl" },
 }
 
 WildfireThinning.propTypes = {}

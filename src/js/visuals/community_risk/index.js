@@ -8,6 +8,8 @@ import Map from "./Map"
 
 const Container = styled.div`
   height: calc(100vh - 20px);
+  box-sizing: border-box;
+  padding: 10px;
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
@@ -60,7 +62,7 @@ const CommunityRisk = () => {
         <Header>Wildfire risk to communities</Header>
         <Caption>
           This map shows the risk of destruction to structures from wildfires by
-          city and census desginated place. Darker areas have more risk. Taller
+          city and census designated place. Darker areas have more risk. Taller
           spikes have a higher population.
         </Caption>
       </div>
@@ -78,7 +80,7 @@ const CommunityRisk = () => {
 
       <div style={{ gridArea: "footer", fontSize: "12px" }}>
         <ClickMessage>
-          <img height="20px" width="20px" src="./tap.svg" alt="tap icon"></img>
+          <img height="20px" width="20px" src="../tap.svg" alt="tap icon"></img>
           <p style={{ margin: "5px" }}>
             Click on a <strong>state</strong> to zoom in
           </p>

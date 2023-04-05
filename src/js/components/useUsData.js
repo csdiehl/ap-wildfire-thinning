@@ -11,7 +11,7 @@ function useUsData(getCounties = true) {
   })
   useEffect(() => {
     async function getData() {
-      const url = `./us.json`
+      const url = `../us.json`
       const stateCodes = [
         "32",
         "08",

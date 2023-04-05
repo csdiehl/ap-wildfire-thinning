@@ -99,7 +99,7 @@ const Legend = ({ colors }) => {
             width={100 / colors.length}
             height={100 / colors.length}
             fill={c}
-            stroke="#fff"
+            stroke="#121212"
           ></rect>
         ))}
         <text x={0} y={40} fontSize="12px">
