@@ -61,9 +61,8 @@ const CommunityRisk = () => {
       <div style={{ gridArea: "header" }}>
         <Header>Wildfire risk to communities</Header>
         <Caption>
-          This map shows the risk of destruction to structures from wildfires by
-          city and census designated place. Darker areas have more risk. Taller
-          spikes have a higher population.
+          This map shows the risk of destruction to structures from wildfires.
+          Darker areas have more risk. Taller spikes have a higher population.
         </Caption>
       </div>
       <div ref={node} style={{ gridArea: "map" }}>
@@ -82,7 +81,7 @@ const CommunityRisk = () => {
         <ClickMessage>
           <img height="20px" width="20px" src="../tap.svg" alt="tap icon"></img>
           <p style={{ margin: "5px" }}>
-            Click on a <strong>state</strong> to zoom in
+            Click on an <strong>area</strong> to zoom in
           </p>
         </ClickMessage>
         <p>

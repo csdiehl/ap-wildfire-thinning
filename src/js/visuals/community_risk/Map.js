@@ -8,13 +8,23 @@ import {
   select,
 } from "d3"
 import { geoVoronoi } from "d3-geo-voronoi"
-import React, { useRef, useEffect, useMemo, useCallback } from "react"
+import React, { useRef, useEffect, useMemo, useState, useCallback } from "react"
 import city_data from "../../../live-data/cities.csv"
 import { makeGeoJSON, spike, dedupeLabels } from "./utils"
 import { zoomIn, zoomOut } from "../utils"
 import ResetButton from "../../components/ResetButton"
 import useUsData from "../../components/useUsData"
 import useData from "../../components/useData"
+import styled from "styled-components"
+
+const Tooltip = styled.div`
+  position: fixed;
+  top: ${(props) => props.y}px;
+  left: ${(props) => props.x}px;
+  background: #fff;
+  padding: 8px;
+  z-index: 100;
+`
 
 // data
 const cities = city_data.map((d) => makeGeoJSON(d))
@@ -29,6 +39,7 @@ const heightScale = scaleSqrt()
 // Component
 const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   const svgRef = useRef()
+  const [hovered, setHovered] = useState(null)
 
   const { outline, states, mesh } = useUsData(false)
   const countries = useData(
@@ -68,8 +79,8 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   }, [selectedState])
 
   const Point = useCallback(
-    (d) => {
-      const coords = projection(d.geometry.coordinates)
+    (projectedCoords) => {
+      const coords = projection(projectedCoords)
       return `${coords[0]},${coords[1]}`
     },
     [projection]
@@ -114,7 +125,9 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
         .selectAll("path")
         .data(cities)
         .attr("transform", (d) => {
-          return `translate(${Point(d)}) scale(${1 / e.transform.k})`
+          return `translate(${Point(d.geometry.coordinates)}) scale(${
+            1 / e.transform.k
+          })`
         })
         .attr("stroke-width", 1 / e.transform.k)
     }
@@ -152,12 +165,20 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
               {voronoi.features.map((d) => {
                 return (
                   <path
+                    onMouseOver={(e) =>
+                      setHovered({
+                        site: d.properties?.site?.properties?.name,
+                        coords: [e.pageX, e.pageY],
+                        pop: d.properties?.site?.properties?.population,
+                      })
+                    }
+                    onMouseOut={() => setHovered(null)}
                     key={d.properties.site.properties.place_fips}
                     d={path(d)}
                     fill={color(d.properties.site.properties.risk_area)}
                     fillOpacity={0.3}
-                    stroke={"lightgrey"}
-                    strokeWidth={0.2}
+                    stroke="#F5F5F5"
+                    strokeWidth={0.1}
                   ></path>
                 )
               })}
@@ -173,7 +194,15 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
             <g id="spikes">
               {cities.map((d) => (
                 <path
-                  transform={`translate(${Point(d)})`}
+                  onMouseOver={(e) =>
+                    setHovered({
+                      site: d.properties?.name,
+                      coords: [e.pageX, e.pageY],
+                      pop: d.properties?.population,
+                    })
+                  }
+                  onMouseOut={() => setHovered(null)}
+                  transform={`translate(${Point(d.geometry.coordinates)})`}
                   key={d.properties.place_fips}
                   d={spike(heightScale(d.properties.population))}
                   fill={color(d.properties.risk_area)}
@@ -206,7 +235,7 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
                 <path
                   key={d.id}
                   d={path(d)}
-                  fill="#FFF"
+                  fill={d.id === selectedState ? "none" : "#FFF"}
                   fillOpacity={0}
                   stroke="none"
                   onClick={() => handleClick(d)}
@@ -216,6 +245,14 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
         )}
       </svg>
       {selectedState && <ResetButton onClick={reset} />}
+      {hovered && (
+        <Tooltip x={hovered?.coords[0] ?? 0} y={hovered?.coords[1] ?? 0}>
+          <p style={{ margin: 0 }}>{hovered?.site ?? ""}</p>
+          <p style={{ margin: 0 }}>
+            Population: <strong>{hovered?.pop.toLocaleString("en")}</strong>
+          </p>
+        </Tooltip>
+      )}
     </div>
   )
 }
