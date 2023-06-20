@@ -165,13 +165,17 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
               {voronoi.features.map((d) => {
                 return (
                   <path
-                    onMouseOver={(e) =>
-                      setHovered({
-                        site: d.properties?.site?.properties?.name,
-                        coords: [e.pageX, e.pageY],
-                        pop: d.properties?.site?.properties?.population,
-                      })
-                    }
+                    onMouseOver={(e) => {
+                      const population =
+                        d.properties?.site?.properties?.population
+                      if (population >= 10000) {
+                        setHovered({
+                          site: d.properties?.site?.properties?.name,
+                          coords: [e.pageX, e.pageY],
+                          pop: population,
+                        })
+                      }
+                    }}
                     onMouseOut={() => setHovered(null)}
                     key={d.properties.site.properties.place_fips}
                     d={path(d)}
@@ -194,13 +198,15 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
             <g id="spikes">
               {cities.map((d) => (
                 <path
-                  onMouseOver={(e) =>
-                    setHovered({
-                      site: d.properties?.name,
-                      coords: [e.pageX, e.pageY],
-                      pop: d.properties?.population,
-                    })
-                  }
+                  onMouseOver={(e) => {
+                    if (d.properties?.population >= 10000) {
+                      setHovered({
+                        site: d.properties?.name,
+                        coords: [e.pageX, e.pageY],
+                        pop: d.properties?.population,
+                      })
+                    }
+                  }}
                   onMouseOut={() => setHovered(null)}
                   transform={`translate(${Point(d.geometry.coordinates)})`}
                   key={d.properties.place_fips}
