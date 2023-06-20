@@ -13,21 +13,6 @@ const Header = styled.div`
   margin: 5px;
 `
 
-const Subhead = styled.div`
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.5rem;
-`
-
-const Highlight = styled.span`
-  background-color: ${(props) => props.color};
-  border-radius: 2px;
-  padding: 2px;
-  margin: 2px;
-  color: #fff;
-`
-
-const formatNum = (n) => Math.round(n).toLocaleString("en")
 const cols = ["exp_outside", "exp_in_zone", "exp_in_wild"]
 
 const StackedBar = ({ selectedArea }) => {
@@ -73,11 +58,13 @@ const StackedBar = ({ selectedArea }) => {
   return (
     <div ref={node}>
       <Header>
-        {codeToName(stateCode, true)[0] ?? "All States"}{" "}
-        {stateCodes[stateCode] &&
-          `- Thinning zones target ${(data[0].pct_saved * 100).toFixed(
-            1
-          )}% of building exposure`}
+        {stateCodes[stateCode]
+          ? `Thinning zones cover ${(data[0].pct_saved * 100).toFixed(
+              1
+            )}% of building exposure in ${
+              codeToName(stateCode, true)[0] ?? "All States"
+            }`
+          : "Thinning zones cover 25% of building exposure in 10 states"}
       </Header>
       <svg ref={svgRef} height={10} width={dimensions.width}>
         {stackedData.map((d) => {
@@ -92,19 +79,6 @@ const StackedBar = ({ selectedArea }) => {
           )
         })}
       </svg>
-      <Subhead>
-        Buildings exposed
-        <Highlight color={colors.red}>
-          {formatNum(data[0].exp_outside)} outside zones{" "}
-        </Highlight>
-        <Highlight color={colors.blue}>
-          {formatNum(data[0].exp_in_zone)} inside zones
-        </Highlight>
-        <Highlight color={colors.grey}>
-          {" "}
-          {formatNum(data[0].exp_in_wild)} in wilderness
-        </Highlight>
-      </Subhead>
     </div>
   )
 }

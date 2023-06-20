@@ -27,7 +27,7 @@ const Container = styled.div`
 
   @media (min-width: 768px) {
     grid-template-columns: 25% 75%;
-    grid-template-rows: 80px 420px 280px;
+    grid-template-rows: 40px 420px 280px;
     grid-template-areas:
       "Header StackedBar"
       "Header Map"
@@ -36,7 +36,7 @@ const Container = styled.div`
 
   @media (min-width: 1024px) {
     grid-template-columns: 30% 70%;
-    grid-template-rows: 80px 350px 350px;
+    grid-template-rows: 40px 350px 350px;
   }
 `
 
@@ -83,10 +83,10 @@ function WildfireThinning() {
       <div style={{ gridArea: "Header" }}>
         <Header>Where fires start in the West</Header>
         <Caption>
-          This map shows{" "}
-          <Highlight color={colors.red}>higher risk firesheds</Highlight> across
-          the western U.S., including areas{" "}
-          <Highlight color={colors.blue}>targeted for thinning</Highlight> to
+          This map shows higher risk areas across the western U.S., including
+          areas <Highlight color={colors.blue}>targeted for thinning</Highlight>{" "}
+          and{" "}
+          <Highlight color={colors.red}>not targeted for thinning</Highlight> to
           date under the Biden administration’s wildfire reduction strategy. The
           darker the area, the more buildings expected to be exposed in a year
           by fires starting there. Protected{" "}

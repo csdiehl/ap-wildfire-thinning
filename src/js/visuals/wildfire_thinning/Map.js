@@ -167,199 +167,187 @@ const Map = ({
     })
 
   return (
-    <svg
-      vectorEffect="non-scaling-stroke"
-      ref={svgRef}
-      width={width}
-      height={height}
-    >
-      <defs>
-        <clipPath id="states-outline">
-          {outline && <path d={path(outline)} stroke="darkgrey" />}
-        </clipPath>
-      </defs>
-      <g id="map-content" cursor="pointer">
-        <g
-          id="hillshade-background"
-          style={{ opacity: stateIsZoomed ? 0 : 0.4, transition: "opacity 1s" }}
-        >
-          {tileImages}
-        </g>
-        <g
-          id="hillshade-tiles"
-          clipPath="url(#states-outline)"
-          style={{ opacity: stateIsZoomed ? 0 : 1, transition: "opacity 1s" }}
-        >
-          {tileImages}
-        </g>
-        {firesheds &&
-          firesheds.map((d) => (
-            <path
-              key={d.properties.fireshed_code}
-              d={path(d)}
-              fill={fireshedColor(parseInt(d.properties.exp_level_out))}
-              stroke="#FFF"
-            ></path>
-          ))}
-        {thinning &&
-          thinning.map((d) => (
-            <path
-              key={d.properties.fireshed_code + d.properties.objectid}
-              d={path(d)}
-              stroke="lightgrey"
-              fill={thinningColor(parseInt(d.properties.exp_level))}
-            ></path>
-          ))}
-        {wilderness &&
-          wilderness.map((d) => (
-            <path
-              key={d.properties.name + d.properties.agency}
-              d={path(d)}
-              fill="darkgrey"
-              stroke="#FFF"
-              fillOpacity={0.7}
-            ></path>
-          ))}
-        <g id="highways">
-          {hwys &&
-            hwys.map((d, i) => (
-              <path key={i} d={path(d)} fill="none" stroke="#454545"></path>
-            ))}
-        </g>
-        {counties &&
-          counties.map((d) => (
-            <path
-              onClick={() => onClick(d)}
-              key={d.id}
-              d={path(d)}
-              fill="#EEE"
-              fillOpacity={
-                countyIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
-              }
-              stroke={
-                d.id.toString() === selectedArea ? "#121212" : "lightgrey"
-              }
-            ></path>
-          ))}
-
-        {mesh && <path d={path(mesh)} fill="none" stroke="#333"></path>}
-
-        {zones &&
-          zones.map((d) => {
-            return (
+    <div style={{ position: "relative" }}>
+      <svg
+        vectorEffect="non-scaling-stroke"
+        ref={svgRef}
+        width={width}
+        height={height}
+      >
+        <defs>
+          <clipPath id="states-outline">
+            {outline && <path d={path(outline)} stroke="darkgrey" />}
+          </clipPath>
+        </defs>
+        <g id="map-content" cursor="pointer">
+          <g
+            id="hillshade-background"
+            style={{
+              opacity: stateIsZoomed ? 0 : 0.4,
+              transition: "opacity 1s",
+            }}
+          >
+            {tileImages}
+          </g>
+          <g
+            id="hillshade-tiles"
+            clipPath="url(#states-outline)"
+            style={{ opacity: stateIsZoomed ? 0 : 1, transition: "opacity 1s" }}
+          >
+            {tileImages}
+          </g>
+          {firesheds &&
+            firesheds.map((d) => (
               <path
-                key={d.properties.name}
+                key={d.properties.fireshed_code}
                 d={path(d)}
-                fill="none"
-                stroke={colors.blue}
+                fill={fireshedColor(parseInt(d.properties.exp_level_out))}
+                stroke="#FFF"
               ></path>
-            )
-          })}
+            ))}
+          {thinning &&
+            thinning.map((d) => (
+              <path
+                key={d.properties.fireshed_code + d.properties.objectid}
+                d={path(d)}
+                stroke="lightgrey"
+                fill={thinningColor(parseInt(d.properties.exp_level))}
+              ></path>
+            ))}
+          {wilderness &&
+            wilderness.map((d) => (
+              <path
+                key={d.properties.name + d.properties.agency}
+                d={path(d)}
+                fill="darkgrey"
+                stroke="#FFF"
+                fillOpacity={0.7}
+              ></path>
+            ))}
+          <g id="highways">
+            {hwys &&
+              hwys.map((d, i) => (
+                <path key={i} d={path(d)} fill="none" stroke="#454545"></path>
+              ))}
+          </g>
+          {counties &&
+            counties.map((d) => (
+              <path
+                onClick={() => onClick(d)}
+                key={d.id}
+                d={path(d)}
+                fill="#EEE"
+                fillOpacity={
+                  countyIsZoomed && d.id.toString() !== selectedArea ? 0.7 : 0
+                }
+                stroke={
+                  d.id.toString() === selectedArea ? "#121212" : "lightgrey"
+                }
+              ></path>
+            ))}
 
-        <g id="cities">
-          {projection &&
-            cities &&
-            cities.features.map((d) => {
-              const coords = projection([d.geometry.x, d.geometry.y])
-              return (
-                <g
-                  key={d.attributes["FID"]}
-                  transform={`translate(${coords[0]},${coords[1]})`}
-                >
-                  <circle cx={0} cy={0} r={1} />
-                  {d.attributes["POP_CLASS"] >= 9 && (
-                    <text x={2} y={2} paintOrder="stroke fill" stroke="#FFF">
-                      {d.attributes["NAME"]}
-                    </text>
-                  )}
-                </g>
-              )
-            })}
-        </g>
+          {mesh && <path d={path(mesh)} fill="none" stroke="#333"></path>}
 
-        {states &&
-          states.map((d) => (
-            <path
-              onClick={() => onClick(d)}
-              key={d.id}
-              d={path(d)}
-              fill={
-                d.id === 56
-                  ? "#FFF"
-                  : stateIsZoomed
-                  ? d.id.toString() === selectedArea
-                    ? "none"
-                    : countyIsZoomed
-                    ? "none"
-                    : "#EEE"
-                  : "#EEE"
-              }
-              fillOpacity={
-                d.id === 56
-                  ? 0.5
-                  : stateIsZoomed && d.id.toString() !== selectedArea
-                  ? 0.7
-                  : 0
-              }
-              stroke="none"
-            ></path>
-          ))}
-        <g id="map-label">
-          {stateIsZoomed &&
-            !countyIsZoomed &&
+          {zones &&
             zones.map((d) => {
-              const words = d.properties.name.split(" ")
-
-              if (d.properties.state !== codeToName(selectedArea, true)[0])
-                return
               return (
-                <text
+                <path
                   key={d.properties.name}
-                  fontWeight={500}
-                  paintOrder="stroke fill"
-                  stroke="#FFF"
-                  fill="#3787C0"
-                  y={path.centroid(d)[1]}
-                >
-                  <tspan x={path.centroid(d)[0]}>
-                    {words.slice(0, 3).join(" ")}
-                  </tspan>
-                  <tspan x={path.centroid(d)[0]} dy="1.2em">
-                    {words.slice(3, words.length).join(" ")}
-                  </tspan>
-                </text>
+                  d={path(d)}
+                  fill="none"
+                  stroke={colors.blue}
+                ></path>
               )
             })}
-          {counties && selectedArea.length > 2 && selectedArea !== "none" && (
-            <MapLabel
-              code={selectedArea}
-              center={path.centroid(
-                counties.find((d) => d.id.toString() === selectedArea)
-              )}
-            />
-          )}
+
+          <g id="cities">
+            {projection &&
+              cities &&
+              cities.features.map((d) => {
+                const coords = projection([d.geometry.x, d.geometry.y])
+                return (
+                  <g
+                    key={d.attributes["FID"]}
+                    transform={`translate(${coords[0]},${coords[1]})`}
+                  >
+                    <circle cx={0} cy={0} r={1} />
+                    {d.attributes["POP_CLASS"] >= 9 && (
+                      <text x={2} y={2} paintOrder="stroke fill" stroke="#FFF">
+                        {d.attributes["NAME"]}
+                      </text>
+                    )}
+                  </g>
+                )
+              })}
+          </g>
+
+          {states &&
+            states.map((d) => (
+              <path
+                onClick={() => onClick(d)}
+                key={d.id}
+                d={path(d)}
+                fill={
+                  d.id === 56
+                    ? "#FFF"
+                    : stateIsZoomed
+                    ? d.id.toString() === selectedArea
+                      ? "none"
+                      : countyIsZoomed
+                      ? "none"
+                      : "#EEE"
+                    : "#EEE"
+                }
+                fillOpacity={
+                  d.id === 56
+                    ? 0.5
+                    : stateIsZoomed && d.id.toString() !== selectedArea
+                    ? 0.7
+                    : 0
+                }
+                stroke="none"
+              ></path>
+            ))}
+          <g id="map-label">
+            {stateIsZoomed &&
+              !countyIsZoomed &&
+              zones.map((d) => {
+                const words = d.properties.name.split(" ")
+
+                if (d.properties.state !== codeToName(selectedArea, true)[0])
+                  return
+                return (
+                  <text
+                    key={d.properties.name}
+                    fontWeight={500}
+                    paintOrder="stroke fill"
+                    stroke="#FFF"
+                    fill="#3787C0"
+                    y={path.centroid(d)[1]}
+                  >
+                    <tspan x={path.centroid(d)[0]}>
+                      {words.slice(0, 3).join(" ")}
+                    </tspan>
+                    <tspan x={path.centroid(d)[0]} dy="1.2em">
+                      {words.slice(3, words.length).join(" ")}
+                    </tspan>
+                  </text>
+                )
+              })}
+            {counties && selectedArea.length > 2 && selectedArea !== "none" && (
+              <MapLabel
+                code={selectedArea}
+                center={path.centroid(
+                  counties.find((d) => d.id.toString() === selectedArea)
+                )}
+              />
+            )}
+          </g>
         </g>
-      </g>
+      </svg>
       {(stateIsZoomed || countyIsZoomed) && <ResetButton onClick={reset} />}
-    </svg>
+    </div>
   )
 }
 
 export default Map
-
-//    "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Major_Cities/FeatureServer/0/query?where=%20(ST%20%3D%20'CA'%20OR%20ST%20%3D%20'UT'%20OR%20ST%20%3D%20'CO'%20OR%20ST%20%3D%20'OR'%20OR%20ST%20%3D%20'WA'%20OR%20ST%20%3D%20'NV'%20OR%20ST%20%3D%20'AZ'%20OR%20ST%20%3D%20'NM'%20OR%20ST%20%3D%20'MT'%20OR%20ST%20%3D%20'ID')%20%20AND%20%20(POP_CLASS%20%3D%207%20OR%20POP_CLASS%20%3D%2010)%20&outFields=CLASS,ST,STFIPS,PLACEFIPS,POP_CLASS,POPULATION,NAME&outSR=4326&f=json"
-
-/***
- *   {tiles().map(([x, y, z], i, { translate: [tx, ty], scale: k }) => {
-          return (
-            <image
-              key={i}
-              xlinkHref={getHillShade(x, y, z)}
-              x={Math.round((x + tx) * k)}
-              y={Math.round((y + ty) * k)}
-              width={k}
-              height={k}
-            ></image>
-          )
-        })}
- */

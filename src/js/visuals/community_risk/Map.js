@@ -123,99 +123,100 @@ const Map = ({ width, height, colors, setSelectedState, selectedState }) => {
   }, [Point])
 
   return (
-    <svg
-      vectorEffect="non-scaling-stroke"
-      ref={svgRef}
-      width={width}
-      height={height}
-      cursor="pointer"
-    >
-      <defs>
-        <clipPath id="state-outline">
-          {outline && <path d={path(outline)} stroke="darkgrey" />}
-        </clipPath>
-      </defs>
+    <div style={{ position: "relative" }}>
+      <svg
+        vectorEffect="non-scaling-stroke"
+        ref={svgRef}
+        width={width}
+        height={height}
+        cursor="pointer"
+      >
+        <defs>
+          <clipPath id="state-outline">
+            {outline && <path d={path(outline)} stroke="darkgrey" />}
+          </clipPath>
+        </defs>
 
-      {projection && (
-        <g id="risk-map-content">
-          {countries &&
-            countries.features.map((d) => (
-              <path
-                key={d.properties.country}
-                d={path(d)}
-                fill={d.properties["ISO"] === "US" ? "none" : "#F5F5F5"}
-                stroke="#777"
-              ></path>
-            ))}
-          <g id="voronoi-polygons" clipPath="url(#state-outline)">
-            {voronoi.features.map((d) => {
-              return (
+        {projection && (
+          <g id="risk-map-content">
+            {countries &&
+              countries.features.map((d) => (
                 <path
-                  key={d.properties.site.properties.place_fips}
+                  key={d.properties.country}
                   d={path(d)}
-                  fill={color(d.properties.site.properties.risk_area)}
-                  fillOpacity={0.3}
-                  stroke={"lightgrey"}
-                  strokeWidth={0.2}
+                  fill={d.properties["ISO"] === "US" ? "none" : "#F5F5F5"}
+                  stroke="#777"
                 ></path>
+              ))}
+            <g id="voronoi-polygons" clipPath="url(#state-outline)">
+              {voronoi.features.map((d) => {
+                return (
+                  <path
+                    key={d.properties.site.properties.place_fips}
+                    d={path(d)}
+                    fill={color(d.properties.site.properties.risk_area)}
+                    fillOpacity={0.3}
+                    stroke={"lightgrey"}
+                    strokeWidth={0.2}
+                  ></path>
+                )
+              })}
+            </g>
+
+            {mesh && <path fill="none" stroke="#777" d={path(mesh)}></path>}
+            {states && (
+              <path
+                d={path(states.find((d) => d.id === 56))}
+                fill="#F5F5F5"
+              ></path>
+            )}
+            <g id="spikes">
+              {cities.map((d) => (
+                <path
+                  transform={`translate(${Point(d)})`}
+                  key={d.properties.place_fips}
+                  d={spike(heightScale(d.properties.population))}
+                  fill={color(d.properties.risk_area)}
+                  fillOpacity={0.7}
+                  stroke={color(d.properties.risk_area)}
+                  strokeLinejoin="round"
+                ></path>
+              ))}
+            </g>
+            {populated.map((d) => {
+              const coords = projection(d.geometry.coordinates)
+              return (
+                <text
+                  className="city-labels"
+                  x={coords[0]}
+                  y={coords[1]}
+                  key={d.properties.place_fips}
+                  paintOrder="stroke fill"
+                  stroke="#FFF"
+                  fontWeight={600}
+                  strokeWidth={0.5}
+                >
+                  {d.properties.name}
+                </text>
               )
             })}
+            {/*Invisible overlay that allows clicking on state shapes */}
+            {states &&
+              states.map((d) => (
+                <path
+                  key={d.id}
+                  d={path(d)}
+                  fill="#FFF"
+                  fillOpacity={0}
+                  stroke="none"
+                  onClick={() => handleClick(d)}
+                ></path>
+              ))}
           </g>
-
-          {mesh && <path fill="none" stroke="#777" d={path(mesh)}></path>}
-          {states && (
-            <path
-              d={path(states.find((d) => d.id === 56))}
-              fill="#F5F5F5"
-            ></path>
-          )}
-          <g id="spikes">
-            {cities.map((d) => (
-              <path
-                transform={`translate(${Point(d)})`}
-                key={d.properties.place_fips}
-                d={spike(heightScale(d.properties.population))}
-                fill={color(d.properties.risk_area)}
-                fillOpacity={0.7}
-                stroke={color(d.properties.risk_area)}
-                strokeLinejoin="round"
-              ></path>
-            ))}
-          </g>
-          {populated.map((d) => {
-            const coords = projection(d.geometry.coordinates)
-            return (
-              <text
-                className="city-labels"
-                x={coords[0]}
-                y={coords[1]}
-                key={d.properties.place_fips}
-                paintOrder="stroke fill"
-                stroke="#FFF"
-                fontWeight={600}
-                strokeWidth={0.5}
-              >
-                {d.properties.name}
-              </text>
-            )
-          })}
-          {/*Invisible overlay that allows clicking on state shapes */}
-          {states &&
-            states.map((d) => (
-              <path
-                key={d.id}
-                d={path(d)}
-                fill="#FFF"
-                fillOpacity={0}
-                stroke="none"
-                onClick={() => handleClick(d)}
-              ></path>
-            ))}
-        </g>
-      )}
-
+        )}
+      </svg>
       {selectedState && <ResetButton onClick={reset} />}
-    </svg>
+    </div>
   )
 }
 
