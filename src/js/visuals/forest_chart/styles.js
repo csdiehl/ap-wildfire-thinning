@@ -74,20 +74,23 @@ const State = styled.p`
 `
 
 const Highlight = styled.span`
-  background-color: orange;
+  background-color: #e56a23;
   border-radius: 2px;
   padding: 2px;
   color: #fff;
+  height: 20px;
 `
 
 const Legend = styled.div`
-  width: 100px;
+  width: 80px;
   background: linear-gradient(to right, #fff, #121212);
   display: inline-block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-align: center;
   color: #fff;
+  border-radius: 2px;
+  height: 20px;
 `
 
 const Tooltip = styled.div`
@@ -104,6 +107,19 @@ const Tooltip = styled.div`
   transition: opacity 200ms ease-in;
 `
 
+const Acres = styled.p`
+  color: #e56a23;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  margin: 0;
+  padding: 2px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 0 10px #fff;
+  font-size: 0.875rem;
+`
+
 export {
   Container,
   Map,
@@ -116,4 +132,5 @@ export {
   Tick,
   Legend,
   Tooltip,
+  Acres,
 }

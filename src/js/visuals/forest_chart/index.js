@@ -14,6 +14,7 @@ import {
   Tick,
   Legend,
   Tooltip,
+  Acres,
 } from "./styles"
 import { format } from "d3"
 
@@ -42,37 +43,18 @@ const ForestChart = () => {
         The dark bar{" "}
         <div
           style={{
-            width: "50px",
+            width: "20px",
             backgroundColor: "black",
             height: "5px",
             display: "inline-block",
             verticalAlign: "middle",
           }}
         ></div>{" "}
-        shows the percentage of the zone that is mature forest, compared to the
-        grey bar
-        <div
-          style={{
-            width: "50px",
-            display: "inline-block",
-            verticalAlign: "middle",
-          }}
-        >
-          <Bar width={100} />
-        </div>
-        , which shows the <Highlight>zone area</Highlight> in square miles. The
-        darker the shaded area <Legend>0% to 100%</Legend>, the greater
-        percentage of mature forest it contains. Researchers{" "}
-        <a
-          style={{ fontweight: 500, color: "black" }}
-          rel="noreferrer"
-          target="_blank"
-          href="https://www.matureforests.org/importance-of-mature-forests "
-        >
-          classify mature forest
-        </a>{" "}
-        as high on three metrics: tree height, canopy cover and biomass compared
-        to surrounding areas.
+        shows the percentage of the <Highlight>thinning zone</Highlight> that is
+        mature forest. The darker the shaded area <Legend>0% to 100%</Legend>,
+        the greater percentage of mature forest it contains. Researchers
+        classify mature forest as high on three metrics: tree height, canopy
+        cover and biomass compared to surrounding areas.
       </Caption>
       <Container>
         {sorted &&
@@ -96,12 +78,6 @@ const ForestChart = () => {
 
                 <div style={{ gridArea: "bar", position: "relative" }}>
                   <Bar width={100} />
-                  <Note width={100}>
-                    <Tick />
-                    <p style={{ margin: "0px", color: "#777" }}>
-                      {format(".2s")(landscapeacres / 640)}
-                    </p>
-                  </Note>
 
                   <ColorBar color="#121212" width={ratio * 100} />
                   <Note width={ratio * 100}>
@@ -128,7 +104,13 @@ const ForestChart = () => {
                       borderRadius: "5px",
                       border: "1px solid #F5F5F5",
                     }}
-                  />
+                  ></img>
+                  <Acres>
+                    {format(".2s")(landscapeacres / 640)}{" "}
+                    <span style={{ fontWeight: 400, color: "#777" }}>
+                      square miles
+                    </span>
+                  </Acres>
                   <Tooltip hovered={name === hover}>
                     {format(".2s")(ratio * (landscapeacres / 640))} square miles
                     of mature forest
@@ -143,3 +125,12 @@ const ForestChart = () => {
 }
 
 export default ForestChart
+
+/*
+   <Note width={100}>
+                    <Tick />
+                    <p style={{ margin: "0px", color: "#777" }}>
+                      {format(".2s")(landscapeacres / 640)}
+                    </p>
+                  </Note>
+*/
