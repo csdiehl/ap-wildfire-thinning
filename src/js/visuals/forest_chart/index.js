@@ -54,7 +54,7 @@ const ForestChart = () => {
         mature forest. The darker the shaded area <Legend>0% to 100%</Legend>,
         the greater percentage of mature forest it contains. Researchers
         classify mature forest as high on three metrics: tree height, canopy
-        cover and biomass compared to surrounding areas.
+        cover and biomass compared to surrounding areas. Source: Wild Heritage
       </Caption>
       <Container>
         {sorted &&
@@ -125,12 +125,3 @@ const ForestChart = () => {
 }
 
 export default ForestChart
-
-/*
-   <Note width={100}>
-                    <Tick />
-                    <p style={{ margin: "0px", color: "#777" }}>
-                      {format(".2s")(landscapeacres / 640)}
-                    </p>
-                  </Note>
-*/
