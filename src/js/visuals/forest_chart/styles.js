@@ -4,6 +4,8 @@ import styled from "styled-components"
 
 const Container = styled.div`
   width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   grid-gap: 10px;
