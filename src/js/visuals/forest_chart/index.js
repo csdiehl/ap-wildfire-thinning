@@ -1,6 +1,4 @@
-import React, { useState, useMemo } from "react"
-import old_growth_ratio from "../../../live-data/old_growth_ratio.csv"
-import useGeoData from "../../components/useGeoData"
+import React, { useState } from "react"
 import { Caption, Header } from "../styles"
 import {
   Bar,
@@ -17,22 +15,11 @@ import {
   Acres,
 } from "./styles"
 import { format } from "d3"
-
-const getRatio = (d) => {
-  const data = old_growth_ratio.find((x) => x["name"] === d.properties?.name)
-  return +data?.mature_forest_ratio
-}
+import { forestData } from "./data"
 
 const ForestChart = () => {
   const [hover, setHover] = useState(null)
 
-  const zones = useGeoData("zone_totals.json")
-  const oldGrowth = useGeoData("old_growth_2.json", "all")
-
-  const sorted = useMemo(
-    () => zones && zones.sort((a, b) => getRatio(b) - getRatio(a)),
-    [zones]
-  )
   return (
     <div
       id="forest-container"
@@ -57,12 +44,10 @@ const ForestChart = () => {
         cover and biomass compared to surrounding areas. Source: Wild Heritage
       </Caption>
       <Container>
-        {sorted &&
-          oldGrowth &&
-          sorted.map((d, i) => {
+        {forestData &&
+          forestData.map((d, i) => {
             // each grid square has its own projection
-            const ratio = getRatio(d)
-            const { landscapeacres, name, state } = d.properties
+            const { landscapeacres, name, state, ratio } = d
 
             return (
               <Map
