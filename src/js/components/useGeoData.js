@@ -8,7 +8,7 @@ const useGeoData = (file, objects = file.split(".")[0]) => {
   // retreive data stored in static folder
   useEffect(() => {
     async function getData() {
-      const url = `../${file}`
+      const url = `https://s3.amazonaws.com/data.ap.org/wildfire-thinning/${file}`
 
       const res = await fetch(url)
       const data = await res.json()
