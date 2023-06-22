@@ -43,7 +43,7 @@ const Map = ({
     hwys = useGeoData("hwy_west.json"),
     zones = useGeoData("zone_totals.json")
 
-  console.log(mesh)
+  console.log(counties)
 
   const svgRef = useRef()
   const zoomLevel =
