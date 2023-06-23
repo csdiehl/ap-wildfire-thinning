@@ -28,7 +28,7 @@ const MapLabel = ({ code, center }) => {
         {name[1]} County
       </tspan>
       <tspan fill="#121212" x={center[0]} dy="1.2em">
-        affect <tspan fontWeight={700}>{bld}</tspan> buildings
+        could affect <tspan fontWeight={700}>{bld}</tspan> buildings
       </tspan>
     </Label>
   )
