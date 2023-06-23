@@ -13,6 +13,7 @@ import {
   Legend,
   Tooltip,
   Acres,
+  Card,
 } from "./styles"
 import { format } from "d3"
 import { forestData } from "./data"
@@ -23,9 +24,14 @@ const ForestChart = () => {
   return (
     <div
       id="forest-container"
-      style={{ boxSizing: "border-box", padding: "10px" }}
+      style={{
+        boxSizing: "border-box",
+        padding: "10px",
+        maxWidth: "1300px",
+        margin: "0 auto",
+      }}
     >
-      <Header>Mature forest density in thinning zones</Header>
+      <Header>Mature forest density in areas to be thinned</Header>
       <Caption style={{ marginBottom: "20px" }}>
         The dark bar{" "}
         <div
@@ -37,11 +43,13 @@ const ForestChart = () => {
             verticalAlign: "middle",
           }}
         ></div>{" "}
-        shows the percentage of the <Highlight>thinning zone</Highlight> that is
-        mature forest. The darker the shaded area <Legend>0% to 100%</Legend>,
-        the greater percentage of mature forest it contains. Researchers
-        classify mature forest as high on three metrics: tree height, canopy
-        cover and biomass compared to surrounding areas. Source: Wild Heritage
+        shows the percentage of mature forest in{" "}
+        <Highlight>zones slated to be thinned</Highlight>
+        under a Biden administration plan. The darker the shaded area,{" "}
+        <Legend>0% to 100%</Legend> the greater percentage of mature forest the
+        area contains. Researchers classify mature forest as high by three
+        metrics: tree height, canopy cover and biomass compared to surrounding
+        areas.
       </Caption>
       <Container>
         {forestData &&
@@ -79,7 +87,7 @@ const ForestChart = () => {
                   </Note>
                 </div>
 
-                <div style={{ position: "relative", gridArea: "map" }}>
+                <Card>
                   <img
                     alt="a forest"
                     width="100%"
@@ -100,11 +108,12 @@ const ForestChart = () => {
                     {format(".2s")(ratio * (landscapeacres / 640))} square miles
                     of mature forest
                   </Tooltip>
-                </div>
+                </Card>
               </Map>
             )
           })}
       </Container>
+      <p>Source: Wild Heritage</p>
     </div>
   )
 }

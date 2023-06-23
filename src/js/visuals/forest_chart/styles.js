@@ -9,9 +9,11 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   grid-gap: 10px;
+  grid-auto-flow: dense;
 `
 
 const Map = styled.div`
+  background-color: #fff;
   display: grid;
   cursor: pointer;
   width: 100%;
@@ -23,6 +25,15 @@ const Map = styled.div`
     "name"
     "map"
     "bar";
+  transform-origin: top left;
+  transition: transform 300ms ease-out;
+
+  &:hover {
+    transform: scale(2);
+    z-index: 1000;
+    border-left: 4px solid white;
+    border-right: 4px solid white;
+  }
 `
 
 const Bar = styled.div`
@@ -122,6 +133,12 @@ const Acres = styled.p`
   font-size: 0.875rem;
 `
 
+const Card = styled.div`
+  position: relative;
+  grid-area: map;
+  background-color: #fff;
+`
+
 export {
   Container,
   Map,
@@ -135,4 +152,5 @@ export {
   Legend,
   Tooltip,
   Acres,
+  Card,
 }
