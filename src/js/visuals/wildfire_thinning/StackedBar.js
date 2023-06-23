@@ -13,7 +13,7 @@ const Header = styled.div`
   margin: 5px;
 `
 
-const cols = ["exp_outside", "exp_in_zone", "exp_in_wild"]
+const cols = ["exp_in_zone", "exp_outside", "exp_in_wild"]
 
 const StackedBar = ({ selectedArea }) => {
   const [node, dimensions] = useNodeDimensions()
@@ -43,7 +43,7 @@ const StackedBar = ({ selectedArea }) => {
   const color = d3
     .scaleOrdinal()
     .domain(cols)
-    .range([colors.red, colors.blue, colors.grey])
+    .range([colors.blue, colors.red, colors.grey])
 
   useEffect(() => {
     d3.select(svgRef.current)
@@ -59,12 +59,12 @@ const StackedBar = ({ selectedArea }) => {
     <div ref={node}>
       <Header>
         {stateCodes[stateCode]
-          ? `Thinning zones cover ${(data[0].pct_saved * 100).toFixed(
+          ? `Thinning zones address ${(data[0].pct_saved * 100).toFixed(
               1
-            )}% of building exposure in ${
+            )}% of the threat to buildings in ${
               codeToName(stateCode, true)[0] ?? "All States"
             }`
-          : "Thinning zones cover 25% of building exposure in 10 states"}
+          : "Thinning zones address 25% of the threat to buildings in 10 states"}
       </Header>
       <svg ref={svgRef} height={10} width={dimensions.width}>
         {stackedData.map((d) => {

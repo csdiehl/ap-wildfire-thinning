@@ -9,6 +9,7 @@ import { colors } from "./utils"
 import { Caption, Header } from "../styles"
 
 const Container = styled.div`
+  height: 750px;
   display: grid;
   box-sizing: border-box;
   padding: 10px;
@@ -17,7 +18,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
-  grid-template-rows: auto auto 500px auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   grid-template-columns: 100%;
   grid-template-areas:
     "Header"
@@ -27,7 +28,7 @@ const Container = styled.div`
 
   @media (min-width: 768px) {
     grid-template-columns: 25% 75%;
-    grid-template-rows: 40px 420px 280px;
+    grid-template-rows: 40px auto minmax(0, 1fr);
     grid-template-areas:
       "Header StackedBar"
       "Header Map"
@@ -36,7 +37,6 @@ const Container = styled.div`
 
   @media (min-width: 1024px) {
     grid-template-columns: 30% 70%;
-    grid-template-rows: 40px 350px 350px;
   }
 `
 
@@ -81,16 +81,16 @@ function WildfireThinning() {
   return (
     <Container>
       <div style={{ gridArea: "Header" }}>
-        <Header>Where fires start in the West</Header>
+        <Header>Buildings and targeted forest thinning</Header>
         <Caption>
-          This map shows higher risk areas across the western U.S., including
-          areas <Highlight color={colors.blue}>targeted for thinning</Highlight>{" "}
-          and{" "}
-          <Highlight color={colors.red}>not targeted for thinning</Highlight> to
-          date under the Biden administration’s wildfire reduction strategy. The
-          darker the area, the more buildings expected to be exposed in a year
-          by fires starting there. Protected{" "}
-          <Highlight color={colors.grey}>Wilderness Areas</Highlight> cannot be
+          This map shows higher risk areas across the Western U.S., including
+          zones <Highlight color={colors.blue}>targeted for thinning</Highlight>
+          under the Biden administration’s wildfire reduction strategy and areas
+          where{" "}
+          <Highlight color={colors.red}>thinning is not planned.</Highlight> The
+          darker the area, the more buildings that would be exposed to a fire
+          that starts in that location. Protected{" "}
+          <Highlight color={"grey"}>Wilderness Areas</Highlight> cannot be
           thinned so are excluded from the totals.
         </Caption>
         <ClickMessage>

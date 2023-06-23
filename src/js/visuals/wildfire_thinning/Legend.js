@@ -5,19 +5,7 @@ const Patch = styled.div`
   width: 20px;
   height: 20px;
   background-color: ${(props) => props.color};
-  border: 0.5px solid black;
-`
-
-const Box = styled.div`
-  width: 10px;
-  height: 10px;
-  background-color: ${(props) => props.color};
-  border-radius: 2px;
-`
-
-const Caption = styled.p`
-  font-size: 12px;
-  margin: 2px 5px 2px 0px;
+  border: 0.5px solid white;
 `
 
 const Container = styled.div`
@@ -72,33 +60,6 @@ const Legend = ({ warmColors, coolColors, labels }) => {
         </div>
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <Subhead>Legend</Subhead>
-        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-          <Box color="darkgrey" />
-          <Caption>Wilderness over 50k acres</Caption>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "5px",
-          }}
-        >
-          <div
-            style={{
-              borderRadius: "50%",
-              backgroundColor: "#121212",
-              width: "10px",
-              height: "10px",
-            }}
-          ></div>
-          <Caption>City over 500k population</Caption>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-          <Box width="5px" height={height} color="black" />
-          <Caption>Interstate highway</Caption>
-        </div>
         <p style={{ fontSize: "12px" }}>Data: U.S. Forest Service</p>
       </div>
     </Container>
