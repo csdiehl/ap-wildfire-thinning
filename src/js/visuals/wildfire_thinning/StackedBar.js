@@ -61,10 +61,10 @@ const StackedBar = ({ selectedArea }) => {
         {stateCodes[stateCode]
           ? `Thinning zones address ${(data[0].pct_saved * 100).toFixed(
               1
-            )}% of the threat to buildings in ${
+            )}% of the threats to buildings in ${
               codeToName(stateCode, true)[0] ?? "All States"
             }`
-          : "Thinning zones address 25% of the threat to buildings in 10 states"}
+          : "Thinning zones address 25% of the threats to buildings in 10 states"}
       </Header>
       <svg ref={svgRef} height={10} width={dimensions.width}>
         {stackedData.map((d) => {
