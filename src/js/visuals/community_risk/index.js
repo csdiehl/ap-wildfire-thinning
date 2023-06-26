@@ -7,7 +7,7 @@ import Legend from "./Legend"
 import Map from "./Map"
 
 const Container = styled.div`
-  height: calc(100vh - 20px);
+  height: 750px;
   box-sizing: border-box;
   padding: 10px;
   width: 100%;

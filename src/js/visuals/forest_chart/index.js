@@ -47,9 +47,8 @@ const ForestChart = () => {
         <Highlight>zones slated to be thinned</Highlight>
         under a Biden administration plan. The darker the shaded area,{" "}
         <Legend>0% to 100%</Legend> the greater percentage of mature forest the
-        area contains. Researchers classify mature forest as high by three
-        metrics: tree height, canopy cover and biomass compared to surrounding
-        areas.
+        area contains. Researchers classify mature forest by three metrics: tree
+        height, canopy cover and biomass compared to surrounding areas.
       </Caption>
       <Container>
         {forestData &&
